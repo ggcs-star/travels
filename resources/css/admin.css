@@ -3105,3 +3105,145 @@ select[name*="[currency]"] {
     }
 
 }
+/* =========================================================
+   TOUR PACKAGE - CURRENT GALLERY UI
+   ========================================================= */
+
+.admin-gallery-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.admin-gallery-heading label {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.admin-gallery-heading small {
+    display: block;
+    color: #667085;
+    font-size: 12px;
+}
+
+.admin-tour-gallery {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.admin-tour-gallery__item {
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid #e4e7ec;
+    border-radius: 14px;
+    background: #fff;
+}
+
+.admin-tour-gallery__image-wrap {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    background: #f2f4f7;
+}
+
+.admin-tour-gallery__image-wrap img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Remove button - UI only */
+.admin-tour-gallery__remove {
+    position: absolute;
+    top: 9px;
+    right: 9px;
+
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 0;
+    border-radius: 9px;
+
+    background: rgba(255, 255, 255, .94);
+    color: #b42318;
+
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .18);
+
+    cursor: pointer;
+
+    transition:
+        transform .18s ease,
+        background .18s ease,
+        color .18s ease;
+}
+
+.admin-tour-gallery__remove span {
+    font-size: 23px;
+    line-height: 1;
+    font-weight: 500;
+}
+
+.admin-tour-gallery__remove:hover {
+    background: #b42318;
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.admin-tour-gallery__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    padding: 10px 11px;
+}
+
+.admin-tour-gallery__footer > span:first-child {
+    color: #667085;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.admin-tour-gallery__remove-label {
+    color: #b42318;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+/* Tablet */
+@media (max-width: 1100px) {
+
+    .admin-tour-gallery {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+}
+
+
+/* Mobile */
+@media (max-width: 700px) {
+
+    .admin-tour-gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+}
+
+
+/* Small mobile */
+@media (max-width: 460px) {
+
+    .admin-tour-gallery {
+        grid-template-columns: 1fr;
+    }
+
+}
