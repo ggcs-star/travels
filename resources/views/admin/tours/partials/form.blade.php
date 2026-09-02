@@ -885,38 +885,65 @@
 
         {{-- Existing gallery --}}
 
-        @if(isset($tour) && $tour->images && $tour->images->isNotEmpty())
+    @if(isset($tour) && $tour->images && $tour->images->isNotEmpty())
 
-            <div class="admin-form-group admin-form-group--full">
+    <div class="admin-form-group admin-form-group--full">
 
-                <label>
-                    Current Gallery
-                </label>
+        <div class="admin-gallery-heading">
+            <div>
+                <label>Current Gallery</label>
+                <small>
+                    Manage your existing package images.
+                </small>
+            </div>
+        </div>
 
-                <div class="admin-tour-gallery">
+        <div class="admin-tour-gallery">
 
-                    @foreach($tour->images as $image)
+            @foreach($tour->images->sortBy('sort_order') as $image)
 
-                        <div class="admin-tour-gallery__item">
+                <div class="admin-tour-gallery__item">
 
-                            <img
-                                src="{{ $image->image_url }}"
-                                alt="{{ $image->alt_text ?: $tour->name }}"
-                            >
+                    <div class="admin-tour-gallery__image-wrap">
 
-                            <span>
-                                Position {{ $image->sort_order + 1 }}
-                            </span>
+                        <img
+                            src="{{ $image->image_url }}"
+                            alt="{{ $image->alt_text ?: $tour->name }}"
+                        >
 
-                        </div>
+                        {{-- UI ONLY --}}
+        <button
+    type="button"
+    class="admin-tour-gallery__remove"
+    title="Remove image"
+    data-gallery-remove
+    data-image-id="{{ $image->id }}"
+>
+    <span>×</span>
+</button>
+                    </div>
 
-                    @endforeach
+                    <div class="admin-tour-gallery__footer">
+
+                        <span>
+                            Position {{ $image->sort_order + 1 }}
+                        </span>
+
+                        <span class="admin-tour-gallery__remove-label">
+                            Remove
+                        </span>
+
+                    </div>
 
                 </div>
 
-            </div>
+            @endforeach
 
-        @endif
+        </div>
+
+    </div>
+
+@endif
 
     </div>
 
@@ -2245,6 +2272,92 @@ document.addEventListener('DOMContentLoaded', function () {
 
     updateNumbers();
     updateRemoveButtons();
+
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const gallery = document.querySelector('.admin-tour-gallery');
+
+    if (!gallery) {
+        return;
+    }
+
+    gallery.addEventListener('click', function (event) {
+
+        const button = event.target.closest('[data-gallery-remove]');
+
+        if (!button) {
+            return;
+        }
+
+        const item = button.closest('.admin-tour-gallery__item');
+
+        if (!item) {
+            return;
+        }
+
+        const imageId = button.dataset.imageId;
+
+        if (!imageId) {
+            return;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Send image ID to Laravel on Update
+        |--------------------------------------------------------------------------
+        */
+
+        const input = document.createElement('input');
+
+        input.type = 'hidden';
+        input.name = 'remove_gallery[]';
+        input.value = imageId;
+
+        gallery.parentElement.appendChild(input);
+
+        /*
+        |--------------------------------------------------------------------------
+        | UI remove
+        |--------------------------------------------------------------------------
+        */
+
+        item.style.transition =
+            'opacity .2s ease, transform .2s ease';
+
+        item.style.opacity = '0';
+        item.style.transform = 'scale(.96)';
+
+        setTimeout(function () {
+
+            item.remove();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Re-number remaining images
+            |--------------------------------------------------------------------------
+            */
+
+            gallery.querySelectorAll(
+                '.admin-tour-gallery__item'
+            ).forEach(function (item, index) {
+
+                const position = item.querySelector(
+                    '.admin-tour-gallery__footer > span:first-child'
+                );
+
+                if (position) {
+                    position.textContent =
+                        'Position ' + (index + 1);
+                }
+
+            });
+
+        }, 200);
+
+    });
 
 });
 </script>
