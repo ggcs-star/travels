@@ -1,0 +1,9 @@
+:root {
+    --site-primary: var(--color-primary);
+    --site-secondary: var(--color-secondary);
+    --site-accent: var(--color-accent);
+    --site-text: var(--color-text);
+    --site-background: var(--color-background);
+    --site-container-width: var(--container-width);
+    --site-border-radius: var(--radius-md);
+}

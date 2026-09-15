@@ -1,0 +1,5702 @@
+/* =========================================================
+   KANILA TOP UTILITY BAR
+   ========================================================= */
+
+.kanila-topbar {
+    position: relative;
+    z-index: 1000;
+    width: 100%;
+    min-height: 44px;
+    background: #102d28;
+    color: #fff;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.kanila-topbar-inner {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 25px;
+}
+
+.kanila-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    min-width: 0;
+}
+
+.kanila-topbar-contact {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: rgba(255,255,255,.76);
+    font-size: 11px;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color .2s ease;
+}
+
+.kanila-topbar-contact:hover {
+    color: #fff;
+}
+
+.kanila-topbar-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #d6ad70;
+    font-size: 13px;
+    line-height: 1;
+}
+
+.kanila-topbar-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 14px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.kanila-topbar-divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(255,255,255,.16);
+    flex-shrink: 0;
+}
+
+/* Guest authentication */
+
+.kanila-auth-link {
+    color: rgba(255,255,255,.82);
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: color .2s ease;
+}
+
+.kanila-auth-link:hover {
+    color: #d6ad70;
+}
+
+.kanila-register-button {
+    min-height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 15px;
+    border: 1px solid #d6ad70;
+    border-radius: 999px;
+    background: #d6ad70;
+    color: #102d28;
+    font-size: 10px;
+    font-weight: 800;
+    text-decoration: none;
+    transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+}
+
+.kanila-register-button:hover {
+    background: #e3bf88;
+    color: #102d28;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(214,173,112,.18);
+}
+
+/* Logged-in user */
+
+.kanila-user-account {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.kanila-user-icon {
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(214,173,112,.55);
+    border-radius: 50%;
+    color: #d6ad70;
+    font-size: 13px;
+}
+
+.kanila-user-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.kanila-user-text small {
+    color: rgba(255,255,255,.48);
+    font-size: 7px;
+    line-height: 1;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.kanila-user-text strong {
+    max-width: 145px;
+    overflow: hidden;
+    color: #fff;
+    font-size: 10px;
+    line-height: 1.2;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kanila-account-link {
+    color: rgba(255,255,255,.78);
+    font-size: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: color .2s ease;
+}
+
+.kanila-account-link:hover {
+    color: #d6ad70;
+}
+
+.kanila-account-link--button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    font: inherit;
+}
+
+.kanila-logout-form {
+    margin: 0;
+}
+
+/* =========================================================
+   MAIN KANILA HEADER
+   ========================================================= */
+
+
+.site-header.kanila-site-header {
+    position: absolute;
+    top: 68px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 999;
+    min-height: 130px;
+
+    background: transparent;
+
+    border-bottom: none;
+    box-shadow: none;
+
+    color: #ffffff;
+
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+
+    transition: all 0.3s ease;
+}
+
+/* Fixed header state */
+.site-header.kanila-site-header.is-fixed {
+    position: fixed;
+    top: 0;
+
+    background: transparent;
+
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+
+    box-shadow: none;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.kanila-site-header .site-header-inner {
+    height: 130px;
+    min-height: 130px;
+    display: flex;
+    align-items: center;
+    gap: 35px;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 25px;
+}
+
+/* =========================================================
+   LOGO
+   ========================================================= */
+
+.kanila-site-header .site-logo {
+    width: 220px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    text-decoration: none;
+}
+
+.kanila-site-header .site-logo-image {
+    width: 175px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+}
+
+.kanila-site-header .site-logo-image img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+}
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.kanila-navigation {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.kanila-site-header .nav-link,
+.kanila-site-header .nav-dropdown-trigger {
+    min-height: 54px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.95);
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.kanila-site-header .nav-link:hover,
+.kanila-site-header .nav-dropdown-trigger:hover {
+    color: #ff7914;
+    transform: translateY(-1px);
+}
+
+.kanila-site-header .nav-link.active {
+    color: #ff7914;
+}
+
+/* =========================================================
+   ARROW
+   ========================================================= */
+
+.kanila-nav-arrow {
+    font-size: 13px;
+    line-height: 1;
+    transition: transform 0.3s ease;
+}
+
+.kanila-nav-dropdown:hover .kanila-nav-arrow {
+    color: #ff7914;
+    transform: rotate(180deg);
+}
+
+/* =========================================================
+   DROPDOWN
+   ========================================================= */
+
+.kanila-nav-dropdown {
+    position: relative;
+}
+
+.kanila-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 14px);
+    left: 0;
+    width: 245px;
+    padding: 10px;
+    background: rgba(14, 28, 28, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.30);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.25s ease;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.kanila-nav-dropdown:hover .kanila-dropdown-menu,
+.kanila-nav-dropdown:focus-within .kanila-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.kanila-site-header .nav-dropdown-item,
+.kanila-site-header .nav-dropdown-all {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 13px;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 13px;
+    text-decoration: none;
+    transition: color 0.25s ease, background 0.25s ease;
+}
+
+.kanila-site-header .nav-dropdown-item:hover,
+.kanila-site-header .nav-dropdown-all:hover {
+    color: #ff7914;
+    background: rgba(255, 121, 20, 0.10);
+}
+
+.kanila-site-header .nav-dropdown-divider {
+    height: 1px;
+    margin: 7px 5px;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.kanila-site-header .nav-dropdown-all {
+    color: #ff7914;
+    font-weight: 700;
+}
+
+/* =========================================================
+   GET IN TOUCH
+   ========================================================= */
+
+.kanila-header-actions {
+    margin-left: 28px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.kanila-get-touch {
+    width: 242px;
+    height: 66px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+    padding: 0 28px;
+    border-radius: 999px;
+    background: #ff7914;
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 8px 25px rgba(255, 121, 20, 0.18);
+    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.kanila-get-touch:hover {
+    background: #ff8a2d;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 35px rgba(255, 121, 20, 0.30);
+}
+
+.kanila-get-touch-icon {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    border-radius: 50%;
+    font-size: 19px;
+    transition: transform 0.4s ease;
+}
+
+.kanila-get-touch:hover .kanila-get-touch-icon {
+    transform: rotate(90deg);
+}
+
+/* =========================================================
+   HIDE OLD ACTIONS
+   ========================================================= */
+
+.kanila-site-header .header-phone,
+.kanila-site-header .header-agent-button,
+.kanila-site-header .header-plan-button {
+    display: none !important;
+}
+
+/* =========================================================
+   MOBILE - FIXED WITH ANIMATIONS
+   ========================================================= */
+
+.kanila-site-header .mobile-menu-toggle {
+    display: none;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 8px;
+    background: transparent;
+    cursor: pointer;
+    transition: border-color 0.25s ease;
+}
+
+.kanila-site-header .mobile-menu-toggle:hover {
+    border-color: #ff7914;
+}
+
+.kanila-site-header .mobile-menu-toggle span {
+    width: 20px;
+    height: 2px;
+    background: #ffffff;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+/* Hamburger animation */
+.kanila-site-header .mobile-menu-toggle.is-active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.kanila-site-header .mobile-menu-toggle.is-active span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.kanila-site-header .mobile-menu-toggle.is-active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -5px);
+}
+
+.kanila-mobile-navigation {
+    display: none !important;
+}
+
+.kanila-mobile-navigation.is-open {
+    display: block !important;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(8, 30, 29, 0.98);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 20px 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1250px) {
+    .kanila-topbar-inner {
+        padding: 0 25px;
+    }
+
+    .kanila-site-header .site-header-inner {
+        gap: 15px;
+        padding: 0 25px;
+    }
+
+    .kanila-site-header .site-logo {
+        width: 180px;
+    }
+
+    .kanila-site-header .nav-link,
+    .kanila-site-header .nav-dropdown-trigger {
+        padding: 0 9px;
+        font-size: 14px;
+    }
+
+    .kanila-get-touch {
+        width: 190px;
+        height: 58px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .kanila-topbar-left {
+        gap: 20px;
+    }
+
+    .kanila-topbar-contact {
+        font-size: 14px;
+    }
+
+    .kanila-trustpilot {
+        font-size: 14px;
+    }
+
+    .kanila-trustpilot strong {
+        font-size: 15px;
+    }
+
+    .kanila-trustpilot-star {
+        font-size: 22px;
+    }
+
+    .kanila-topbar-right {
+        gap: 18px;
+    }
+
+    .kanila-topbar-selector {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .kanila-topbar {
+        display: none;
+    }
+
+    .site-header.kanila-site-header {
+        top: 0;
+        min-height: 88px;
+        background: rgba(8, 30, 29, 0.92);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+    }
+
+    .site-header.kanila-site-header.is-fixed {
+        top: 0;
+    }
+
+    .kanila-site-header .site-header-inner {
+        height: 88px;
+        min-height: 88px;
+        padding: 0 20px;
+    }
+
+    .kanila-site-header .site-logo {
+        width: 160px;
+    }
+
+    .kanila-site-header .site-logo-image {
+        width: 130px;
+        height: 65px;
+    }
+
+    .kanila-navigation {
+        display: none !important;
+    }
+
+    .kanila-get-touch {
+        display: none;
+    }
+
+    .kanila-header-actions {
+        margin-left: auto;
+    }
+
+    .kanila-site-header .mobile-menu-toggle {
+        display: flex;
+    }
+
+    .kanila-mobile-navigation.is-open {
+        display: block !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .kanila-site-header .site-logo {
+        width: 130px;
+    }
+
+    .kanila-site-header .site-logo-image {
+        width: 110px;
+        height: 55px;
+    }
+
+    .kanila-site-header .site-header-inner {
+        padding: 0 16px;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 520px) {
+    .kanila-site-header .site-logo {
+        width: 110px;
+    }
+
+    .kanila-site-header .site-logo-image {
+        width: 90px;
+        height: 48px;
+    }
+
+    .kanila-site-header .site-header-inner {
+        padding: 0 15px;
+        gap: 8px;
+    }
+
+    .kanila-site-header .mobile-menu-toggle {
+        width: 38px;
+        height: 38px;
+        gap: 4px;
+    }
+
+    .kanila-site-header .mobile-menu-toggle span {
+        width: 18px;
+        height: 2px;
+    }
+}
+
+.kanila-topbar-selector:focus-visible,
+.kanila-search-button:focus-visible,
+.kanila-topbar-contact:focus-visible,
+.kanila-site-header .nav-link:focus-visible,
+.kanila-site-header .nav-dropdown-trigger:focus-visible,
+.kanila-get-touch:focus-visible,
+.kanila-site-header .mobile-menu-toggle:focus-visible {
+    outline: 2px solid #ff7914;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* =========================================================
+   KANILA TOUR DETAIL — REFERENCE PAGE
+   ========================================================= */
+
+.tour-reference-page {
+    --tour-orange: #ff7914;
+    --tour-orange-dark: #f56d08;
+    --tour-ink: #17212d;
+    --tour-text: #5e7188;
+    --tour-muted: #91a0b2;
+    --tour-border: #e4e7eb;
+    --tour-soft: #f5f1e8;
+    --tour-page: #fbfaf7;
+
+    background: var(--tour-page);
+    color: var(--tour-text);
+}
+
+.tour-reference-breadcrumb-strip {
+    background: #f0ece2;
+    border-top: 1px solid rgba(23, 33, 45, 0.04);
+    border-bottom: 1px solid rgba(23, 33, 45, 0.05);
+}
+
+.tour-reference-breadcrumb {
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 14px;
+    line-height: 1.4;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 25px;
+}
+
+.tour-reference-breadcrumb a {
+    color: #728198;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.tour-reference-breadcrumb a:hover {
+    color: var(--tour-orange);
+}
+
+.tour-reference-breadcrumb strong {
+    color: var(--tour-ink);
+    font-weight: 500;
+}
+
+.tour-reference-breadcrumb__arrow {
+    color: #a4adb7;
+    font-size: 24px;
+    line-height: 1;
+}
+
+.tour-reference-heading {
+    padding: 76px 0 42px;
+    background: #fbfaf7;
+}
+
+.tour-reference-heading__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 25px;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 25px;
+}
+
+.tour-reference-location {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: #71849a;
+    font-size: 15px;
+}
+
+.tour-reference-location i {
+    color: #8ca0b7;
+    font-size: 18px;
+}
+
+.tour-reference-actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.tour-reference-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #718198;
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.tour-reference-action:hover {
+    color: var(--tour-orange);
+}
+
+.tour-reference-action i {
+    font-size: 18px;
+}
+
+.tour-reference-title {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 25px;
+    color: var(--tour-ink);
+    font-family: var(--font-heading, Georgia, serif);
+    font-size: clamp(3.1rem, 5vw, 5.15rem);
+    font-weight: 500;
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+}
+
+.tour-reference-facts {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 42px;
+    margin-top: 48px;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 25px;
+}
+
+.tour-reference-fact {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 170px;
+}
+
+.tour-reference-fact__icon {
+    width: 64px;
+    height: 64px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 64px;
+    border-radius: 14px;
+    background: #eee9de;
+    color: var(--tour-orange);
+    font-size: 21px;
+}
+
+.tour-reference-fact div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.tour-reference-fact span {
+    color: #9aa7b8;
+    font-size: 13px;
+}
+
+.tour-reference-fact strong {
+    color: var(--tour-ink);
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.tour-reference-gallery-section {
+    padding: 0 0 78px;
+    background: #fbfaf7;
+}
+
+.tour-reference-gallery {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 25px;
+    height: 610px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 4px;
+    overflow: hidden;
+    border-radius: 13px;
+    background: #17212d;
+}
+
+.tour-reference-gallery__main {
+    position: relative;
+    grid-column: 1;
+    grid-row: 1 / 3;
+    overflow: hidden;
+    background: #dfe5ea;
+}
+
+.tour-reference-gallery__item {
+    position: relative;
+    overflow: hidden;
+    background: #dfe5ea;
+}
+
+.tour-reference-gallery__main img,
+.tour-reference-gallery__item img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    background: #f3f0e8;
+    transition: transform 0.5s ease;
+}
+
+.tour-reference-gallery__main:hover img,
+.tour-reference-gallery__item:hover img {
+    transform: scale(1.035);
+}
+
+.tour-reference-gallery__main-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.18));
+    pointer-events: none;
+}
+
+.tour-reference-gallery__buttons {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 3;
+}
+
+.tour-reference-gallery__buttons span {
+    min-height: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 0 20px;
+    border-radius: 999px;
+    background: #ffffff;
+    color: var(--tour-ink);
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.tour-reference-gallery__buttons span:hover {
+    color: var(--tour-orange);
+    transform: translateY(-2px);
+}
+
+.tour-reference-gallery__more {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    padding: 9px 13px;
+    border-radius: 999px;
+    background: rgba(23, 33, 45, 0.82);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.tour-reference-body {
+    padding: 0 0 110px;
+    background: #fbfaf7;
+}
+
+.tour-reference-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 440px;
+    gap: 54px;
+    align-items: start;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 25px;
+}
+
+.tour-reference-content {
+    min-width: 0;
+}
+
+.tour-reference-section {
+    margin-bottom: 78px;
+}
+
+.tour-reference-section > h2 {
+    margin: 0 0 35px;
+    color: var(--tour-ink);
+    font-family: var(--font-heading, Georgia, serif);
+    font-size: clamp(2.4rem, 3.2vw, 3.6rem);
+    font-weight: 500;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+}
+
+.tour-reference-lead,
+.tour-reference-copy {
+    max-width: 930px;
+    color: #687c93;
+    font-size: 17px;
+    line-height: 1.75;
+}
+
+.tour-reference-lead {
+    margin: 0 0 22px;
+}
+
+.tour-reference-copy {
+    margin: 0;
+}
+
+.tour-reference-check-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 21px;
+}
+
+.tour-reference-check-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    color: #687c93;
+    font-size: 16px;
+    line-height: 1.65;
+}
+
+.tour-reference-check-list li > span {
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 24px;
+    color: var(--tour-orange);
+    font-size: 17px;
+}
+
+.tour-reference-inclusion-card {
+    padding: 48px 42px;
+    background: #f3efe7;
+    border-radius: 14px;
+}
+
+.tour-reference-inclusion-column + .tour-reference-inclusion-column {
+    margin-top: 52px;
+    padding-top: 45px;
+    border-top: 1px solid rgba(23, 33, 45, 0.10);
+}
+
+.tour-reference-inclusion-column h3 {
+    margin: 0 0 30px;
+    color: var(--tour-ink);
+    font-family: var(--font-heading, Georgia, serif);
+    font-size: 31px;
+    font-weight: 500;
+    line-height: 1.15;
+}
+
+.tour-reference-booking {
+    position: sticky;
+    top: 25px;
+    z-index: 20;
+}
+
+.tour-reference-booking__inner {
+    padding: 35px 34px;
+    background: #ffffff;
+    border: 1px solid #ececec;
+    border-radius: 14px;
+    box-shadow: 0 12px 45px rgba(21, 32, 45, 0.07);
+}
+
+.tour-reference-booking h2 {
+    margin: 0 0 28px;
+    color: var(--tour-ink);
+    font-family: var(--font-heading, Georgia, serif);
+    font-size: 31px;
+    font-weight: 500;
+}
+
+.tour-reference-booking__field {
+    min-height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    border: 1px solid #dedede;
+    border-radius: 999px;
+    color: var(--tour-ink);
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.tour-reference-booking__field:hover {
+    border-color: var(--tour-orange);
+}
+
+.tour-reference-booking__field > div {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.tour-reference-booking__field i {
+    color: #718198;
+}
+
+.tour-reference-booking__field span {
+    font-family: var(--font-heading, Georgia, serif);
+    font-size: 18px;
+}
+
+.tour-reference-booking__rows {
+    margin-top: 18px;
+}
+
+.tour-reference-departure {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr) auto;
+    gap: 15px;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px dashed #dfe2e5;
+}
+
+.tour-reference-departure:last-child {
+    border-bottom: 0;
+}
+
+.tour-reference-departure__date {
+    width: 58px;
+    height: 58px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #f0ece3;
+}
+
+.tour-reference-departure__date strong {
+    color: var(--tour-ink);
+    font-size: 20px;
+    line-height: 1;
+}
+
+.tour-reference-departure__date span {
+    margin-top: 4px;
+    color: #8d9aaa;
+    font-size: 10px;
+    text-transform: uppercase;
+}
+
+.tour-reference-departure__info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.tour-reference-departure__info strong {
+    color: var(--tour-ink);
+    font-size: 15px;
+}
+
+.tour-reference-departure__info span {
+    color: #8997a8;
+    font-size: 12px;
+}
+
+.tour-reference-departure__price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.tour-reference-departure__price strong {
+    color: var(--tour-orange);
+    font-size: 17px;
+}
+
+.tour-reference-departure__price a {
+    min-width: 74px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 13px;
+    border-radius: 999px;
+    background: var(--tour-orange);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.tour-reference-departure__price a:hover {
+    background: var(--tour-orange-dark);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.tour-reference-booking__divider {
+    height: 1px;
+    margin: 25px 0;
+    background: #e6e8eb;
+}
+
+.tour-reference-booking__note {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: #8492a2;
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+.tour-reference-booking__note i {
+    margin-top: 2px;
+    color: var(--tour-orange);
+}
+
+.tour-reference-booking__empty {
+    padding: 25px 0;
+    text-align: center;
+}
+
+.tour-reference-booking__empty > i {
+    color: #9ba7b4;
+    font-size: 30px;
+}
+
+.tour-reference-booking__empty p {
+    margin: 13px 0 18px;
+    color: #75859a;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.tour-reference-booking__empty a {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 25px;
+    border-radius: 999px;
+    background: var(--tour-orange);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.tour-reference-booking__empty a:hover {
+    background: var(--tour-orange-dark);
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* =========================================================
+   TOUR LIGHTBOX
+   ========================================================= */
+
+.tour-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 35px;
+    background: rgba(9, 16, 24, 0.94);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.tour-lightbox.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.tour-lightbox img {
+    max-width: min(1100px, 90vw);
+    max-height: 82vh;
+    display: block;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.tour-lightbox__close,
+.tour-lightbox__arrow {
+    position: absolute;
+    border: 0;
+    background: rgba(255, 255, 255, 0.10);
+    color: #ffffff;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.tour-lightbox__close:hover,
+.tour-lightbox__arrow:hover {
+    background: rgba(255, 121, 20, 0.85);
+}
+
+.tour-lightbox__close {
+    top: 22px;
+    right: 25px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    font-size: 31px;
+    line-height: 1;
+}
+
+.tour-lightbox__arrow {
+    top: 50%;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    font-size: 39px;
+    line-height: 1;
+    transform: translateY(-50%);
+}
+
+.tour-lightbox__arrow--prev {
+    left: 25px;
+}
+
+.tour-lightbox__arrow--next {
+    right: 25px;
+}
+
+body.tour-lightbox-open {
+    overflow: hidden;
+}
+
+/* =========================================================
+   RESPONSIVE - TOUR DETAIL
+   ========================================================= */
+
+@media (max-width: 1100px) {
+    .tour-reference-title {
+        font-size: 3.8rem;
+    }
+
+    .tour-reference-layout {
+        grid-template-columns: minmax(0, 1fr) 350px;
+        gap: 32px;
+    }
+
+    .tour-reference-gallery {
+        height: 530px;
+    }
+
+    .tour-reference-facts {
+        gap: 24px;
+    }
+
+    .tour-reference-fact {
+        min-width: 145px;
+    }
+
+    .tour-reference-fact__icon {
+        width: 56px;
+        height: 56px;
+        flex-basis: 56px;
+    }
+}
+
+@media (max-width: 900px) {
+    .tour-reference-heading {
+        padding-top: 55px;
+    }
+
+    .tour-reference-title {
+        font-size: 3.2rem;
+    }
+
+    .tour-reference-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .tour-reference-booking {
+        position: static;
+        order: -1;
+    }
+
+    .tour-reference-gallery {
+        height: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    .tour-reference-breadcrumb {
+        min-height: 60px;
+        font-size: 13px;
+        padding: 0 16px;
+    }
+
+    .tour-reference-heading__top {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0 16px;
+    }
+
+    .tour-reference-title {
+        padding: 0 16px;
+        font-size: 2.8rem;
+    }
+
+    .tour-reference-facts {
+        padding: 0 16px;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 650px) {
+    .tour-reference-breadcrumb {
+        min-height: 60px;
+        font-size: 12px;
+    }
+
+    .tour-reference-heading {
+        padding: 40px 0 30px;
+    }
+
+    .tour-reference-heading__top {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 17px;
+    }
+
+    .tour-reference-actions {
+        gap: 18px;
+    }
+
+    .tour-reference-title {
+        font-size: 2.45rem;
+        line-height: 1.08;
+    }
+
+    .tour-reference-facts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px 12px;
+        margin-top: 32px;
+    }
+
+    .tour-reference-fact {
+        min-width: 0;
+        gap: 10px;
+    }
+
+    .tour-reference-fact__icon {
+        width: 48px;
+        height: 48px;
+        flex-basis: 48px;
+        border-radius: 11px;
+        font-size: 17px;
+    }
+
+    .tour-reference-fact span {
+        font-size: 11px;
+    }
+
+    .tour-reference-fact strong {
+        font-size: 13px;
+    }
+
+    .tour-reference-gallery-section {
+        padding-bottom: 45px;
+    }
+
+    .tour-reference-gallery {
+        height: 420px;
+        padding: 0 16px;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1.35fr 1fr;
+    }
+
+    .tour-reference-gallery__main {
+        grid-column: 1 / 3;
+        grid-row: 1;
+    }
+
+    .tour-reference-gallery__item:nth-of-type(4) {
+        display: none;
+    }
+
+    .tour-reference-gallery__buttons {
+        left: 12px;
+        bottom: 12px;
+    }
+
+    .tour-reference-gallery__buttons span {
+        min-height: 42px;
+        padding: 0 14px;
+        font-size: 11px;
+    }
+
+    .tour-reference-body {
+        padding-bottom: 70px;
+    }
+
+    .tour-reference-layout {
+        padding: 0 16px;
+    }
+
+    .tour-reference-section {
+        margin-bottom: 55px;
+    }
+
+    .tour-reference-section > h2 {
+        margin-bottom: 25px;
+        font-size: 2.35rem;
+    }
+
+    .tour-reference-lead,
+    .tour-reference-copy {
+        font-size: 15px;
+        line-height: 1.7;
+    }
+
+    .tour-reference-inclusion-card {
+        padding: 30px 24px;
+    }
+
+    .tour-reference-inclusion-column h3 {
+        font-size: 25px;
+    }
+
+    .tour-reference-booking__inner {
+        padding: 28px 22px;
+    }
+
+    .tour-reference-departure {
+        grid-template-columns: 56px minmax(0, 1fr);
+    }
+
+    .tour-reference-departure__price {
+        grid-column: 2;
+        align-items: flex-start;
+        flex-direction: row;
+    }
+}
+
+@media (max-width: 430px) {
+    .tour-reference-title {
+        font-size: 2.1rem;
+    }
+
+    .tour-reference-facts {
+        grid-template-columns: 1fr;
+    }
+
+    .tour-reference-gallery {
+        height: 370px;
+    }
+
+    .tour-reference-gallery__buttons span {
+        padding: 0 11px;
+    }
+
+    .tour-reference-gallery__buttons span:last-child {
+        display: none;
+    }
+
+    .tour-reference-departure__price {
+        justify-content: space-between;
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   PROFILE PAGE — FINAL
+   Matches the uploaded profile Blade markup exactly.
+   ========================================================= */
+
+.profile-page {
+    position: relative;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0 0 90px;
+    overflow: hidden;
+    background: #f7f5ef;
+    color: #183d37;
+}
+
+/* =========================================================
+   PROFILE HERO
+   ========================================================= */
+
+.profile-page .profile-hero {
+    position: relative;
+    min-height: 500px;
+    overflow: hidden;
+    color: #fff;
+}
+
+.profile-page .profile-hero__image {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: url("/public/images/hero/profile.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.profile-page .profile-hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+        90deg,
+        rgba(5,42,36,.94) 0%,
+        rgba(5,42,36,.72) 38%,
+        rgba(5,42,36,.18) 100%
+    );
+}
+
+.profile-page .profile-hero__content {
+    position: relative;
+    z-index: 2;
+}
+
+.profile-page .profile-hero__inner {
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+    padding-top: 245px;
+    padding-bottom: 90px;
+}
+
+.profile-page .profile-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 32px;
+    color: rgba(255,255,255,.62);
+    font-size: 13px;
+}
+
+.profile-page .profile-breadcrumb strong {
+    color: #fff;
+}
+
+.profile-page .profile-hero__eyebrow {
+    display: block;
+    margin-bottom: 10px;
+    color: #f28a24;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .20em;
+    text-transform: uppercase;
+}
+
+.profile-page .profile-hero h1 {
+    margin: 0;
+    color: #fff !important;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(48px, 5vw, 70px);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -.04em;
+}
+
+.profile-page .profile-hero p {
+    max-width: 570px;
+    margin: 15px 0 0;
+    color: rgba(255,255,255,.78) !important;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+/* =========================================================
+   PROFILE HEADER OVERRIDE
+   Header lives in layouts.app, outside .profile-page.
+   ========================================================= */
+
+body:has(.profile-page) .site-header.kanila-site-header {
+    position: absolute !important;
+    top: 48px !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 94px !important;
+    min-height: 94px !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border-bottom: 1px solid rgba(255,255,255,.15) !important;
+    box-shadow: none !important;
+    z-index: 9999 !important;
+}
+
+body:has(.profile-page) .kanila-site-header .nav-link,
+body:has(.profile-page) .kanila-site-header .nav-dropdown-trigger {
+    color: #fff !important;
+}
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.profile-page .profile-content {
+    position: relative;
+    z-index: 3;
+    width: min(1180px, calc(100% - 48px));
+    margin: -10px auto 0;
+}
+
+/* =========================================================
+   PROFILE IDENTITY CARD
+   ========================================================= */
+
+.profile-page .account-profile-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    min-height: 150px;
+    padding: 32px 34px;
+    overflow: hidden;
+    background: linear-gradient(
+        135deg,
+        #0e3933 0%,
+        #164940 58%,
+        #0c302b 100%
+    );
+    border-radius: 22px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.12);
+}
+
+.profile-page .account-profile-card::before {
+    content: "";
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    right: -110px;
+    top: -165px;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.profile-page .account-profile-main {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    min-width: 0;
+}
+
+.profile-page .account-avatar {
+    width: 76px;
+    height: 76px;
+    flex: 0 0 76px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 50%;
+    background: #f3eee7;
+    color: #183d37;
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.profile-page .account-avatar img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.profile-page .account-profile-info {
+    min-width: 0;
+}
+
+.profile-page .account-profile-label {
+    display: block;
+    margin-bottom: 6px;
+    color: #f28a24;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .16em;
+}
+
+.profile-page .account-profile-info h2 {
+    margin: 0;
+    color: #fff !important;
+    font-size: 23px;
+    font-weight: 700;
+}
+
+.profile-page .account-profile-info p {
+    color: rgba(255,255,255,.70);
+}
+
+.profile-page .account-username {
+    margin: 4px 0 0;
+    font-size: 13px;
+}
+
+.profile-page .account-email {
+    margin: 3px 0 0;
+    color: rgba(255,255,255,.55) !important;
+    font-size: 13px;
+}
+
+.profile-page .account-profile-status {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    padding: 9px 13px;
+    border: 1px solid rgba(255,255,255,.13);
+    border-radius: 999px;
+    background: rgba(255,255,255,.07);
+    color: rgba(255,255,255,.78);
+    font-size: 12px;
+}
+
+.profile-page .account-status-dot {
+    width: 8px;
+    height: 8px;
+    flex: 0 0 8px;
+    border-radius: 50%;
+    background: #56c77b;
+    box-shadow: 0 0 0 4px rgba(86,199,123,.12);
+}
+
+/* =========================================================
+   ACCOUNT INFORMATION
+   ========================================================= */
+
+.profile-page .account-section {
+    margin-top: 42px;
+}
+
+.profile-page .account-section-heading {
+    margin-bottom: 20px;
+}
+
+.profile-page .account-section-heading > div {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.profile-page .account-section-heading span {
+    color: #ef7b19;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .18em;
+}
+
+.profile-page .account-section-heading h2 {
+    margin: 0;
+    color: #183d37 !important;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 1.15;
+}
+
+.profile-page .account-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid rgba(18,59,53,.08);
+    border-radius: 18px;
+    box-shadow: 0 12px 35px rgba(18,59,53,.045);
+}
+
+.profile-page .account-detail {
+    padding: 25px 28px;
+    background: #fff;
+}
+
+.profile-page .account-detail:nth-child(2n) {
+    border-left: 1px solid rgba(18,59,53,.07);
+}
+
+.profile-page .account-detail:nth-child(n+3) {
+    border-top: 1px solid rgba(18,59,53,.07);
+}
+
+.profile-page .account-detail > span {
+    display: block;
+    margin-bottom: 7px;
+    color: #7b8986;
+    font-size: 12px;
+}
+
+.profile-page .account-detail strong {
+    color: #183d37 !important;
+    font-size: 15px;
+    font-weight: 700;
+    word-break: break-word;
+}
+
+.profile-page .account-detail strong.is-muted {
+    color: #9aa5a2 !important;
+    font-weight: 500;
+}
+
+/* =========================================================
+   TRAVEL REWARDS
+   ========================================================= */
+
+.profile-page .travel-wallet {
+    position: relative;
+    margin-top: 28px;
+    padding: 30px;
+    overflow: hidden;
+    border-radius: 22px;
+    color: #fff;
+    background: linear-gradient(135deg,#0c3933,#124b42);
+    box-shadow: 0 18px 50px rgba(12,57,51,.12);
+}
+
+.profile-page .travel-wallet::before {
+    content: "";
+    position: absolute;
+    width: 330px;
+    height: 330px;
+    right: -140px;
+    top: -180px;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 50%;
+}
+
+.profile-page .travel-wallet__top {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.profile-page .travel-wallet__eyebrow {
+    color: rgba(255,255,255,.62);
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .16em;
+}
+
+.profile-page .travel-wallet h2 {
+    margin: 8px 0 0;
+    color: #fff !important;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 31px;
+    font-weight: 500;
+}
+
+.profile-page .travel-wallet__top p {
+    margin: 7px 0 0;
+    color: rgba(255,255,255,.64) !important;
+    font-size: 13px;
+}
+
+.profile-page .travel-wallet__balance {
+    min-width: 185px;
+    padding: 17px 20px;
+    border: 1px solid rgba(255,255,255,.11);
+    border-radius: 16px;
+    background: rgba(255,255,255,.07);
+    text-align: right;
+}
+
+.profile-page .travel-wallet__balance span {
+    display: block;
+    color: rgba(255,255,255,.55);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .10em;
+}
+
+.profile-page .travel-wallet__balance strong {
+    display: inline-block;
+    margin-top: 7px;
+    color: #fff !important;
+    font-size: 38px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.profile-page .travel-wallet__balance small {
+    margin-left: 5px;
+    color: rgba(255,255,255,.55);
+    font-size: 12px;
+}
+
+.profile-page .travel-wallet__stats {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(255,255,255,.12);
+}
+
+.profile-page .travel-wallet__stats > div {
+    padding-right: 20px;
+}
+
+.profile-page .travel-wallet__stats > div + div {
+    padding-left: 20px;
+    border-left: 1px solid rgba(255,255,255,.10);
+}
+
+.profile-page .travel-wallet__stats span {
+    display: block;
+    margin-bottom: 5px;
+    color: rgba(255,255,255,.58);
+    font-size: 12px;
+}
+
+.profile-page .travel-wallet__stats strong {
+    color: #fff !important;
+    font-size: 19px;
+}
+
+.profile-page .travel-wallet__footer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,.10);
+}
+
+.profile-page .travel-wallet__footer > span {
+    color: rgba(255,255,255,.55);
+    font-size: 12px;
+}
+
+.profile-page .travel-wallet__footer a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff !important;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.profile-page .travel-wallet__footer a:hover {
+    color: #f28a24 !important;
+}
+
+/* =========================================================
+   RECENT ACTIVITY
+   ========================================================= */
+
+.profile-page .activity-section {
+    margin-top: 46px;
+}
+
+.profile-page .activity-section__heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.profile-page .activity-section__heading > div {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.profile-page .activity-section__heading > div > span {
+    color: #ef7b19;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .18em;
+}
+
+.profile-page .activity-section__heading h2 {
+    margin: 0;
+    color: #183d37 !important;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 30px;
+    font-weight: 500;
+}
+
+.profile-page .activity-view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #ef7b19 !important;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.profile-page .activity-list {
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid rgba(18,59,53,.08);
+    border-radius: 18px;
+    box-shadow: 0 12px 35px rgba(18,59,53,.045);
+}
+
+.profile-page .activity-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(18,59,53,.07);
+}
+
+.profile-page .activity-item:last-child {
+    border-bottom: 0;
+}
+
+.profile-page .activity-icon {
+    width: 43px;
+    height: 43px;
+    flex: 0 0 43px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.profile-page .activity-icon.is-credit {
+    background: #e8f7ee;
+    color: #18864b;
+}
+
+.profile-page .activity-icon.is-debit {
+    background: #fff0ef;
+    color: #c33c32;
+}
+
+.profile-page .activity-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.profile-page .activity-info strong {
+    display: block;
+    color: #183d37 !important;
+    font-size: 14px;
+}
+
+.profile-page .activity-info p {
+    margin: 3px 0 0;
+    overflow: hidden;
+    color: #73827f !important;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.profile-page .activity-info time {
+    display: block;
+    margin-top: 5px;
+    color: #9aa5a2 !important;
+    font-size: 11px;
+}
+
+.profile-page .activity-points {
+    flex-shrink: 0;
+    font-size: 17px;
+    font-weight: 800;
+    text-align: right;
+}
+
+.profile-page .activity-points.is-credit {
+    color: #18864b !important;
+}
+
+.profile-page .activity-points.is-debit {
+    color: #c33c32 !important;
+}
+
+.profile-page .activity-points small {
+    margin-left: 2px;
+    font-size: 10px;
+}
+
+/* EMPTY */
+.profile-page .activity-empty {
+    padding: 65px 25px;
+    background: #fff;
+    border: 1px solid rgba(18,59,53,.08);
+    border-radius: 18px;
+    text-align: center;
+}
+
+.profile-page .activity-empty__icon {
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 17px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #edf5f2;
+    color: #123b35;
+    font-size: 25px;
+}
+
+.profile-page .activity-empty h3 {
+    margin: 0;
+    color: #183d37 !important;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 25px;
+    font-weight: 500;
+}
+
+.profile-page .activity-empty p {
+    margin: 9px auto 0;
+    color: #7b8986 !important;
+    font-size: 13px;
+}
+
+/* =========================================================
+   EXISTING PROFILE FORM CLASSES
+   ========================================================= */
+
+.profile-page .profile-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 22px;
+}
+
+.profile-page .profile-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.profile-page .profile-form-group.full {
+    grid-column: 1 / -1;
+}
+
+.profile-page .profile-form-group label {
+    color: #284740;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.profile-page .profile-form-group input,
+.profile-page .profile-form-group select,
+.profile-page .profile-form-group textarea {
+    width: 100%;
+    min-height: 50px;
+    padding: 0 15px;
+    box-sizing: border-box;
+    border: 1px solid #dfe5e2;
+    border-radius: 11px;
+    background: #fff;
+    color: #183d37;
+    font: inherit;
+    outline: none;
+}
+
+.profile-page .profile-form-group textarea {
+    min-height: 125px;
+    padding-top: 13px;
+    padding-bottom: 13px;
+    resize: vertical;
+}
+
+.profile-page .profile-form-group input:focus,
+.profile-page .profile-form-group select:focus,
+.profile-page .profile-form-group textarea:focus {
+    border-color: #ef7b19;
+    box-shadow: 0 0 0 4px rgba(239,123,25,.09);
+}
+
+.profile-page .form-section {
+    margin-top: 34px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(18,59,53,.08);
+}
+
+.profile-page .profile-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 30px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(18,59,53,.08);
+}
+
+.profile-page .profile-cancel-button,
+.profile-page .profile-save-button {
+    min-height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 21px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.profile-page .profile-cancel-button {
+    border: 1px solid #dce3e0;
+    background: #fff;
+    color: #526762;
+}
+
+.profile-page .profile-save-button {
+    border: 1px solid #ef7b19;
+    background: #ef7b19;
+    color: #fff;
+}
+
+.profile-page .profile-alert {
+    margin-bottom: 22px;
+    padding: 15px 18px;
+    border-radius: 12px;
+    font-size: 13px;
+}
+
+.profile-page .profile-alert.success {
+    background: #eaf7ef;
+    border: 1px solid #ccebd9;
+    color: #17633d;
+}
+
+.profile-page .profile-alert.error {
+    background: #fff0ef;
+    border: 1px solid #f1d1ce;
+    color: #b83c32;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    body:has(.profile-page) .site-header.kanila-site-header {
+        top: 0 !important;
+        height: 88px !important;
+        min-height: 88px !important;
+        background: rgba(7,43,38,.92) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+    }
+
+    .profile-page .profile-hero {
+        min-height: 430px;
+    }
+
+    .profile-page .profile-hero__inner {
+        width: calc(100% - 36px);
+        padding-top: 185px;
+        padding-bottom: 65px;
+    }
+
+    .profile-page .profile-content {
+        width: calc(100% - 36px);
+    }
+}
+
+@media (max-width: 700px) {
+
+    .profile-page .profile-hero {
+        min-height: 430px;
+    }
+
+    .profile-page .profile-hero__inner {
+        width: calc(100% - 30px);
+        padding-top: 175px;
+        padding-bottom: 65px;
+    }
+
+    .profile-page .profile-hero h1 {
+        font-size: 42px;
+    }
+
+    .profile-page .profile-content {
+        width: calc(100% - 30px);
+    }
+
+    .profile-page .account-profile-card {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 25px 20px;
+        border-radius: 18px;
+    }
+
+    .profile-page .account-profile-main {
+        width: 100%;
+    }
+
+    .profile-page .account-profile-status {
+        margin-left: 98px;
+    }
+
+    .profile-page .account-avatar {
+        width: 70px;
+        height: 70px;
+        flex-basis: 70px;
+        font-size: 24px;
+    }
+
+    .profile-page .account-details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-page .account-detail {
+        padding: 20px;
+    }
+
+    .profile-page .account-detail:nth-child(2n) {
+        border-left: 0;
+    }
+
+    .profile-page .account-detail:nth-child(n+2) {
+        border-top: 1px solid rgba(18,59,53,.07);
+    }
+
+    .profile-page .travel-wallet {
+        padding: 25px 20px;
+        border-radius: 18px;
+    }
+
+    .profile-page .travel-wallet__top {
+        flex-direction: column;
+    }
+
+    .profile-page .travel-wallet h2 {
+        font-size: 27px;
+    }
+
+    .profile-page .travel-wallet__balance {
+        width: 100%;
+        box-sizing: border-box;
+        text-align: left;
+    }
+
+    .profile-page .travel-wallet__stats {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .profile-page .travel-wallet__stats > div,
+    .profile-page .travel-wallet__stats > div + div {
+        padding: 15px 0;
+        border-left: 0;
+        border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+
+    .profile-page .travel-wallet__stats > div:first-child {
+        padding-top: 0;
+    }
+
+    .profile-page .travel-wallet__stats > div:last-child {
+        padding-bottom: 0;
+        border-bottom: 0;
+    }
+
+    .profile-page .travel-wallet__footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .profile-page .activity-section__heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .profile-page .activity-section__heading h2,
+    .profile-page .account-section-heading h2 {
+        font-size: 25px;
+    }
+
+    .profile-page .activity-item {
+        align-items: flex-start;
+        padding: 16px;
+    }
+
+    .profile-page .profile-form-grid {
+        grid-template-columns: 1fr;
+        gap: 17px;
+    }
+
+    .profile-page .profile-form-group.full {
+        grid-column: auto;
+    }
+
+    .profile-page .profile-form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .profile-page .profile-cancel-button,
+    .profile-page .profile-save-button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .profile-page .profile-hero {
+        min-height: 400px;
+    }
+
+    .profile-page .profile-hero__inner {
+        width: calc(100% - 24px);
+        padding-top: 155px;
+        padding-bottom: 55px;
+    }
+
+    .profile-page .profile-hero h1 {
+        font-size: 37px;
+    }
+
+    .profile-page .profile-content {
+        width: calc(100% - 24px);
+    }
+
+    .profile-page .account-profile-card {
+        padding: 22px 17px;
+    }
+
+    .profile-page .account-profile-main {
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .profile-page .account-avatar {
+        width: 62px;
+        height: 62px;
+        flex-basis: 62px;
+        font-size: 21px;
+    }
+
+    .profile-page .account-profile-info h2 {
+        font-size: 20px;
+    }
+
+    .profile-page .account-email,
+    .profile-page .account-username {
+        font-size: 11px;
+    }
+
+    .profile-page .account-profile-status {
+        margin-left: 77px;
+    }
+
+    .profile-page .travel-wallet {
+        padding: 22px 17px;
+    }
+
+    .profile-page .travel-wallet__balance strong {
+        font-size: 34px;
+    }
+}
+
+
+/* =========================================================
+   USER PROFILE — FINAL ACCOUNT UI
+   ========================================================= */
+
+body:has(.profile-page) {
+    background: #f7f5ef;
+    color: #183d37;
+}
+
+body:has(.profile-page) .profile-page {
+    background: #f7f5ef !important;
+}
+
+/* Header stays readable over the profile hero */
+body:has(.profile-page) .site-header.kanila-site-header {
+    position: absolute !important;
+    top: 48px !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 94px !important;
+    min-height: 94px !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border-bottom: 1px solid rgba(255,255,255,.14) !important;
+    box-shadow: none !important;
+    z-index: 9999 !important;
+}
+
+body:has(.profile-page) .kanila-site-header .nav-link,
+body:has(.profile-page) .kanila-site-header .nav-dropdown-trigger {
+    color: rgba(255,255,255,.95) !important;
+}
+
+body:has(.profile-page) .kanila-site-header .nav-link:hover,
+body:has(.profile-page) .kanila-site-header .nav-dropdown-trigger:hover,
+body:has(.profile-page) .kanila-site-header .nav-link.active {
+    color: #ff7914 !important;
+}
+
+/* Profile hero */
+body:has(.profile-page) .profile-page .profile-hero {
+    min-height: 470px !important;
+}
+
+body:has(.profile-page) .profile-page .profile-hero__inner {
+    width: min(1180px, calc(100% - 48px)) !important;
+    padding-top: 235px !important;
+    padding-bottom: 86px !important;
+}
+
+/* Identity card */
+body:has(.profile-page) .profile-page .profile-content {
+    width: min(1180px, calc(100% - 48px)) !important;
+    margin: -40px auto 0 !important;
+}
+
+body:has(.profile-page) .profile-page .account-profile-card {
+    min-height: 165px !important;
+    padding: 30px 34px !important;
+    border-radius: 22px !important;
+    background:
+        radial-gradient(circle at 88% 0%, rgba(242,138,36,.10), transparent 28%),
+        linear-gradient(135deg, #0e3933 0%, #164940 58%, #0c302b 100%) !important;
+    box-shadow: 0 22px 60px rgba(0,0,0,.14) !important;
+}
+
+/* Edit button */
+.profile-edit-button {
+    position: relative;
+    z-index: 2;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 18px;
+    border: 1px solid rgba(255,255,255,.20);
+    border-radius: 999px;
+    background: rgba(255,255,255,.08);
+    color: #fff !important;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+    backdrop-filter: blur(8px);
+    transition: transform .2s ease, background .2s ease, border-color .2s ease;
+}
+
+.profile-edit-button:hover {
+    transform: translateY(-1px);
+    background: #ff7914;
+    border-color: #ff7914;
+    color: #fff !important;
+}
+
+/* Account detail card */
+body:has(.profile-page) .profile-page .account-details-grid {
+    overflow: hidden;
+    background: #fff !important;
+    border: 1px solid rgba(18,59,53,.08) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 12px 35px rgba(18,59,53,.045) !important;
+}
+
+body:has(.profile-page) .profile-page .account-detail {
+    min-height: 112px;
+    padding: 22px 24px !important;
+}
+
+body:has(.profile-page) .profile-page .account-detail + .account-detail {
+    border-left: 1px solid rgba(18,59,53,.08);
+}
+
+body:has(.profile-page) .profile-page .account-detail:nth-child(n+3) {
+    border-top: 1px solid rgba(18,59,53,.08);
+}
+
+/* Make account heading support the edit action */
+.account-section-heading--with-action {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.profile-section-action {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 16px;
+    border: 1px solid rgba(18,59,53,.12);
+    border-radius: 999px;
+    background: #fff;
+    color: #183d37 !important;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 5px 18px rgba(18,59,53,.04);
+    transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+
+.profile-section-action:hover {
+    background: #183d37;
+    color: #fff !important;
+    transform: translateY(-1px);
+}
+
+/* Wallet is now a proper clickable card */
+.travel-wallet--clickable {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: transform .22s ease, box-shadow .22s ease;
+}
+
+.travel-wallet--clickable:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 26px 70px rgba(18,59,53,.20) !important;
+}
+
+.travel-wallet--clickable::after {
+    content: "OPEN WALLET  →";
+    position: absolute;
+    top: 24px;
+    right: 28px;
+    padding: 8px 11px;
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 999px;
+    color: rgba(255,255,255,.85);
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: .08em;
+    background: rgba(255,255,255,.06);
+}
+
+.travel-wallet--clickable .travel-wallet__footer a {
+    pointer-events: none;
+}
+
+/* Wallet history page */
+.wallet-page {
+    min-height: 100vh;
+    padding-bottom: 90px;
+    background: #f7f5ef;
+}
+
+.wallet-page__hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 360px;
+    color: #fff;
+    background:
+        radial-gradient(circle at 85% 18%, rgba(242,138,36,.16), transparent 30%),
+        linear-gradient(135deg, #102f2a 0%, #164940 58%, #0c302b 100%);
+}
+
+.wallet-page__hero::after {
+    content: "";
+    position: absolute;
+    width: 430px;
+    height: 430px;
+    right: -120px;
+    top: -190px;
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 50%;
+}
+
+.wallet-page__hero-inner {
+    position: relative;
+    z-index: 2;
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+    padding-top: 205px;
+    padding-bottom: 62px;
+}
+
+.wallet-page__back {
+    display: inline-flex;
+    margin-bottom: 24px;
+    color: rgba(255,255,255,.72) !important;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.wallet-page__back:hover {
+    color: #fff !important;
+}
+
+.wallet-page__eyebrow {
+    display: block;
+    margin-bottom: 9px;
+    color: #f28a24;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+}
+
+.wallet-page__hero h1 {
+    margin: 0;
+    color: #fff !important;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(43px, 5vw, 68px);
+    font-weight: 500;
+    line-height: 1.03;
+    letter-spacing: -.035em;
+}
+
+.wallet-page__hero p {
+    max-width: 650px;
+    margin: 12px 0 0;
+    color: rgba(255,255,255,.74);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* Wallet summary */
+.wallet-page__content {
+    position: relative;
+    z-index: 4;
+    width: min(1180px, calc(100% - 48px));
+    margin: -34px auto 0;
+}
+
+.wallet-summary-card {
+    overflow: hidden;
+    padding: 30px;
+    border-radius: 22px;
+    background: #fff;
+    border: 1px solid rgba(18,59,53,.08);
+    box-shadow: 0 18px 55px rgba(18,59,53,.07);
+}
+
+.wallet-summary-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.wallet-summary-copy span {
+    display: block;
+    margin-bottom: 6px;
+    color: #ef7b19;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .15em;
+}
+
+.wallet-summary-copy h2 {
+    margin: 0;
+    color: #183d37;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 28px;
+    font-weight: 500;
+}
+
+.wallet-summary-copy p {
+    margin: 8px 0 0;
+    color: #7b8986;
+    font-size: 13px;
+}
+
+.wallet-summary-balance {
+    min-width: 215px;
+    padding: 20px 22px;
+    border-radius: 17px;
+    background: linear-gradient(135deg, #103a34, #184c44);
+    text-align: right;
+}
+
+.wallet-summary-balance span {
+    display: block;
+    color: rgba(255,255,255,.58);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .10em;
+}
+
+.wallet-summary-balance strong {
+    display: inline-block;
+    margin-top: 7px;
+    color: #fff;
+    font-size: 37px;
+    line-height: 1;
+    font-weight: 900;
+}
+
+.wallet-summary-balance small {
+    margin-left: 4px;
+    color: rgba(255,255,255,.58);
+}
+
+.wallet-summary-stats {
+    display: grid;
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    margin-top: 26px;
+    border-top: 1px solid rgba(18,59,53,.08);
+}
+
+.wallet-summary-stat {
+    padding: 21px 20px 4px;
+}
+
+.wallet-summary-stat + .wallet-summary-stat {
+    border-left: 1px solid rgba(18,59,53,.08);
+}
+
+.wallet-summary-stat span {
+    display: block;
+    margin-bottom: 6px;
+    color: #8a9693;
+    font-size: 11px;
+}
+
+.wallet-summary-stat strong {
+    color: #183d37;
+    font-size: 21px;
+}
+
+/* Transaction history */
+.wallet-history {
+    margin-top: 34px;
+}
+
+.wallet-history__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 18px;
+}
+
+.wallet-history__header span {
+    display: block;
+    margin-bottom: 7px;
+    color: #ef7b19;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .18em;
+}
+
+.wallet-history__header h2 {
+    margin: 0;
+    color: #183d37;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 31px;
+    font-weight: 500;
+}
+
+.wallet-history__count {
+    color: #7d8b87;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.wallet-table-card {
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid rgba(18,59,53,.08);
+    border-radius: 18px;
+    box-shadow: 0 12px 35px rgba(18,59,53,.045);
+}
+
+.wallet-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.wallet-table {
+    width: 100%;
+    min-width: 880px;
+    border-collapse: collapse;
+}
+
+.wallet-table th {
+    padding: 15px 18px;
+    border-bottom: 1px solid rgba(18,59,53,.08);
+    background: #fbfcfa;
+    color: #7c8986;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .07em;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.wallet-table td {
+    padding: 18px;
+    border-bottom: 1px solid rgba(18,59,53,.07);
+    vertical-align: top;
+}
+
+.wallet-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.wallet-table tbody tr:hover {
+    background: #fcfdfb;
+}
+
+.wallet-date strong,
+.wallet-source strong,
+.wallet-balance strong {
+    display: block;
+    color: #183d37;
+    font-size: 13px;
+}
+
+.wallet-date span,
+.wallet-source span,
+.wallet-balance span {
+    display: block;
+    margin-top: 4px;
+    color: #8c9895;
+    font-size: 11px;
+}
+
+.wallet-type {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.wallet-type--credit {
+    background: #eaf8f0;
+    color: #087443;
+}
+
+.wallet-type--debit {
+    background: #fff0ed;
+    color: #b44d3b;
+}
+
+.wallet-points {
+    white-space: nowrap;
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.wallet-points--credit {
+    color: #087443;
+}
+
+.wallet-points--debit {
+    color: #b44d3b;
+}
+
+.wallet-description {
+    max-width: 280px;
+    color: #536964;
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+.wallet-reference {
+    display: inline-block;
+    padding: 5px 7px;
+    border-radius: 7px;
+    background: #f3f6f4;
+    color: #60716d;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 10px;
+}
+
+.wallet-empty {
+    padding: 70px 25px;
+    text-align: center;
+}
+
+.wallet-empty__icon {
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 17px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #edf5f2;
+    color: #123b35;
+    font-size: 25px;
+}
+
+.wallet-empty h3 {
+    margin: 0;
+    color: #183d37;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 25px;
+    font-weight: 500;
+}
+
+.wallet-empty p {
+    margin: 9px auto 0;
+    color: #7b8986;
+    font-size: 13px;
+}
+
+/* Pagination */
+.wallet-pagination {
+    padding: 18px 22px;
+    border-top: 1px solid rgba(18,59,53,.07);
+}
+
+.wallet-pagination nav {
+    display: flex;
+    justify-content: center;
+}
+
+/* Edit profile page */
+.profile-edit-page {
+    min-height: 100vh;
+    padding-bottom: 90px;
+    background: #f7f5ef;
+}
+
+.profile-edit-hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 310px;
+    background:
+        radial-gradient(circle at 86% 18%, rgba(242,138,36,.15), transparent 30%),
+        linear-gradient(135deg, #102f2a 0%, #164940 58%, #0c302b 100%);
+}
+
+.profile-edit-hero__inner {
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+    padding-top: 195px;
+    padding-bottom: 45px;
+}
+
+.profile-edit-hero__inner a {
+    color: rgba(255,255,255,.72) !important;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.profile-edit-hero__inner a:hover {
+    color: #fff !important;
+}
+
+.profile-edit-hero__eyebrow {
+    display: block;
+    margin-top: 24px;
+    margin-bottom: 8px;
+    color: #f28a24;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .18em;
+}
+
+.profile-edit-hero h1 {
+    margin: 0;
+    color: #fff !important;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(40px, 5vw, 62px);
+    font-weight: 500;
+}
+
+.profile-edit-content {
+    width: min(980px, calc(100% - 48px));
+    margin: -34px auto 0;
+    position: relative;
+    z-index: 4;
+}
+
+.profile-edit-card {
+    padding: 34px;
+    background: #fff;
+    border: 1px solid rgba(18,59,53,.08);
+    border-radius: 22px;
+    box-shadow: 0 18px 55px rgba(18,59,53,.07);
+}
+
+.profile-form-grid--account {
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+    gap: 20px !important;
+}
+
+.profile-form-group small.profile-help {
+    color: #8a9693;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.profile-readonly {
+    background: #f5f7f5 !important;
+    color: #82908c !important;
+    cursor: not-allowed;
+}
+
+.profile-alert {
+    border: 1px solid transparent;
+}
+
+.profile-alert.success {
+    background: #eaf8f0 !important;
+    border-color: #ccebd9;
+    color: #087443;
+}
+
+.profile-alert.error {
+    background: #fff0ed !important;
+    border-color: #f2cbc3;
+    color: #a34739;
+}
+
+.profile-save-button {
+    min-width: 145px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .profile-edit-content,
+    .wallet-page__content {
+        width: min(100% - 36px, 760px);
+    }
+
+    .wallet-summary-main {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .wallet-summary-balance {
+        width: 100%;
+        text-align: left;
+    }
+
+    .wallet-summary-stats {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+    }
+
+    .wallet-summary-stat:nth-child(3) {
+        border-left: 0;
+        border-top: 1px solid rgba(18,59,53,.08);
+    }
+
+    .wallet-summary-stat:nth-child(4) {
+        border-top: 1px solid rgba(18,59,53,.08);
+    }
+
+    .profile-edit-hero__inner {
+        width: min(100% - 36px, 760px);
+        padding-top: 155px;
+    }
+}
+
+@media (max-width: 700px) {
+    body:has(.profile-page) .profile-page .profile-content {
+        width: min(100% - 30px, 620px) !important;
+        margin-top: -25px !important;
+    }
+
+    body:has(.profile-page) .profile-page .profile-hero__inner {
+        width: min(100% - 30px, 620px) !important;
+        padding-top: 170px !important;
+        padding-bottom: 70px !important;
+    }
+
+    body:has(.profile-page) .profile-page .account-profile-card {
+        align-items: flex-start !important;
+        flex-direction: column !important;
+        padding: 24px !important;
+    }
+
+    .account-section-heading--with-action {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    body:has(.profile-page) .profile-page .account-detail + .account-detail {
+        border-left: 0;
+        border-top: 1px solid rgba(18,59,53,.08);
+    }
+
+    .travel-wallet--clickable::after {
+        top: auto;
+        right: 20px;
+        bottom: 20px;
+    }
+
+    .wallet-page__hero-inner {
+        width: min(100% - 30px, 620px);
+        padding-top: 160px;
+        padding-bottom: 55px;
+    }
+
+    .wallet-page__content {
+        width: min(100% - 30px, 620px);
+    }
+
+    .wallet-summary-card,
+    .profile-edit-card {
+        padding: 22px 18px;
+        border-radius: 18px;
+    }
+
+    .wallet-summary-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .wallet-summary-stat {
+        padding: 17px 14px 4px;
+    }
+
+    .profile-form-grid--account {
+        grid-template-columns: 1fr !important;
+    }
+
+    .wallet-history__header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .wallet-table-card {
+        border-radius: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .wallet-page__hero h1 {
+        font-size: 40px;
+    }
+
+    .wallet-summary-balance strong {
+        font-size: 31px;
+    }
+
+    .wallet-summary-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .wallet-summary-stat + .wallet-summary-stat {
+        border-left: 0;
+        border-top: 1px solid rgba(18,59,53,.08);
+    }
+
+    .profile-edit-hero__inner {
+        width: min(100% - 24px, 620px);
+        padding-top: 145px;
+    }
+
+    .profile-edit-content {
+        width: min(100% - 24px, 620px);
+    }
+
+    .profile-edit-card {
+        padding: 18px 15px;
+    }
+}
+/* =========================================================
+   USER PROFILE — EDIT PAGE
+   Paste this block after the main profile CSS.
+   ========================================================= */
+
+body:has(.profile-edit-page) {
+    background: #f7f5ef;
+}
+
+body:has(.profile-edit-page) .profile-edit-page {
+    min-height: 100vh;
+    background: #f7f5ef;
+    color: #183d37;
+    padding-bottom: 90px;
+}
+
+/* HEADER */
+body:has(.profile-edit-page) .site-header.kanila-site-header {
+    position: absolute !important;
+    top: 48px !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 9999 !important;
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255,255,255,.14) !important;
+    box-shadow: none !important;
+}
+
+body:has(.profile-edit-page) .kanila-site-header .nav-link,
+body:has(.profile-edit-page) .kanila-site-header .nav-dropdown-trigger {
+    color: rgba(255,255,255,.95) !important;
+}
+
+body:has(.profile-edit-page) .kanila-site-header .nav-link:hover,
+body:has(.profile-edit-page) .kanila-site-header .nav-dropdown-trigger:hover {
+    color: #ff7914 !important;
+}
+
+/* HERO */
+body:has(.profile-edit-page) .profile-edit-hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 410px;
+    background:
+        radial-gradient(circle at 83% 20%, rgba(242,138,36,.15), transparent 28%),
+        linear-gradient(135deg, #0d302b 0%, #164940 56%, #0b2d28 100%);
+}
+
+body:has(.profile-edit-page) .profile-edit-hero::before {
+    content: "";
+    position: absolute;
+    width: 430px;
+    height: 430px;
+    right: -150px;
+    top: -190px;
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 50%;
+}
+
+body:has(.profile-edit-page) .profile-edit-hero::after {
+    content: "";
+    position: absolute;
+    width: 610px;
+    height: 610px;
+    left: -270px;
+    bottom: -510px;
+    border: 1px solid rgba(255,255,255,.045);
+    border-radius: 50%;
+}
+
+body:has(.profile-edit-page) .profile-edit-hero__glow {
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    right: 18%;
+    bottom: -175px;
+    border-radius: 50%;
+    background: rgba(242,138,36,.05);
+    filter: blur(2px);
+}
+
+body:has(.profile-edit-page) .profile-edit-hero__inner {
+    position: relative;
+    z-index: 2;
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+    padding-top: 195px;
+    padding-bottom: 72px;
+}
+
+body:has(.profile-edit-page) .profile-edit-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255,255,255,.73) !important;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none !important;
+}
+
+body:has(.profile-edit-page) .profile-edit-back:hover {
+    color: #fff !important;
+}
+
+body:has(.profile-edit-page) .profile-edit-back span {
+    font-size: 16px;
+}
+
+body:has(.profile-edit-page) .profile-edit-heading {
+    max-width: 700px;
+    margin-top: 28px;
+}
+
+body:has(.profile-edit-page) .profile-edit-eyebrow {
+    display: block;
+    margin-bottom: 9px;
+    color: #f28a24;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .18em;
+}
+
+body:has(.profile-edit-page) .profile-edit-heading h1 {
+    margin: 0;
+    color: #fff !important;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(43px, 5vw, 64px);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -.03em;
+}
+
+body:has(.profile-edit-page) .profile-edit-heading p {
+    max-width: 610px;
+    margin: 14px 0 0;
+    color: rgba(255,255,255,.73);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* CONTENT */
+body:has(.profile-edit-page) .profile-edit-content {
+    position: relative;
+    z-index: 4;
+    width: min(950px, calc(100% - 48px));
+    margin: -42px auto 0;
+}
+
+/* ALERTS */
+.profile-edit-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    margin-bottom: 16px;
+    padding: 16px 18px;
+    border-radius: 14px;
+    border: 1px solid transparent;
+}
+
+.profile-edit-alert__icon {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-weight: 900;
+}
+
+.profile-edit-alert strong {
+    display: block;
+    margin-top: 1px;
+    font-size: 13px;
+}
+
+.profile-edit-alert p {
+    margin: 3px 0 0;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.profile-edit-alert ul {
+    margin: 7px 0 0 17px;
+    padding: 0;
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+.profile-edit-alert--success {
+    background: #eaf8f0;
+    border-color: #cbe9d7;
+    color: #087443;
+}
+
+.profile-edit-alert--success .profile-edit-alert__icon {
+    background: #d2f0df;
+}
+
+.profile-edit-alert--error {
+    background: #fff0ed;
+    border-color: #f1cbc4;
+    color: #a34739;
+}
+
+.profile-edit-alert--error .profile-edit-alert__icon {
+    background: #f9d9d2;
+}
+
+/* CARD */
+body:has(.profile-edit-page) .profile-edit-card {
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid rgba(18,59,53,.08);
+    border-radius: 24px;
+    box-shadow: 0 22px 65px rgba(18,59,53,.09);
+}
+
+/* CARD TOP */
+.profile-edit-card__head {
+    display: flex;
+    align-items: center;
+    gap: 19px;
+    padding: 27px 31px;
+    background:
+        radial-gradient(circle at 92% 0%, rgba(242,138,36,.11), transparent 28%),
+        linear-gradient(135deg, #103a34 0%, #174a42 100%);
+}
+
+.profile-edit-avatar {
+    width: 74px;
+    height: 74px;
+    flex: 0 0 74px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border: 4px solid rgba(255,255,255,.18);
+    border-radius: 50%;
+    background: #f3eee7;
+    color: #183d37;
+    font-size: 27px;
+    font-weight: 900;
+}
+
+.profile-edit-avatar img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.profile-edit-card__identity span {
+    display: block;
+    margin-bottom: 5px;
+    color: #f28a24;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: .16em;
+}
+
+.profile-edit-card__identity h2 {
+    margin: 0;
+    color: #fff !important;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 28px;
+    font-weight: 500;
+}
+
+.profile-edit-card__identity p {
+    margin: 5px 0 0;
+    color: rgba(255,255,255,.63);
+    font-size: 12px;
+}
+
+/* FORM */
+.profile-edit-form {
+    padding: 32px;
+}
+
+.profile-edit-section-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 21px;
+}
+
+.profile-edit-section-heading > div > span {
+    display: block;
+    margin-bottom: 5px;
+    color: #ef7b19;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .15em;
+}
+
+.profile-edit-section-heading h3 {
+    margin: 0;
+    color: #183d37;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 27px;
+    font-weight: 500;
+}
+
+.profile-edit-required {
+    color: #8c9995;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.profile-edit-required b {
+    color: #ef7b19;
+}
+
+.profile-edit-fields {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 20px;
+}
+
+.profile-edit-field {
+    min-width: 0;
+}
+
+.profile-edit-field label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 9px;
+    color: #284740;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+}
+
+.profile-edit-field label > b {
+    color: #ef7b19;
+}
+
+.profile-edit-field__icon {
+    width: 26px;
+    height: 26px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #edf5f2;
+    color: #183d37;
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.profile-edit-input-wrap {
+    position: relative;
+}
+
+.profile-edit-field input {
+    width: 100%;
+    min-height: 54px;
+    box-sizing: border-box;
+    padding: 0 16px;
+    border: 1px solid #dfe6e2;
+    border-radius: 12px;
+    outline: none;
+    background: #fff;
+    color: #183d37;
+    font: inherit;
+    font-size: 14px;
+    transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.profile-edit-field input::placeholder {
+    color: #a1aaa7;
+}
+
+.profile-edit-field input:focus {
+    border-color: #ef7b19;
+    box-shadow: 0 0 0 4px rgba(239,123,25,.09);
+    background: #fff;
+}
+
+.profile-edit-field > small {
+    display: block;
+    margin-top: 8px;
+    color: #8a9693;
+    font-size: 11px;
+    line-height: 1.55;
+}
+
+.profile-edit-field__error {
+    color: #b44d3b !important;
+}
+
+/* READONLY */
+.profile-edit-readonly-section {
+    margin-top: 34px;
+    padding-top: 31px;
+    border-top: 1px solid rgba(18,59,53,.08);
+}
+
+.profile-edit-locked {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 30px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: #f3f6f4;
+    color: #72807c;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.profile-edit-readonly-grid {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    overflow: hidden;
+    border: 1px solid #e4e9e6;
+    border-radius: 15px;
+    background: #f8faf9;
+}
+
+.profile-edit-readonly-item {
+    min-width: 0;
+    padding: 20px 21px;
+}
+
+.profile-edit-readonly-item + .profile-edit-readonly-item {
+    border-left: 1px solid #e2e8e4;
+}
+
+.profile-edit-readonly-item > span {
+    display: block;
+    margin-bottom: 7px;
+    color: #899591;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+}
+
+.profile-edit-readonly-item strong {
+    display: block;
+    overflow: hidden;
+    color: #455954;
+    font-size: 14px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.profile-edit-readonly-item small {
+    display: block;
+    margin-top: 6px;
+    color: #9aa5a1;
+    font-size: 10px;
+}
+
+/* BUTTONS */
+.profile-edit-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 11px;
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid rgba(18,59,53,.08);
+}
+
+.profile-edit-cancel,
+.profile-edit-save {
+    min-height: 47px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 20px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 900;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform .2s ease, background .2s ease, border-color .2s ease;
+}
+
+.profile-edit-cancel {
+    border: 1px solid #dce3df;
+    background: #fff;
+    color: #39524c !important;
+}
+
+.profile-edit-cancel:hover {
+    transform: translateY(-1px);
+    background: #f6f8f6;
+    color: #183d37 !important;
+}
+
+.profile-edit-save {
+    border: 1px solid #ef7b19;
+    background: #ef7b19;
+    color: #fff;
+    box-shadow: 0 9px 24px rgba(239,123,25,.17);
+}
+
+.profile-edit-save:hover {
+    transform: translateY(-1px);
+    background: #d9680d;
+    border-color: #d9680d;
+}
+
+.profile-edit-security-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 18px 0 0;
+    color: #87938f;
+    font-size: 10px;
+    line-height: 1.55;
+}
+
+.profile-edit-security-note > span {
+    color: #087443;
+    font-weight: 900;
+}
+
+/* TABLET */
+@media (max-width: 800px) {
+    body:has(.profile-edit-page) .profile-edit-content {
+        width: min(100% - 36px, 700px);
+    }
+
+    body:has(.profile-edit-page) .profile-edit-hero__inner {
+        width: min(100% - 36px, 700px);
+        padding-top: 165px;
+    }
+
+    .profile-edit-form {
+        padding: 26px;
+    }
+
+    .profile-edit-fields {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* MOBILE */
+@media (max-width: 560px) {
+    body:has(.profile-edit-page) .profile-edit-hero {
+        min-height: 360px;
+    }
+
+    body:has(.profile-edit-page) .profile-edit-hero__inner {
+        width: min(100% - 26px, 640px);
+        padding-top: 150px;
+        padding-bottom: 58px;
+    }
+
+    body:has(.profile-edit-page) .profile-edit-heading h1 {
+        font-size: 42px;
+    }
+
+    body:has(.profile-edit-page) .profile-edit-heading p {
+        font-size: 13px;
+    }
+
+    body:has(.profile-edit-page) .profile-edit-content {
+        width: min(100% - 26px, 640px);
+        margin-top: -25px;
+    }
+
+    .profile-edit-card__head {
+        align-items: flex-start;
+        padding: 23px 19px;
+    }
+
+    .profile-edit-avatar {
+        width: 62px;
+        height: 62px;
+        flex-basis: 62px;
+        font-size: 23px;
+    }
+
+    .profile-edit-card__identity h2 {
+        font-size: 23px;
+    }
+
+    .profile-edit-form {
+        padding: 22px 18px;
+    }
+
+    .profile-edit-section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .profile-edit-section-heading h3 {
+        font-size: 24px;
+    }
+
+    .profile-edit-required,
+    .profile-edit-locked {
+        align-self: flex-start;
+    }
+
+    .profile-edit-readonly-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-edit-readonly-item + .profile-edit-readonly-item {
+        border-left: 0;
+        border-top: 1px solid #e2e8e4;
+    }
+
+    .profile-edit-actions {
+        flex-direction: column-reverse;
+    }
+
+    .profile-edit-cancel,
+    .profile-edit-save {
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   USER-FRIENDLY TRAVEL WALLET
+   ========================================================= */
+
+body:has(.friendly-wallet-page) {
+    background: #f7f5ee;
+}
+
+.friendly-wallet-page {
+    --fw-green: #083f37;
+    --fw-green-dark: #062f2a;
+    --fw-green-soft: #eaf4f1;
+    --fw-orange: #ff7a12;
+    --fw-orange-soft: #fff1e6;
+    --fw-cream: #f7f5ee;
+    --fw-text: #173f39;
+    --fw-muted: #70817e;
+    --fw-border: #e3e9e6;
+    --fw-white: #ffffff;
+
+    color: var(--fw-text);
+    background: var(--fw-cream);
+}
+
+body:has(.friendly-wallet-page) .site-header.kanila-site-header {
+    position: absolute;
+    top: 48px;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+body:has(.friendly-wallet-page) .site-header.kanila-site-header a,
+body:has(.friendly-wallet-page) .site-header.kanila-site-header .nav-link {
+    color: #fff !important;
+}
+
+.friendly-wallet-hero {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 82% 20%, rgba(255, 180, 90, 0.14), transparent 24%),
+        radial-gradient(circle at 8% 70%, rgba(255, 255, 255, 0.07), transparent 25%),
+        linear-gradient(140deg, #0a4038 0%, #0d5045 56%, #08352f 100%);
+    color: #fff;
+    padding: 205px 24px 125px;
+}
+
+.friendly-wallet-hero::before,
+.friendly-wallet-hero::after {
+    content: "";
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.friendly-wallet-hero::before {
+    width: 540px;
+    height: 540px;
+    right: -230px;
+    top: 80px;
+}
+
+.friendly-wallet-hero::after {
+    width: 340px;
+    height: 340px;
+    left: -165px;
+    bottom: -190px;
+}
+
+.friendly-wallet-hero__inner,
+.friendly-wallet-content {
+    width: min(1260px, calc(100% - 48px));
+    margin: 0 auto;
+}
+
+.friendly-wallet-hero__inner {
+    position: relative;
+    z-index: 2;
+}
+
+.friendly-wallet-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 34px;
+    color: rgba(255,255,255,0.88);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.friendly-wallet-back:hover {
+    color: #fff;
+}
+
+.friendly-wallet-back span {
+    font-size: 18px;
+}
+
+.friendly-wallet-eyebrow {
+    display: block;
+    color: var(--fw-orange);
+    font-size: 12px;
+    line-height: 1.2;
+    letter-spacing: 0.16em;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.friendly-wallet-hero h1 {
+    margin: 14px 0 12px;
+    max-width: 800px;
+    color: #fff;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(46px, 6vw, 76px);
+    line-height: 0.98;
+    font-weight: 500;
+    letter-spacing: -0.035em;
+}
+
+.friendly-wallet-hero p {
+    max-width: 760px;
+    margin: 0;
+    color: rgba(255,255,255,0.74);
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+/* Content overlap */
+
+.friendly-wallet-content {
+    position: relative;
+    z-index: 3;
+    margin-top: -62px;
+    padding-bottom: 80px;
+}
+
+/* Current balance */
+
+.friendly-wallet-balance-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    min-height: 300px;
+    padding: 44px 48px;
+    border-radius: 26px;
+    background: #fff;
+    box-shadow: 0 25px 60px rgba(8, 63, 55, 0.11);
+    border: 1px solid rgba(8, 63, 55, 0.06);
+}
+
+.friendly-wallet-balance-copy {
+    max-width: 760px;
+}
+
+.friendly-wallet-label {
+    display: block;
+    margin-bottom: 13px;
+    color: var(--fw-orange);
+    font-size: 12px;
+    letter-spacing: 0.13em;
+    font-weight: 900;
+}
+
+.friendly-wallet-balance-card h2 {
+    margin: 0;
+    color: var(--fw-green);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(56px, 7vw, 84px);
+    line-height: 0.95;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+}
+
+.friendly-wallet-balance-card h2 small {
+    font-family: inherit;
+    font-size: 22px;
+    letter-spacing: 0;
+}
+
+.friendly-wallet-balance-card p {
+    max-width: 650px;
+    margin: 16px 0 18px;
+    color: var(--fw-muted);
+    font-size: 16px;
+    line-height: 1.65;
+}
+
+.friendly-wallet-balance-note {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 9px;
+    padding: 11px 14px;
+    border-radius: 12px;
+    background: #eff8f5;
+    color: #356b62;
+    font-size: 13px;
+    line-height: 1.45;
+    font-weight: 600;
+}
+
+.friendly-wallet-balance-note span:first-child {
+    color: #12815f;
+    font-weight: 900;
+}
+
+.friendly-wallet-balance-visual {
+    flex: 0 0 auto;
+    width: 210px;
+    height: 210px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(circle at 35% 30%, rgba(255,255,255,.13), transparent 32%),
+        linear-gradient(145deg, #0f574b, #06372f);
+    color: #fff;
+    box-shadow: inset 0 0 0 18px rgba(255,255,255,.035);
+}
+
+.friendly-wallet-balance-visual span {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: rgba(255,255,255,.65);
+    font-weight: 900;
+}
+
+.friendly-wallet-balance-visual strong {
+    margin-top: 8px;
+    font-size: 30px;
+    letter-spacing: 0.08em;
+}
+
+/* Explainer */
+
+.friendly-wallet-explainer {
+    margin-top: 64px;
+}
+
+.friendly-wallet-section-heading h2,
+.friendly-wallet-history-head h2,
+.friendly-wallet-help h2 {
+    margin: 12px 0 8px;
+    color: var(--fw-green);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(34px, 4vw, 48px);
+    line-height: 1.05;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+}
+
+.friendly-wallet-section-heading p,
+.friendly-wallet-history-head p,
+.friendly-wallet-help p {
+    margin: 0;
+    color: var(--fw-muted);
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+.friendly-wallet-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 26px;
+}
+
+.friendly-wallet-summary-card {
+    min-height: 160px;
+    display: flex;
+    gap: 15px;
+    padding: 23px 20px;
+    border-radius: 18px;
+    background: #fff;
+    border: 1px solid var(--fw-border);
+}
+
+.friendly-wallet-summary-icon {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 13px;
+    font-size: 21px;
+    font-weight: 900;
+}
+
+.friendly-wallet-summary-icon--earned {
+    background: #e8f6ee;
+    color: #18875b;
+}
+
+.friendly-wallet-summary-icon--used {
+    background: #fff0ec;
+    color: #d85b43;
+}
+
+.friendly-wallet-summary-icon--adjusted {
+    background: #fff4e7;
+    color: #c36a17;
+}
+
+.friendly-wallet-summary-icon--expired {
+    background: #f1f2f2;
+    color: #697572;
+}
+
+.friendly-wallet-summary-card span {
+    display: block;
+    color: #73817f;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.friendly-wallet-summary-card strong {
+    display: block;
+    margin-top: 5px;
+    color: var(--fw-green);
+    font-size: 23px;
+    line-height: 1.15;
+}
+
+.friendly-wallet-summary-card small {
+    display: block;
+    margin-top: 8px;
+    color: #8a9694;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.friendly-wallet-how-it-works {
+    display: flex;
+    gap: 13px;
+    margin-top: 16px;
+    padding: 18px 20px;
+    border-radius: 16px;
+    background: #f0f7f4;
+    border: 1px solid #dcebe7;
+}
+
+.friendly-wallet-how-it-works__icon {
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    border-radius: 50%;
+    background: var(--fw-green);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+}
+
+.friendly-wallet-how-it-works strong {
+    display: block;
+    color: var(--fw-green);
+    font-size: 14px;
+}
+
+.friendly-wallet-how-it-works p {
+    margin: 5px 0 0;
+    color: #66807a;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* History */
+
+.friendly-wallet-history {
+    margin-top: 70px;
+}
+
+.friendly-wallet-history-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+}
+
+.friendly-wallet-count {
+    flex: 0 0 auto;
+    min-width: 130px;
+    text-align: right;
+}
+
+.friendly-wallet-count strong {
+    display: block;
+    color: var(--fw-green);
+    font-size: 22px;
+}
+
+.friendly-wallet-count span {
+    color: #81908d;
+    font-size: 12px;
+}
+
+.friendly-wallet-activity-list {
+    margin-top: 26px;
+    overflow: hidden;
+    border-radius: 21px;
+    background: #fff;
+    border: 1px solid var(--fw-border);
+}
+
+.friendly-wallet-activity {
+    display: flex;
+    gap: 18px;
+    padding: 24px 25px;
+    border-bottom: 1px solid var(--fw-border);
+}
+
+.friendly-wallet-activity:last-child {
+    border-bottom: 0;
+}
+
+.friendly-wallet-activity__icon {
+    width: 48px;
+    height: 48px;
+    flex: 0 0 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    font-weight: 900;
+}
+
+.friendly-wallet-activity__icon.is-positive {
+    color: #18875b;
+    background: #e8f6ee;
+}
+
+.friendly-wallet-activity__icon.is-negative {
+    color: #d35b42;
+    background: #fff0eb;
+}
+
+.friendly-wallet-activity__main {
+    min-width: 0;
+    flex: 1;
+}
+
+.friendly-wallet-activity__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.friendly-wallet-activity__top h3 {
+    margin: 1px 0 5px;
+    color: var(--fw-green);
+    font-size: 17px;
+    line-height: 1.35;
+}
+
+.friendly-wallet-activity__date {
+    color: #8a9693;
+    font-size: 12px;
+}
+
+.friendly-wallet-activity__points {
+    white-space: nowrap;
+    text-align: right;
+    font-size: 19px;
+    font-weight: 900;
+}
+
+.friendly-wallet-activity__points small {
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.friendly-wallet-activity__points.is-positive {
+    color: #14865a;
+}
+
+.friendly-wallet-activity__points.is-negative {
+    color: #d25b41;
+}
+
+.friendly-wallet-activity__description {
+    margin: 12px 0 18px;
+    max-width: 900px;
+    color: #687a76;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.friendly-wallet-activity__bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.friendly-wallet-activity__balance span {
+    display: block;
+    color: #8a9693;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.friendly-wallet-activity__balance strong {
+    display: block;
+    margin-top: 4px;
+    color: var(--fw-green);
+    font-size: 14px;
+}
+
+.friendly-wallet-reference summary {
+    cursor: pointer;
+    list-style: none;
+    color: #5e7772;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.friendly-wallet-reference summary::-webkit-details-marker {
+    display: none;
+}
+
+.friendly-wallet-reference summary::before {
+    content: "＋";
+    margin-right: 5px;
+}
+
+.friendly-wallet-reference[open] summary::before {
+    content: "−";
+}
+
+.friendly-wallet-reference > div {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    justify-content: flex-end;
+    margin-top: 9px;
+}
+
+.friendly-wallet-reference > div span {
+    color: #93a09d;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.friendly-wallet-reference code {
+    max-width: 280px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 7px 9px;
+    border-radius: 8px;
+    background: #f4f7f6;
+    color: #536966;
+    font-size: 11px;
+}
+
+.friendly-wallet-reference > div strong {
+    color: #536966;
+    font-size: 12px;
+}
+
+/* Pagination */
+
+.friendly-wallet-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+.friendly-wallet-pagination .pagination {
+    gap: 6px;
+    margin: 0;
+}
+
+.friendly-wallet-pagination .page-link {
+    min-width: 38px;
+    height: 38px;
+    border-radius: 10px !important;
+    border: 1px solid var(--fw-border);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--fw-green);
+    background: #fff;
+}
+
+/* Empty */
+
+.friendly-wallet-empty {
+    margin-top: 26px;
+    padding: 65px 25px;
+    text-align: center;
+    border: 1px solid var(--fw-border);
+    border-radius: 21px;
+    background: #fff;
+}
+
+.friendly-wallet-empty__icon {
+    width: 62px;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 17px;
+    border-radius: 50%;
+    background: #eff5f3;
+    color: var(--fw-green);
+    font-size: 28px;
+}
+
+.friendly-wallet-empty h3 {
+    margin: 0;
+    color: var(--fw-green);
+    font-size: 22px;
+}
+
+.friendly-wallet-empty p {
+    max-width: 530px;
+    margin: 9px auto 20px;
+    color: var(--fw-muted);
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.friendly-wallet-empty a,
+.friendly-wallet-help a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--fw-orange);
+    text-decoration: none;
+    font-weight: 900;
+}
+
+/* Bottom help */
+
+.friendly-wallet-help {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    margin-top: 26px;
+    padding: 30px 34px;
+    border-radius: 20px;
+    background: #fff7ef;
+    border: 1px solid #f4dfca;
+}
+
+.friendly-wallet-help h2 {
+    margin-bottom: 8px;
+    font-size: 29px;
+}
+
+.friendly-wallet-help p {
+    max-width: 740px;
+}
+
+/* Responsive */
+
+@media (max-width: 1100px) {
+    .friendly-wallet-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .friendly-wallet-balance-card {
+        padding: 38px;
+    }
+}
+
+@media (max-width: 760px) {
+    .friendly-wallet-hero {
+        padding: 145px 20px 100px;
+    }
+
+    .friendly-wallet-hero__inner,
+    .friendly-wallet-content {
+        width: min(100% - 32px, 1260px);
+    }
+
+    .friendly-wallet-hero h1 {
+        font-size: 48px;
+    }
+
+    .friendly-wallet-balance-card {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 30px 24px;
+    }
+
+    .friendly-wallet-balance-visual {
+        width: 145px;
+        height: 145px;
+        align-self: flex-end;
+    }
+
+    .friendly-wallet-balance-card h2 {
+        font-size: 60px;
+    }
+
+    .friendly-wallet-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .friendly-wallet-history-head {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .friendly-wallet-count {
+        text-align: left;
+    }
+
+    .friendly-wallet-activity {
+        padding: 20px 18px;
+        gap: 13px;
+    }
+
+    .friendly-wallet-activity__top {
+        flex-direction: column;
+        gap: 11px;
+    }
+
+    .friendly-wallet-activity__points {
+        text-align: left;
+    }
+
+    .friendly-wallet-activity__bottom {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .friendly-wallet-reference > div {
+        justify-content: flex-start;
+    }
+
+    .friendly-wallet-help {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 26px 22px;
+    }
+}
+
+@media (max-width: 520px) {
+    .friendly-wallet-hero {
+        padding: 125px 16px 90px;
+    }
+
+    .friendly-wallet-hero__inner,
+    .friendly-wallet-content {
+        width: calc(100% - 24px);
+    }
+
+    .friendly-wallet-hero h1 {
+        font-size: 40px;
+    }
+
+    .friendly-wallet-hero p {
+        font-size: 14px;
+    }
+
+    .friendly-wallet-content {
+        margin-top: -45px;
+    }
+
+    .friendly-wallet-balance-card {
+        border-radius: 20px;
+    }
+
+    .friendly-wallet-balance-card h2 {
+        font-size: 52px;
+    }
+
+    .friendly-wallet-balance-card h2 small {
+        font-size: 18px;
+    }
+
+    .friendly-wallet-balance-visual {
+        width: 118px;
+        height: 118px;
+        align-self: flex-end;
+    }
+
+    .friendly-wallet-balance-visual strong {
+        font-size: 24px;
+    }
+
+    .friendly-wallet-summary-card {
+        min-height: auto;
+        padding: 18px;
+    }
+
+    .friendly-wallet-activity__icon {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+    }
+
+    .friendly-wallet-activity__top h3 {
+        font-size: 15px;
+    }
+
+    .friendly-wallet-activity__description {
+        font-size: 13px;
+    }
+
+    .friendly-wallet-reference code {
+        max-width: 210px;
+    }
+}
+
+/* =========================================================
+   FINAL RESPONSIVE CASCADE
+   This is the ONLY file that needs to be updated for the
+   responsive fixes. No other stylesheet is required.
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+img,
+svg,
+video,
+canvas,
+iframe {
+    max-width: 100%;
+}
+
+img {
+    height: auto;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+    max-width: 100%;
+}
+
+.kanila-hero,
+.tour-reference-page,
+.profile-page,
+.profile-edit-page,
+.friendly-wallet-page,
+.site-footer,
+.footer {
+    max-width: 100%;
+    overflow-x: clip;
+}
+
+/* -------------------------
+   LARGE TABLET / SMALL LAPTOP
+   ------------------------- */
+@media (max-width: 1100px) {
+    .kanila-site-header .site-header-inner,
+    .kanila-topbar-inner,
+    .tour-reference-breadcrumb,
+    .tour-reference-heading__top,
+    .tour-reference-title,
+    .tour-reference-facts,
+    .tour-reference-layout,
+    .profile-page .profile-content,
+    .profile-page .profile-hero__inner {
+        width: calc(100% - 40px);
+    }
+
+    .kanila-site-header .site-header-inner {
+        gap: 18px;
+    }
+
+    .kanila-site-header .site-logo {
+        width: 165px;
+    }
+
+    .kanila-site-header .nav-link,
+    .kanila-site-header .nav-dropdown-trigger {
+        padding-inline: 8px;
+        font-size: 14px;
+    }
+
+    .kanila-header-actions {
+        margin-left: 12px;
+    }
+
+    .kanila-get-touch {
+        width: 185px;
+        height: 56px;
+        font-size: 14px;
+    }
+
+    .tour-reference-layout {
+        grid-template-columns: minmax(0, 1fr) 350px;
+        gap: 30px;
+    }
+
+    .tour-reference-gallery {
+        height: 530px;
+    }
+}
+
+/* -------------------------
+   TABLET / MOBILE HEADER
+   ------------------------- */
+@media (max-width: 1000px) {
+    .kanila-topbar {
+        display: none !important;
+    }
+
+    .site-header.kanila-site-header,
+    .site-header.kanila-site-header.is-fixed {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 78px;
+        min-height: 78px;
+        background: rgba(8, 30, 29, .96) !important;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 8px 30px rgba(0,0,0,.12);
+    }
+
+    .kanila-site-header .site-header-inner {
+        width: 100%;
+        height: 78px;
+        min-height: 78px;
+        padding: 0 20px;
+        gap: 12px;
+    }
+
+    .kanila-site-header .site-logo {
+        width: 150px;
+        min-width: 0;
+    }
+
+    .kanila-site-header .site-logo-image {
+        width: 125px;
+        height: 62px;
+    }
+
+    .kanila-navigation {
+        display: none !important;
+    }
+
+    .kanila-header-actions {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+    }
+
+    .kanila-get-touch {
+        display: none !important;
+    }
+
+    .kanila-site-header .mobile-menu-toggle {
+        display: flex !important;
+        flex: 0 0 44px;
+    }
+
+    .kanila-mobile-navigation.is-open {
+        display: block !important;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-height: calc(100vh - 78px);
+        overflow-y: auto;
+        padding: 16px 20px 24px;
+        background: rgba(8,30,29,.98);
+        border-top: 1px solid rgba(255,255,255,.10);
+        box-shadow: 0 20px 45px rgba(0,0,0,.24);
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .kanila-mobile-navigation a,
+    .kanila-mobile-navigation button {
+        width: 100%;
+        min-height: 46px;
+    }
+
+    body {
+        scroll-padding-top: 78px;
+    }
+
+    /* Generic two-column layouts */
+    .about-grid,
+    .about-section-grid,
+    .story-grid,
+    .stories-grid,
+    .contact-grid,
+    .faq-grid,
+    .cta-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Tour */
+    .tour-reference-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .tour-reference-booking {
+        position: static;
+        order: -1;
+    }
+}
+
+/* -------------------------
+   900px TABLET
+   ------------------------- */
+@media (max-width: 900px) {
+    .tour-reference-title {
+        font-size: clamp(42px, 7vw, 58px);
+    }
+
+    .tour-reference-gallery {
+        height: 500px;
+    }
+
+    .tour-reference-facts {
+        gap: 24px;
+    }
+
+    .tour-reference-fact {
+        min-width: 145px;
+    }
+
+    .profile-page .profile-hero__inner,
+    .profile-page .profile-content {
+        width: calc(100% - 36px);
+    }
+}
+
+/* -------------------------
+   800px
+   ------------------------- */
+@media (max-width: 800px) {
+    .kanila-hero {
+        min-height: 780px;
+        height: auto;
+    }
+
+    .kanila-hero-inner {
+        width: calc(100% - 32px);
+        min-height: 780px;
+    }
+
+    .kanila-hero-copy {
+        left: 5%;
+        width: 90%;
+    }
+
+    .kanila-title {
+        font-size: clamp(52px, 11vw, 88px);
+        line-height: .95;
+    }
+
+    .journey-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .journey-card {
+        min-width: 0;
+        height: 380px;
+    }
+
+    .monthly-tour-grid,
+    .monthly-tours-grid,
+    .handpicked-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .monthly-tour-card,
+    .handpicked-card {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* -------------------------
+   768px MOBILE
+   ------------------------- */
+@media (max-width: 768px) {
+    section {
+        scroll-margin-top: 78px;
+    }
+
+    .kanila-site-header .site-header-inner {
+        padding-inline: 16px;
+    }
+
+    .kanila-site-header .site-logo {
+        width: 130px;
+    }
+
+    .kanila-site-header .site-logo-image {
+        width: 110px;
+        height: 55px;
+    }
+
+    .kanila-hero {
+        min-height: 760px;
+    }
+
+    .kanila-hero-inner {
+        min-height: 760px;
+        width: calc(100% - 32px);
+    }
+
+    .kanila-hero-copy {
+        top: 9%;
+        left: 5%;
+        right: 5%;
+        width: auto;
+    }
+
+    .kanila-title {
+        max-width: 100%;
+        font-size: clamp(48px, 14vw, 76px);
+    }
+
+    /* Tour */
+    .tour-reference-breadcrumb {
+        width: calc(100% - 32px);
+        min-height: 56px;
+        padding-inline: 0;
+        font-size: 12px;
+        flex-wrap: wrap;
+    }
+
+    .tour-reference-heading {
+        padding: 40px 0 30px;
+    }
+
+    .tour-reference-heading__top,
+    .tour-reference-title,
+    .tour-reference-facts {
+        width: calc(100% - 32px);
+        padding-inline: 0;
+    }
+
+    .tour-reference-heading__top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .tour-reference-title {
+        font-size: clamp(38px, 10vw, 52px);
+        line-height: 1.06;
+    }
+
+    .tour-reference-actions {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 14px;
+    }
+
+    .tour-reference-facts {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px 12px;
+        margin-top: 30px;
+    }
+
+    .tour-reference-fact {
+        min-width: 0;
+        gap: 9px;
+    }
+
+    .tour-reference-fact__icon {
+        width: 48px;
+        height: 48px;
+        flex-basis: 48px;
+        border-radius: 11px;
+        font-size: 17px;
+    }
+
+    .tour-reference-fact strong {
+        font-size: 13px;
+        overflow-wrap: anywhere;
+    }
+
+    .tour-reference-gallery {
+        width: 100%;
+        height: 420px;
+        padding: 0 16px;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1.35fr 1fr;
+        border-radius: 0;
+    }
+
+    .tour-reference-gallery__main {
+        grid-column: 1 / 3;
+        grid-row: 1;
+    }
+
+    .tour-reference-gallery__buttons {
+        left: 12px;
+        bottom: 12px;
+        max-width: calc(100% - 24px);
+        flex-wrap: wrap;
+    }
+
+    .tour-reference-gallery__buttons span {
+        min-height: 42px;
+        padding-inline: 14px;
+        font-size: 11px;
+    }
+
+    .tour-reference-layout {
+        width: 100%;
+        padding-inline: 16px;
+    }
+
+    .tour-reference-section {
+        margin-bottom: 55px;
+    }
+
+    .tour-reference-section > h2 {
+        margin-bottom: 22px;
+        font-size: clamp(32px, 8vw, 40px);
+    }
+
+    .tour-reference-lead,
+    .tour-reference-copy {
+        font-size: 15px;
+        line-height: 1.7;
+    }
+
+    .tour-reference-inclusion-card {
+        padding: 28px 22px;
+    }
+
+    .tour-reference-booking__inner {
+        padding: 26px 20px;
+    }
+
+    .tour-reference-departure {
+        grid-template-columns: 56px minmax(0, 1fr);
+    }
+
+    .tour-reference-departure__price {
+        grid-column: 2;
+        align-items: flex-start;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    /* Profile */
+    body:has(.profile-page) .profile-page .profile-content,
+    body:has(.profile-page) .profile-page .profile-hero__inner {
+        width: calc(100% - 30px) !important;
+    }
+
+    body:has(.profile-page) .profile-page .profile-hero__inner {
+        padding-top: 155px !important;
+        padding-bottom: 65px !important;
+    }
+
+    .profile-page .profile-hero {
+        min-height: 430px;
+    }
+
+    .profile-page .profile-hero h1 {
+        font-size: clamp(40px, 11vw, 58px);
+    }
+
+    .profile-page .account-profile-card {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 24px 20px;
+        gap: 18px;
+    }
+
+    .profile-page .account-profile-main {
+        width: 100%;
+    }
+
+    .profile-page .account-profile-status {
+        align-self: flex-start;
+    }
+
+    .profile-page .account-details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-page .account-detail-item + .account-detail-item {
+        border-left: 0;
+        border-top: 1px solid rgba(18,59,53,.08);
+    }
+
+    /* Footer */
+    .footer-cta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .footer-cta-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .footer-plan-button,
+    .footer-call-button {
+        width: 100%;
+    }
+
+    .footer-bottom-inner {
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .footer-bottom-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* -------------------------
+   650px SMALL MOBILE
+   ------------------------- */
+@media (max-width: 650px) {
+    .kanila-hero {
+        min-height: 700px;
+    }
+
+    .kanila-hero-inner {
+        min-height: 700px;
+        width: calc(100% - 24px);
+    }
+
+    .kanila-hero-copy {
+        top: 8%;
+        left: 4%;
+        right: 4%;
+    }
+
+    .kanila-title {
+        font-size: clamp(44px, 15vw, 68px);
+    }
+
+    .journey-grid,
+    .monthly-tour-grid,
+    .monthly-tours-grid,
+    .handpicked-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .journey-card {
+        height: 390px;
+    }
+
+    .monthly-tour-card {
+        width: 100%;
+        min-height: 275px;
+    }
+
+    .handpicked-card {
+        width: 100%;
+        min-height: 255px;
+    }
+
+    .form-grid,
+    .contact-form-grid,
+    .booking-form-grid,
+    .checkout-grid,
+    .settings-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .button-row,
+    .form-actions,
+    .profile-edit-actions {
+        flex-wrap: wrap;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .footer-contact {
+        grid-column: auto;
+    }
+}
+
+/* -------------------------
+   560px PHONE
+   ------------------------- */
+@media (max-width: 560px) {
+    .site-header.kanila-site-header,
+    .site-header.kanila-site-header.is-fixed {
+        height: 70px;
+        min-height: 70px;
+    }
+
+    .kanila-site-header .site-header-inner {
+        height: 70px;
+        min-height: 70px;
+        padding-inline: 14px;
+    }
+
+    .kanila-site-header .site-logo {
+        width: 112px;
+    }
+
+    .kanila-site-header .site-logo-image {
+        width: 92px;
+        height: 48px;
+    }
+
+    .kanila-site-header .mobile-menu-toggle {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
+    }
+
+    .kanila-mobile-navigation.is-open {
+        max-height: calc(100vh - 70px);
+        padding-inline: 14px;
+    }
+
+    body {
+        scroll-padding-top: 70px;
+    }
+
+    .kanila-hero {
+        min-height: 660px;
+    }
+
+    .kanila-hero-inner {
+        min-height: 660px;
+        width: calc(100% - 20px);
+    }
+
+    .kanila-title {
+        font-size: clamp(40px, 15.5vw, 60px);
+    }
+
+    .tour-reference-breadcrumb,
+    .tour-reference-heading__top,
+    .tour-reference-title,
+    .tour-reference-facts {
+        width: calc(100% - 28px);
+    }
+
+    .tour-reference-facts {
+        grid-template-columns: 1fr;
+    }
+
+    .tour-reference-gallery {
+        height: 360px;
+        padding-inline: 14px;
+    }
+
+    .tour-reference-title {
+        font-size: clamp(30px, 10.5vw, 40px);
+    }
+
+    .tour-reference-section > h2 {
+        font-size: clamp(29px, 9vw, 36px);
+    }
+
+    .tour-reference-departure {
+        grid-template-columns: 50px minmax(0, 1fr);
+    }
+
+    .tour-reference-departure__date {
+        width: 50px;
+        height: 50px;
+    }
+
+    .tour-reference-departure__price {
+        grid-column: 1 / -1;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .profile-page .profile-hero {
+        min-height: 370px;
+    }
+
+    .profile-page .account-profile-card {
+        padding: 20px 16px;
+    }
+
+    .profile-page .account-avatar {
+        width: 62px;
+        height: 62px;
+        flex-basis: 62px;
+    }
+
+    .friendly-wallet-balance-card {
+        padding: 24px 18px;
+    }
+}
+
+/* -------------------------
+   480px
+   ------------------------- */
+@media (max-width: 480px) {
+    .kanila-hero {
+        min-height: 620px;
+    }
+
+    .kanila-hero-inner {
+        min-height: 620px;
+    }
+
+    .kanila-title {
+        font-size: clamp(36px, 15vw, 54px);
+    }
+
+    .journey-card {
+        height: 360px;
+    }
+
+    .monthly-tour-card {
+        min-height: 250px;
+    }
+
+    .handpicked-card {
+        min-height: 230px;
+    }
+
+    .hero-actions,
+    .cta-actions,
+    .footer-cta-actions,
+    .tour-reference-actions,
+    .button-row,
+    .form-actions {
+        width: 100%;
+    }
+
+    .hero-actions > *,
+    .cta-actions > *,
+    .footer-cta-actions > *,
+    .tour-reference-actions > *,
+    .button-row > *,
+    .form-actions > * {
+        max-width: 100%;
+    }
+
+    .tour-reference-gallery {
+        height: 330px;
+    }
+
+    .tour-reference-gallery__buttons span:last-child {
+        display: none;
+    }
+
+    .tour-reference-copy,
+    .tour-reference-lead {
+        font-size: 14px;
+    }
+}
+
+/* -------------------------
+   430px NARROW PHONES
+   ------------------------- */
+@media (max-width: 430px) {
+    .kanila-site-header .site-logo {
+        width: 100px;
+    }
+
+    .kanila-site-header .site-logo-image {
+        width: 84px;
+        height: 44px;
+    }
+
+    .kanila-site-header .mobile-menu-toggle {
+        width: 38px;
+        height: 38px;
+        flex-basis: 38px;
+    }
+
+    .kanila-site-header .mobile-menu-toggle span {
+        width: 18px;
+    }
+
+    .kanila-hero {
+        min-height: 590px;
+    }
+
+    .kanila-hero-inner {
+        min-height: 590px;
+    }
+
+    .kanila-title {
+        font-size: clamp(34px, 15vw, 50px);
+    }
+
+    .journey-card {
+        height: 340px;
+    }
+
+    .tour-reference-title {
+        font-size: 30px;
+    }
+
+    .tour-reference-gallery {
+        height: 310px;
+    }
+
+    .profile-page .profile-hero h1 {
+        font-size: 38px;
+    }
+
+    .profile-page .account-avatar {
+        width: 56px;
+        height: 56px;
+        flex-basis: 56px;
+    }
+}
+
+/* -------------------------
+   TOUCH / ACCESSIBILITY
+   ------------------------- */
+@media (hover: none) and (pointer: coarse) {
+    .kanila-site-header .nav-link:hover,
+    .kanila-site-header .nav-dropdown-trigger:hover,
+    .kanila-get-touch:hover,
+    .tour-reference-gallery__main:hover img,
+    .tour-reference-gallery__item:hover img {
+        transform: none;
+    }
+
+    .kanila-site-header .mobile-menu-toggle,
+    button,
+    a,
+    input,
+    select,
+    textarea {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .kanila-mobile-navigation a,
+    .kanila-mobile-navigation button {
+        min-height: 48px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}
+

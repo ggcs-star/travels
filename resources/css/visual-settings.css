@@ -1,0 +1,445 @@
+:root {
+    --site-primary: var(--color-primary);
+    --site-secondary: var(--color-secondary);
+    --site-accent: var(--color-accent);
+    --site-text: var(--color-text);
+    --site-background: var(--color-background);
+    --site-container-width: var(--container-width);
+    --site-border-radius: var(--radius-md);
+}
+
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    color: var(--site-text);
+    background-color: var(--site-background);
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.container {
+    width: 100%;
+    max-width: var(--site-container-width);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* =========================================================
+   COLORS
+========================================================= */
+
+.text-primary {
+    color: var(--site-primary);
+}
+
+.bg-primary {
+    background-color: var(--site-primary);
+}
+
+.border-primary {
+    border-color: var(--site-primary);
+}
+
+
+.text-secondary {
+    color: var(--site-secondary);
+}
+
+.bg-secondary {
+    background-color: var(--site-secondary);
+}
+
+.border-secondary {
+    border-color: var(--site-secondary);
+}
+
+
+.text-accent {
+    color: var(--site-accent);
+}
+
+.bg-accent {
+    background-color: var(--site-accent);
+}
+
+.border-accent {
+    border-color: var(--site-accent);
+}
+
+
+/* =========================================================
+   LINKS
+========================================================= */
+
+body a {
+    transition:
+        color 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+body a:hover {
+    color: var(--site-accent);
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn-primary,
+.button-primary,
+button.btn-primary {
+    background-color: var(--site-primary);
+    border-color: var(--site-primary);
+    color: #ffffff;
+}
+
+.btn-primary:hover,
+.button-primary:hover,
+button.btn-primary:hover {
+    background-color: var(--site-secondary);
+    border-color: var(--site-secondary);
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   BUTTON STYLE — ROUNDED
+========================================================= */
+
+body[data-button-style="rounded"] .btn,
+body[data-button-style="rounded"] .button,
+body[data-button-style="rounded"] button,
+body[data-button-style="rounded"] input[type="submit"],
+body[data-button-style="rounded"] input[type="button"] {
+    border-radius: var(--site-border-radius);
+}
+
+
+/* =========================================================
+   BUTTON STYLE — SHARP
+========================================================= */
+
+body[data-button-style="sharp"] .btn,
+body[data-button-style="sharp"] .button,
+body[data-button-style="sharp"] button,
+body[data-button-style="sharp"] input[type="submit"],
+body[data-button-style="sharp"] input[type="button"] {
+    border-radius: 0;
+}
+
+
+/* =========================================================
+   BUTTON STYLE — PILL
+========================================================= */
+
+body[data-button-style="pill"] .btn,
+body[data-button-style="pill"] .button,
+body[data-button-style="pill"] button,
+body[data-button-style="pill"] input[type="submit"],
+body[data-button-style="pill"] input[type="button"] {
+    border-radius: 999px;
+}
+
+
+/* =========================================================
+   COMMON CARDS
+========================================================= */
+
+.card,
+.content-card,
+.tour-card,
+.blog-card,
+.destination-card,
+.package-card {
+    border-radius: var(--site-border-radius);
+}
+
+
+/* =========================================================
+   CARD STYLE — FLAT
+========================================================= */
+
+body[data-card-style="flat"] .card,
+body[data-card-style="flat"] .content-card,
+body[data-card-style="flat"] .tour-card,
+body[data-card-style="flat"] .blog-card,
+body[data-card-style="flat"] .destination-card,
+body[data-card-style="flat"] .package-card {
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   CARD STYLE — BORDERED
+========================================================= */
+
+body[data-card-style="bordered"] .card,
+body[data-card-style="bordered"] .content-card,
+body[data-card-style="bordered"] .tour-card,
+body[data-card-style="bordered"] .blog-card,
+body[data-card-style="bordered"] .destination-card,
+body[data-card-style="bordered"] .package-card {
+    border: 1px solid #e5e7eb;
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   CARD STYLE — SHADOW
+========================================================= */
+
+body[data-card-style="shadow"] .card,
+body[data-card-style="shadow"] .content-card,
+body[data-card-style="shadow"] .tour-card,
+body[data-card-style="shadow"] .blog-card,
+body[data-card-style="shadow"] .destination-card,
+body[data-card-style="shadow"] .package-card {
+    border: none;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================================
+   FORM FOCUS
+========================================================= */
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--site-primary);
+    outline: none;
+}
+
+
+/* =========================================================
+   THEME — DARK
+========================================================= */
+
+body[data-theme="dark"] {
+    background-color: #111827;
+    color: #f3f4f6;
+}
+
+
+/* =========================================================
+   DARK CARDS
+========================================================= */
+
+body[data-theme="dark"] .card,
+body[data-theme="dark"] .content-card,
+body[data-theme="dark"] .tour-card,
+body[data-theme="dark"] .blog-card,
+body[data-theme="dark"] .destination-card,
+body[data-theme="dark"] .package-card {
+    background-color: #1f2937;
+    color: #f3f4f6;
+}
+
+
+/* =========================================================
+   SYSTEM THEME
+========================================================= */
+
+@media (prefers-color-scheme: dark) {
+
+    body[data-theme="system"] {
+        background-color: #111827;
+        color: #f3f4f6;
+    }
+
+    body[data-theme="system"] .card,
+    body[data-theme="system"] .content-card,
+    body[data-theme="system"] .tour-card,
+    body[data-theme="system"] .blog-card,
+    body[data-theme="system"] .destination-card,
+    body[data-theme="system"] .package-card {
+        background-color: #1f2937;
+        color: #f3f4f6;
+    }
+
+}
+
+
+/* =========================================================
+   ANIMATIONS OFF
+========================================================= */
+
+body[data-animations="false"] *,
+body[data-animations="false"] *::before,
+body[data-animations="false"] *::after {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+}
+
+
+/* =========================================================
+   PAGE LOADER
+========================================================= */
+
+#site-page-loader {
+    position: fixed;
+    inset: 0;
+
+    z-index: 99999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--site-background);
+
+    opacity: 1;
+    visibility: visible;
+
+    transition:
+        opacity 0.25s ease,
+        visibility 0.25s ease;
+}
+
+#site-page-loader.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+
+.site-loader-spinner {
+    width: 44px;
+    height: 44px;
+
+    border: 4px solid rgba(0, 0, 0, 0.10);
+    border-top-color: var(--site-primary);
+
+    border-radius: 50%;
+
+    animation: site-loader-spin 0.75s linear infinite;
+}
+
+
+@keyframes site-loader-spin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* =========================================================
+   BACK TO TOP
+========================================================= */
+
+#site-back-to-top {
+    position: fixed;
+
+    right: 24px;
+    bottom: 24px;
+
+    z-index: 9990;
+
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: 0;
+
+    background-color: var(--site-primary);
+    color: #ffffff;
+
+    cursor: pointer;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform: translateY(10px);
+
+    transition:
+        opacity 0.2s ease,
+        visibility 0.2s ease,
+        transform 0.2s ease,
+        background-color 0.2s ease;
+}
+
+
+#site-back-to-top.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+
+#site-back-to-top:hover {
+    background-color: var(--site-secondary);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .container {
+        width: calc(100% - 30px);
+        max-width: none;
+    }
+
+    #site-back-to-top {
+        right: 16px;
+        bottom: 16px;
+
+        width: 42px;
+        height: 42px;
+    }
+
+}
+/* =========================================================
+   FOOTER VISIBILITY FIX / SAFETY
+========================================================= */
+
+.site-footer {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100%;
+    height: auto !important;
+    min-height: 100px;
+    position: relative;
+    z-index: 10;
+}
+
+.site-footer * {
+    visibility: visible;
+}
+
+.footer-main,
+.footer-grid,
+.footer-destinations,
+.footer-bottom {
+    visibility: visible;
+    opacity: 1;
+}
