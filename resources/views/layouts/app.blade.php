@@ -332,7 +332,7 @@
     ========================================================== --}}
 
     @vite([
-        'resources/css/visual-settings.css',
+        <!-- 'resources/css/visual-settings.css', -->
         'resources/css/app.css',
         'resources/js/app.js'
     ])
