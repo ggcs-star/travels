@@ -1,101 +1,202 @@
-<div class="kanila-topbar">
+@php
+    $settings = app(\App\Services\SettingsService::class);
 
-    <div class="kanila-topbar-inner container">
+    /*
+    |--------------------------------------------------------------------------
+    | Topbar Settings
+    |--------------------------------------------------------------------------
+    */
 
-        {{-- LEFT --}}
-        <div class="kanila-topbar-left">
+    $topbarEnabled = $settings->get(
+        'topbar.enabled',
+        true
+    );
 
-            <a
-                href="tel:{{ preg_replace('/[^0-9+]/', '', config('travels.contact.phone_primary')) }}"
-                class="kanila-topbar-contact"
-            >
-                <span class="kanila-topbar-icon">☎</span>
+    /*
+    |--------------------------------------------------------------------------
+    | Global Contact Settings
+    |--------------------------------------------------------------------------
+    */
 
-                <span>
-                    Call us:
-                    {{ config('travels.contact.phone_primary', '+1 (202) 555-0147') }}
-                </span>
-            </a>
+    $phone = $settings->get(
+        'site.phone',
+        config(
+            'travels.contact.phone_primary',
+            '+1 (202) 555-0147'
+        )
+    );
 
-            <a
-                href="mailto:{{ config('travels.contact.email', 'support@example.com') }}"
-                class="kanila-topbar-contact"
-            >
-                <span class="kanila-topbar-icon">✉</span>
+    $email = $settings->get(
+        'site.email',
+        config(
+            'travels.contact.email',
+            'support@example.com'
+        )
+    );
 
-                <span>
-                    {{ config('travels.contact.email', 'support@example.com') }}
-                </span>
-            </a>
+    /*
+    |--------------------------------------------------------------------------
+    | Topbar Labels
+    |--------------------------------------------------------------------------
+    */
 
-        </div>
+    $phoneLabel = $settings->get(
+        'topbar.phone_label',
+        'Call us'
+    );
+
+    $emailLabel = $settings->get(
+        'topbar.email_label',
+        ''
+    );
+
+    $phoneHref = preg_replace(
+        '/[^0-9+]/',
+        '',
+        $phone
+    );
+@endphp
 
 
-        {{-- RIGHT --}}
-        <div class="kanila-topbar-right">
+@if($topbarEnabled)
 
-            @auth
+    <div class="kanila-topbar">
 
-                {{-- Logged in user --}}
-                <a
-                    href="{{ route('profile') }}"
-                    class="kanila-user-account"
-                >
-                    <span class="kanila-user-icon">♙</span>
+        <div class="kanila-topbar-inner container">
 
-                    <span class="kanila-user-text">
-                        <small>Welcome</small>
-                        <strong>
-                            {{ auth()->user()->name ?: auth()->user()->username ?: 'My Account' }}
-                        </strong>
-                    </span>
-                </a>
+            {{-- LEFT --}}
+            <div class="kanila-topbar-left">
 
-                <span class="kanila-topbar-divider"></span>
+                @if($phone)
 
-                <a
-                    href="{{ route('bookings.index') }}"
-                    class="kanila-account-link"
-                >
-                    My Bookings
-                </a>
-
-                <form
-                    method="POST"
-                    action="{{ route('logout') }}"
-                    class="kanila-logout-form"
-                >
-                    @csrf
-
-                    <button
-                        type="submit"
-                        class="kanila-account-link kanila-account-link--button"
+                    <a
+                        href="tel:{{ $phoneHref }}"
+                        class="kanila-topbar-contact"
                     >
-                        Logout
-                    </button>
-                </form>
 
-            @else
+                        <span class="kanila-topbar-icon">
+                            ☎
+                        </span>
 
-                {{-- Guest --}}
-                <a
-                    href="{{ route('login') }}"
-                    class="kanila-auth-link"
-                >
-                    Login
-                </a>
+                        <span>
+                            @if($phoneLabel)
+                                {{ $phoneLabel }}:
+                            @endif
 
-                <a
-                    href="{{ route('register') }}"
-                    class="kanila-register-button"
-                >
-                    Register
-                </a>
+                            {{ $phone }}
+                        </span>
 
-            @endauth
+                    </a>
+
+                @endif
+
+
+                @if($email)
+
+                    <a
+                        href="mailto:{{ $email }}"
+                        class="kanila-topbar-contact"
+                    >
+
+                        <span class="kanila-topbar-icon">
+                            ✉
+                        </span>
+
+                        <span>
+                            @if($emailLabel)
+                                {{ $emailLabel }}:
+                            @endif
+
+                            {{ $email }}
+                        </span>
+
+                    </a>
+
+                @endif
+
+            </div>
+
+
+            {{-- RIGHT --}}
+            <div class="kanila-topbar-right">
+
+                @auth
+
+                    <a
+                        href="{{ route('profile') }}"
+                        class="kanila-user-account"
+                    >
+
+                        <span class="kanila-user-icon">
+                            ♙
+                        </span>
+
+                        <span class="kanila-user-text">
+
+                            <small>Welcome</small>
+
+                            <strong>
+                                {{ auth()->user()->name
+                                    ?: auth()->user()->username
+                                    ?: 'My Account' }}
+                            </strong>
+
+                        </span>
+
+                    </a>
+
+
+                    <span class="kanila-topbar-divider"></span>
+
+
+                    <a
+                        href="{{ route('bookings.index') }}"
+                        class="kanila-account-link"
+                    >
+                        My Bookings
+                    </a>
+
+
+                    <form
+                        method="POST"
+                        action="{{ route('logout') }}"
+                        class="kanila-logout-form"
+                    >
+
+                        @csrf
+
+                        <button
+                            type="submit"
+                            class="kanila-account-link kanila-account-link--button"
+                        >
+                            Logout
+                        </button>
+
+                    </form>
+
+
+                @else
+
+                    <a
+                        href="{{ route('login') }}"
+                        class="kanila-auth-link"
+                    >
+                        Login
+                    </a>
+
+                    <a
+                        href="{{ route('register') }}"
+                        class="kanila-register-button"
+                    >
+                        Register
+                    </a>
+
+                @endauth
+
+            </div>
 
         </div>
 
     </div>
 
-</div>
+@endif

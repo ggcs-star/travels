@@ -39,14 +39,51 @@
                  LOGO
             ====================================================== --}}
 
+            @php
+                /*
+                |--------------------------------------------------------------------------
+                | LOGIN PAGE LOGO
+                |--------------------------------------------------------------------------
+                | ONLY Visual Settings -> Login Page Logo
+                | Setting key: visual.login_logo
+                |
+                | This is intentionally separate from:
+                | - visual.logo          (Website Logo)
+                | - footer.logo          (Footer Logo)
+                | - Admin sidebar logo
+                |--------------------------------------------------------------------------
+                */
+
+                $settingsService = app(\App\Services\SettingsService::class);
+
+                $loginLogo = $settingsService->get('visual.login_logo');
+                $loginLogoUrl = null;
+
+                if (!empty($loginLogo)) {
+                    $loginLogo = ltrim(trim((string) $loginLogo), '/');
+
+                    if (filter_var($loginLogo, FILTER_VALIDATE_URL)) {
+                        $loginLogoUrl = $loginLogo;
+                    } else {
+                        $loginLogoUrl = asset('storage/' . $loginLogo);
+                    }
+
+                    // Prevent browser cache from showing an older login logo.
+                    $loginLogoUrl .= (str_contains($loginLogoUrl, '?') ? '&' : '?')
+                        . 'v=' . rawurlencode($loginLogo);
+                }
+            @endphp
+
             <div class="auth-logo">
 
-                <img
-                    src="{{ asset('images/logo.jpeg') }}"
-                    alt="{{ config('travels.brand.name', 'Travels') }}"
-                    width="100"
-                    height="100"
-                >
+                @if (!empty($loginLogoUrl))
+                    <img
+                        src="{{ $loginLogoUrl }}"
+                        alt="{{ config('travels.brand.name', 'Travels') }}"
+                        width="100"
+                        height="100"
+                    >
+                @endif
 
             </div>
 

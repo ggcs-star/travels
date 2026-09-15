@@ -22,6 +22,7 @@
 
             <span class="admin-brand-content">
 
+                <!--
                 <strong>
                     {{ config('travels.brand.name', 'Travels') }}
                 </strong>
@@ -29,11 +30,11 @@
                 <small>
                     ADMIN PANEL
                 </small>
+                -->
 
             </span>
 
         </a>
-
 
         <button
             type="button"
@@ -64,6 +65,7 @@
                 MAIN
             </span>
 
+            {{-- DASHBOARD --}}
 
             <a
                 href="{{ route('admin.dashboard') }}"
@@ -83,6 +85,7 @@
         </div>
 
 
+
         {{-- =================================================
              CONTENT
         ================================================== --}}
@@ -92,6 +95,24 @@
             <span class="admin-nav-label">
                 CONTENT
             </span>
+
+
+            {{-- TOUR CATEGORIES --}}
+
+            <a
+                href="{{ route('admin.tour-categories.index') }}"
+                class="admin-nav-link {{ request()->routeIs('admin.tour-categories.*') ? 'active' : '' }}"
+            >
+
+                <span class="admin-nav-icon">
+                    ◈
+                </span>
+
+                <span>
+                    Tour Categories
+                </span>
+
+            </a>
 
 
             {{-- TOUR PACKAGES --}}
@@ -129,6 +150,14 @@
 
             </a>
 
+{{-- CONTACT INQUIRIES --}}
+<a
+    href="{{ route('admin.inquiries.index') }}"
+    class="admin-nav-link {{ request()->routeIs('admin.inquiries.*') ? 'active' : '' }}"
+>
+    <span class="admin-nav-icon">✉</span>
+    <span>Contact Inquiries</span>
+</a>
 
             {{-- =================================================
                  BLOG
@@ -152,16 +181,58 @@
                 </a>
 
 
+                {{-- POINTS MANAGEMENT --}}
+
+                <a
+                    href="{{ route('admin.point-settings.index') }}"
+                    class="admin-nav-link {{ request()->routeIs('admin.point-settings.*') ? 'active' : '' }}"
+                >
+
+                    <span class="admin-nav-icon">
+                        ◎
+                    </span>
+
+                    <span>
+                        Points Management
+                    </span>
+
+                </a>
+
+
+                {{-- POINTS WALLETS --}}
+
+                <a
+                    href="{{ route('admin.point-wallets.index') }}"
+                    class="admin-nav-link {{ request()->routeIs('admin.point-wallets.*') ? 'active' : '' }}"
+                >
+
+                    <span class="admin-nav-icon">
+                        ◎
+                    </span>
+
+                    <span>
+                        Points Wallets
+                    </span>
+
+                </a>
+
+
                 {{-- BLOG SUB NAVIGATION --}}
 
-                @if(request()->routeIs('admin.blog.*') || request()->routeIs('admin.blog-categories.*'))
+                @if(
+                    request()->routeIs('admin.blog.*') ||
+                    request()->routeIs('admin.blog-categories.*')
+                )
 
                     <div class="admin-nav-submenu">
+
+                        {{-- ALL POSTS --}}
 
                         <a
                             href="{{ route('admin.blog.index') }}"
                             class="admin-nav-sublink {{ request()->routeIs('admin.blog.index', 'admin.blog.create', 'admin.blog.edit', 'admin.blog.show') ? 'active' : '' }}"
                         >
+
                             <span class="admin-nav-subicon">
                                 •
                             </span>
@@ -169,13 +240,17 @@
                             <span>
                                 All Posts
                             </span>
+
                         </a>
 
+
+                        {{-- CREATE POST --}}
 
                         <a
                             href="{{ route('admin.blog.create') }}"
                             class="admin-nav-sublink {{ request()->routeIs('admin.blog.create') ? 'active' : '' }}"
                         >
+
                             <span class="admin-nav-subicon">
                                 +
                             </span>
@@ -183,13 +258,17 @@
                             <span>
                                 Create Post
                             </span>
+
                         </a>
 
+
+                        {{-- CATEGORIES --}}
 
                         <a
                             href="{{ route('admin.blog-categories.index') }}"
                             class="admin-nav-sublink {{ request()->routeIs('admin.blog-categories.*') ? 'active' : '' }}"
                         >
+
                             <span class="admin-nav-subicon">
                                 ◦
                             </span>
@@ -197,6 +276,7 @@
                             <span>
                                 Categories
                             </span>
+
                         </a>
 
                     </div>
@@ -208,7 +288,8 @@
         </div>
 
 
-        {{-- =================================================
+
+        <!-- {{-- =================================================
              WEBSITE
         ================================================== --}}
 
@@ -254,9 +335,159 @@
                     Website Content
                 </span>
 
-            </a>
+            </a> -->
+<a
+    href="{{ route('admin.pages.index') }}"
+    class="admin-nav-link {{ request()->routeIs('admin.pages.*') ? 'active' : '' }}"
+>
+    <span class="admin-nav-icon">
+        ▤
+    </span>
+
+    <span>
+        Pages
+    </span>
+</a>
+
+
+            {{-- =================================================
+                 SETTINGS
+            ================================================== --}}
+
+            <div class="admin-nav-group">
+
+                {{-- SETTINGS TOGGLE --}}
+
+                <a
+                    href="#"
+                    id="adminSettingsToggle"
+                    class="admin-nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}"
+                    aria-expanded="{{ request()->routeIs('admin.settings.*') ? 'true' : 'false' }}"
+                    aria-controls="adminSettingsSubmenu"
+                    onclick="toggleAdminSettings(event)"
+                >
+
+                    <span class="admin-nav-icon">
+                        ⚙
+                    </span>
+
+                    <span>
+                        Settings
+                    </span>
+
+                    <span
+                        class="admin-nav-arrow"
+                        id="adminSettingsArrow"
+                    >
+                        {{ request()->routeIs('admin.settings.*') ? '⌃' : '⌄' }}
+                    </span>
+
+                </a>
+
+
+                {{-- SETTINGS SUB NAVIGATION --}}
+
+                <div
+                    id="adminSettingsSubmenu"
+                    class="admin-nav-submenu"
+                    style="{{ request()->routeIs('admin.settings.*') ? 'display: block;' : 'display: none;' }}"
+                >
+
+                    {{-- GENERAL SETTINGS --}}
+
+                    <a
+                        href="{{ route('admin.settings.general') }}"
+                        class="admin-nav-sublink {{ request()->routeIs('admin.settings.general') ? 'active' : '' }}"
+                    >
+
+                        <span class="admin-nav-subicon">
+                            •
+                        </span>
+
+                        <span>
+                            General Settings
+                        </span>
+
+                    </a>
+
+
+                    {{-- VISUAL SETTINGS --}}
+
+                    <a
+                        href="{{ route('admin.settings.visual') }}"
+                        class="admin-nav-sublink {{ request()->routeIs('admin.settings.visual') ? 'active' : '' }}"
+                    >
+
+                        <span class="admin-nav-subicon">
+                            •
+                        </span>
+
+                        <span>
+                            Visual Settings
+                        </span>
+
+                    </a>
+
+
+                    {{-- FONT SETTINGS --}}
+
+                    <a
+                        href="{{ route('admin.settings.fonts') }}"
+                        class="admin-nav-sublink {{ request()->routeIs('admin.settings.fonts') ? 'active' : '' }}"
+                    >
+
+                        <span class="admin-nav-subicon">
+                            •
+                        </span>
+
+                        <span>
+                            Font Settings
+                        </span>
+
+                    </a>
+
+
+                    {{-- HOME PAGE SETTINGS --}}
+
+                    <a
+                        href="{{ route('admin.settings.home') }}"
+                        class="admin-nav-sublink {{ request()->routeIs('admin.settings.home') ? 'active' : '' }}"
+                    >
+
+                        <span class="admin-nav-subicon">
+                            •
+                        </span>
+
+                        <span>
+                            Home Page Settings
+                        </span>
+
+                    </a>
+
+
+                    {{-- SEO SETTINGS --}}
+
+                    <a
+                        href="{{ route('admin.settings.seo') }}"
+                        class="admin-nav-sublink {{ request()->routeIs('admin.settings.seo') ? 'active' : '' }}"
+                    >
+
+                        <span class="admin-nav-subicon">
+                            •
+                        </span>
+
+                        <span>
+                            SEO Settings
+                        </span>
+
+                    </a>
+
+                </div>
+
+            </div>
 
         </div>
+
 
 
         {{-- =================================================
@@ -270,7 +501,7 @@
             </span>
 
 
-            {{-- PROFILE --}}
+            {{-- MY PROFILE --}}
 
             <a
                 href="{{ route('admin.profile') }}"
@@ -288,11 +519,11 @@
             </a>
 
 
-            {{-- PASSWORD --}}
+            {{-- CHANGE PASSWORD --}}
 
             <a
-                href="{{ route('admin.password.change') }}"
-                class="admin-nav-link {{ request()->routeIs('admin.password.change') ? 'active' : '' }}"
+                href="{{ route('admin.profile.password') }}"
+                class="admin-nav-link {{ request()->routeIs('admin.profile.password') ? 'active' : '' }}"
             >
 
                 <span class="admin-nav-icon">
@@ -307,7 +538,9 @@
 
         </div>
 
+
     </nav>
+
 
 
     {{-- =====================================================
@@ -378,6 +611,7 @@
 </aside>
 
 
+
 {{-- =========================================================
      MOBILE OVERLAY
 ========================================================= --}}
@@ -386,3 +620,41 @@
     class="admin-sidebar-overlay"
     id="adminSidebarOverlay"
 ></div>
+
+
+
+{{-- =========================================================
+     SETTINGS TOGGLE
+========================================================= --}}
+
+<script>
+    function toggleAdminSettings(event) {
+
+        event.preventDefault();
+
+        const submenu = document.getElementById('adminSettingsSubmenu');
+        const arrow = document.getElementById('adminSettingsArrow');
+        const toggle = document.getElementById('adminSettingsToggle');
+
+        if (!submenu || !arrow || !toggle) {
+            return;
+        }
+
+        const isOpen = submenu.style.display === 'block';
+
+        if (isOpen) {
+
+            submenu.style.display = 'none';
+            arrow.textContent = '⌄';
+            toggle.setAttribute('aria-expanded', 'false');
+
+        } else {
+
+            submenu.style.display = 'block';
+            arrow.textContent = '⌃';
+            toggle.setAttribute('aria-expanded', 'true');
+
+        }
+
+    }
+</script>

@@ -633,6 +633,61 @@
         $tour->excluded_items ?? []
     );
 
+    $itinerary = old(
+        'itinerary',
+        $tour->itinerary ?? []
+    );
+
+    if (! is_array($itinerary)) {
+        $itinerary = [];
+    }
+
+    $importantNotes = old(
+        'important_notes',
+        $tour->important_notes ?? ''
+    );
+
+    /*
+     * Important Notes are stored as plain text, one point per line.
+     * Normalize legacy array values here, outside the textarea, so Blade
+     * never prints an @php block literally inside the field.
+     */
+    if (is_array($importantNotes)) {
+        $importantNotesForForm = collect($importantNotes)
+            ->map(function ($note) {
+                if (is_array($note)) {
+                    return trim((string) (
+                        $note['description']
+                        ?? $note['content']
+                        ?? $note['text']
+                        ?? $note['title']
+                        ?? ''
+                    ));
+                }
+
+                return trim((string) $note);
+            })
+            ->filter()
+            ->implode("\n");
+    } else {
+        $importantNotesForForm = (string) $importantNotes;
+    }
+
+    $termsConditions = old(
+        'terms_conditions',
+        $tour->terms_conditions ?? ''
+    );
+
+    $cancellationPolicy = old(
+        'cancellation_policy',
+        $tour->cancellation_policy ?? ''
+    );
+
+    $privacyPolicy = old(
+        'privacy_policy',
+        $tour->privacy_policy ?? ''
+    );
+
 @endphp
 
 
@@ -750,7 +805,449 @@
 
 
 {{-- ================================================================
-     STEP 06 — IMAGES
+     STEP 06 — ITINERARY
+================================================================ --}}
+
+<section class="admin-card">
+
+    <div class="admin-card__header">
+        <div>
+            <span class="admin-eyebrow">STEP 06</span>
+            <h2>Tour Itinerary</h2>
+            <p>
+                Add each day with title, destination/places covered, a day image,
+                description and activities. Day image and location are used only
+                in the generated PDF; the public tour page continues to show its
+                existing itinerary design.
+            </p>
+        </div>
+    </div>
+
+    <div id="tour-itinerary" class="tour-itinerary" data-itinerary-container>
+
+        <div class="tour-itinerary__list" data-itinerary-list>
+
+            @forelse($itinerary as $index => $day)
+
+                @php
+                    $dayNumber = (int) ($day['day'] ?? ($index + 1));
+                    $dayTitle = $day['title'] ?? $day['name'] ?? '';
+                    $dayLocation = $day['location'] ?? $day['places'] ?? '';
+                    $dayDescription = $day['description'] ?? $day['details'] ?? '';
+                    $dayImage = $day['image'] ?? $day['image_path'] ?? '';
+                    $activities = $day['activities'] ?? $day['items'] ?? [];
+
+                    if (is_string($activities)) {
+                        $activities = preg_split('/\R/', $activities, -1, PREG_SPLIT_NO_EMPTY);
+                    }
+
+                    if (! is_array($activities)) {
+                        $activities = [];
+                    }
+                @endphp
+
+                <div class="tour-itinerary-day" data-itinerary-day>
+
+                    <input
+                        type="hidden"
+                        name="itinerary[{{ $index }}][day]"
+                        value="{{ $dayNumber }}"
+                        data-itinerary-day-number
+                    >
+
+                    <div class="tour-itinerary-day__header">
+                        <div>
+                            <span class="tour-itinerary-day__number" data-itinerary-day-label>
+                                Day {{ $dayNumber }}
+                            </span>
+                            <strong>Day Itinerary</strong>
+                        </div>
+
+                        <button
+                            type="button"
+                            class="admin-button admin-button--danger"
+                            data-remove-itinerary-day
+                        >
+                            Remove Day
+                        </button>
+                    </div>
+
+                    <div class="admin-form-grid">
+
+                        <div class="admin-form-group admin-form-group--full">
+                            <label>
+                                Day Title <span>*</span>
+                            </label>
+                            <input
+                                type="text"
+                                name="itinerary[{{ $index }}][title]"
+                                value="{{ $dayTitle }}"
+                                maxlength="255"
+                                placeholder="e.g. Kashi Vishwanath Temple & Spiritual Varanasi"
+                                required
+                            >
+                            @error("itinerary.$index.title")
+                                <small class="admin-form-error">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label>Location / Places Covered</label>
+                            <input
+                                type="text"
+                                name="itinerary[{{ $index }}][location]"
+                                value="{{ $dayLocation }}"
+                                maxlength="500"
+                                placeholder="e.g. Varanasi – Kashi Vishwanath, Vishalakshi & Annapurna"
+                            >
+                            <small>This is shown in the PDF only.</small>
+                            @error("itinerary.$index.location")
+                                <small class="admin-form-error">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label>Day Image</label>
+                            <input
+                                type="file"
+                                name="itinerary[{{ $index }}][image]"
+                                accept=".jpg,.jpeg,.png,.webp,.avif,image/jpeg,image/png,image/webp,image/avif"
+                                data-itinerary-image-input
+                            >
+                            <small>JPG, PNG, WebP or AVIF · max 5 MB · PDF only.</small>
+
+                            @if($dayImage)
+                                @php
+                                    $previewUrl = \Illuminate\Support\Str::startsWith($dayImage, ['http://', 'https://', '//'])
+                                        ? $dayImage
+                                        : \Illuminate\Support\Facades\Storage::disk('public')->url(ltrim($dayImage, '/'));
+                                @endphp
+                                <div class="tour-itinerary-image-preview">
+                                    <img src="{{ $previewUrl }}" alt="Day {{ $dayNumber }}">
+                                    <span>Current PDF image</span>
+                                </div>
+                            @endif
+
+                            <div class="tour-itinerary-image-preview tour-itinerary-image-preview--new" data-itinerary-image-preview hidden>
+                                <img src="" alt="Selected day image" data-itinerary-image-preview-img>
+                                <span>New image selected</span>
+                            </div>
+
+                            @error("itinerary.$index.image")
+                                <small class="admin-form-error">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <div class="admin-form-group admin-form-group--full">
+                            <label>Day Description</label>
+                            <textarea
+                                name="itinerary[{{ $index }}][description]"
+                                rows="5"
+                                maxlength="10000"
+                                placeholder="Describe the day's travel, sightseeing, meals, hotel and other details..."
+                            >{{ $dayDescription }}</textarea>
+                            @error("itinerary.$index.description")
+                                <small class="admin-form-error">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                    </div>
+
+                    <div class="tour-itinerary-activities">
+                        <div class="tour-itinerary-activities__header">
+                            <div>
+                                <strong>Activities / Schedule</strong>
+                                <small>Add one activity or schedule item per row.</small>
+                            </div>
+                            <button type="button" class="admin-button" data-add-itinerary-activity>
+                                + Add Activity
+                            </button>
+                        </div>
+
+                        <div data-itinerary-activities>
+                            @forelse($activities as $activityIndex => $activity)
+                                @php
+                                    if (is_array($activity)) {
+                                        $activity = $activity['title'] ?? $activity['name'] ?? $activity['text'] ?? '';
+                                    }
+                                @endphp
+                                <div class="tour-itinerary-activity" data-itinerary-activity>
+                                    <input
+                                        type="text"
+                                        name="itinerary[{{ $index }}][activities][{{ $activityIndex }}]"
+                                        value="{{ $activity }}"
+                                        maxlength="500"
+                                        placeholder="e.g. Visit Kashi Vishwanath Temple"
+                                    >
+                                    <button
+                                        type="button"
+                                        class="admin-button admin-button--danger"
+                                        data-remove-itinerary-activity
+                                        title="Remove activity"
+                                    >×</button>
+                                </div>
+                            @empty
+                                <div class="tour-itinerary-activity" data-itinerary-activity>
+                                    <input
+                                        type="text"
+                                        name="itinerary[{{ $index }}][activities][0]"
+                                        value=""
+                                        maxlength="500"
+                                        placeholder="e.g. Visit Kashi Vishwanath Temple"
+                                    >
+                                    <button
+                                        type="button"
+                                        class="admin-button admin-button--danger"
+                                        data-remove-itinerary-activity
+                                        title="Remove activity"
+                                    >×</button>
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+
+                </div>
+
+            @empty
+
+                <div class="tour-itinerary-day" data-itinerary-day>
+                    <input type="hidden" name="itinerary[0][day]" value="1" data-itinerary-day-number>
+
+                    <div class="tour-itinerary-day__header">
+                        <div>
+                            <span class="tour-itinerary-day__number" data-itinerary-day-label>Day 1</span>
+                            <strong>Day Itinerary</strong>
+                        </div>
+                        <button type="button" class="admin-button admin-button--danger" data-remove-itinerary-day>
+                            Remove Day
+                        </button>
+                    </div>
+
+                    <div class="admin-form-grid">
+                        <div class="admin-form-group admin-form-group--full">
+                            <label>Day Title <span>*</span></label>
+                            <input
+                                type="text"
+                                name="itinerary[0][title]"
+                                maxlength="255"
+                                placeholder="e.g. Arrival in Varanasi & Ganga Aarti"
+                                required
+                            >
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label>Location / Places Covered</label>
+                            <input
+                                type="text"
+                                name="itinerary[0][location]"
+                                maxlength="500"
+                                placeholder="e.g. Varanasi – Dashashwamedh Ghat"
+                            >
+                            <small>This is shown in the PDF only.</small>
+                        </div>
+
+                        <div class="admin-form-group">
+                            <label>Day Image</label>
+                            <input
+                                type="file"
+                                name="itinerary[0][image]"
+                                accept=".jpg,.jpeg,.png,.webp,.avif,image/jpeg,image/png,image/webp,image/avif"
+                                data-itinerary-image-input
+                            >
+                            <small>JPG, PNG, WebP or AVIF · max 5 MB · PDF only.</small>
+                            <div class="tour-itinerary-image-preview tour-itinerary-image-preview--new" data-itinerary-image-preview hidden>
+                                <img src="" alt="Selected day image" data-itinerary-image-preview-img>
+                                <span>New image selected</span>
+                            </div>
+                        </div>
+
+                        <div class="admin-form-group admin-form-group--full">
+                            <label>Day Description</label>
+                            <textarea
+                                name="itinerary[0][description]"
+                                rows="5"
+                                maxlength="10000"
+                                placeholder="Describe the day's travel, sightseeing, meals, hotel and other details..."
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <div class="tour-itinerary-activities">
+                        <div class="tour-itinerary-activities__header">
+                            <div>
+                                <strong>Activities / Schedule</strong>
+                                <small>Add one activity or schedule item per row.</small>
+                            </div>
+                            <button type="button" class="admin-button" data-add-itinerary-activity>+ Add Activity</button>
+                        </div>
+                        <div data-itinerary-activities>
+                            <div class="tour-itinerary-activity" data-itinerary-activity>
+                                <input
+                                    type="text"
+                                    name="itinerary[0][activities][0]"
+                                    maxlength="500"
+                                    placeholder="e.g. Airport pickup and hotel check-in"
+                                >
+                                <button type="button" class="admin-button admin-button--danger" data-remove-itinerary-activity title="Remove activity">×</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            @endforelse
+
+        </div>
+
+        <div class="tour-itinerary__actions">
+            <button type="button" class="admin-button admin-button--dark" data-add-itinerary-day>
+                + Add Another Day
+            </button>
+            <small>Add all days that should appear in the itinerary PDF.</small>
+        </div>
+
+    </div>
+
+    @error('itinerary')
+        <small class="admin-form-error">{{ $message }}</small>
+    @enderror
+
+</section>
+
+{{-- ================================================================
+     STEP 07 — IMPORTANT NOTES & POLICIES
+================================================================ --}}
+
+<section class="admin-card">
+
+    <div class="admin-card__header">
+        <div>
+            <span class="admin-eyebrow">STEP 07</span>
+            <h2>Important Notes & Policies</h2>
+            <p>
+                These sections are displayed as separate modules on the
+                public tour page and are also included in the dynamic PDF.
+            </p>
+        </div>
+    </div>
+
+    <div class="admin-form-grid">
+
+        <div class="admin-form-group admin-form-group--full">
+            <label for="important_notes">
+                Important Notes
+            </label>
+
+            <textarea
+                id="important_notes"
+                name="important_notes"
+                rows="10"
+                maxlength="30000"
+                placeholder="Enter ONE short Important Note per line. Keep each point short enough to display in about 1–2 lines on the website.
+
+Example:
+Tours may be cancelled, postponed, or modified due to natural calamities, extreme weather, government restrictions, political disturbances, or other unforeseen circumstances.
+SSB Travelz will not be held responsible for delays, cancellations, or changes caused by airlines, helicopter, hotels, transport providers, or other third parties.
+Any additional expenses arising due to unforeseen circumstances must be borne by the traveler."
+            >{{ $importantNotesForForm }}</textarea>
+
+            <small class="important-notes-admin-help">
+                <strong>SSB-style format:</strong> Enter one short point per line. Do not add
+                <code>&lt;h3&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;ul&gt;</code> or
+                <code>&lt;li&gt;</code> tags here. The frontend automatically converts each line
+                into a numbered yellow card.
+            </small>
+
+            @error('important_notes')
+                <small class="admin-form-error">
+                    {{ $message }}
+                </small>
+            @enderror
+        </div>
+
+
+        <div class="admin-form-group admin-form-group--full">
+            <label for="terms_conditions">
+                Terms & Conditions
+            </label>
+
+            <textarea
+                id="terms_conditions"
+                name="terms_conditions"
+                rows="10"
+                maxlength="30000"
+                placeholder="Enter the terms and conditions applicable to this tour package..."
+            >{{ $termsConditions }}</textarea>
+
+            <small>
+                This content will appear under the Terms & Conditions module
+                and in the PDF.
+            </small>
+
+            @error('terms_conditions')
+                <small class="admin-form-error">
+                    {{ $message }}
+                </small>
+            @enderror
+        </div>
+
+
+        <div class="admin-form-group admin-form-group--full">
+            <label for="cancellation_policy">
+                Cancellation Policy
+            </label>
+
+            <textarea
+                id="cancellation_policy"
+                name="cancellation_policy"
+                rows="10"
+                maxlength="30000"
+                placeholder="Enter cancellation charges, refund rules, timelines and other cancellation conditions..."
+            >{{ $cancellationPolicy }}</textarea>
+
+            <small>
+                Keep the policy clear and customer-friendly.
+            </small>
+
+            @error('cancellation_policy')
+                <small class="admin-form-error">
+                    {{ $message }}
+                </small>
+            @enderror
+        </div>
+
+
+        <div class="admin-form-group admin-form-group--full">
+            <label for="privacy_policy">
+                Privacy Policy
+            </label>
+
+            <textarea
+                id="privacy_policy"
+                name="privacy_policy"
+                rows="10"
+                maxlength="30000"
+                placeholder="Enter the privacy information applicable to bookings and this tour package..."
+            >{{ $privacyPolicy }}</textarea>
+
+            <small>
+                This tour-specific privacy content will also be available in
+                the generated PDF.
+            </small>
+
+            @error('privacy_policy')
+                <small class="admin-form-error">
+                    {{ $message }}
+                </small>
+            @enderror
+        </div>
+
+    </div>
+
+</section>
+
+
+{{-- ================================================================
+     STEP 08 — IMAGES
 ================================================================ --}}
 
 <section class="admin-card">
@@ -951,7 +1448,7 @@
 
 
 {{-- ================================================================
-     STEP 07 — SEO
+     STEP 09 — SEO
 ================================================================ --}}
 
 <section class="admin-card">
@@ -1206,7 +1703,7 @@
 
 
 {{-- ================================================================
-     STEP 08 — VISIBILITY
+     STEP 10 — VISIBILITY
 ================================================================ --}}
 
 <section class="admin-card">
@@ -1332,7 +1829,7 @@
 
 
 {{-- ================================================================
-     STEP 09 — TOUR DEPARTURES
+     STEP 11 — TOUR DEPARTURES
 ================================================================ --}}
 
 @php
@@ -2027,8 +2524,324 @@
 
 
 
+
+<style>
+.tour-itinerary-day {
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 18px;
+    background: #fff;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, .04);
+}
+.tour-itinerary-day__header {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:20px;
+    padding-bottom:15px;
+    border-bottom:1px solid #edf1f5;
+}
+.tour-itinerary-day__header > div {
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+.tour-itinerary-day__number {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:64px;
+    padding:7px 11px;
+    border-radius:999px;
+    background:#fff3e6;
+    color:#e8790b;
+    font-weight:800;
+    font-size:12px;
+}
+.tour-itinerary-activities {
+    margin-top:18px;
+    padding:16px;
+    border-radius:14px;
+    background:#f8fafc;
+    border:1px solid #edf1f5;
+}
+.tour-itinerary-activities__header {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:12px;
+}
+.tour-itinerary-activities__header div {
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+}
+.tour-itinerary-activities__header small,
+.tour-itinerary-day .admin-form-group > small {
+    color:#64748b;
+    font-size:12px;
+}
+.tour-itinerary-activity {
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:8px;
+    margin-top:8px;
+}
+.tour-itinerary-image-preview {
+    position:relative;
+    width:100%;
+    max-width:240px;
+    margin-top:10px;
+    border:1px solid #e2e8f0;
+    border-radius:12px;
+    overflow:hidden;
+    background:#f8fafc;
+}
+.tour-itinerary-image-preview img {
+    display:block;
+    width:100%;
+    height:120px;
+    object-fit:cover;
+}
+.tour-itinerary-image-preview span {
+    display:block;
+    padding:7px 9px;
+    font-size:11px;
+    font-weight:700;
+    color:#475569;
+}
+@media (max-width:700px) {
+    .tour-itinerary-day { padding:14px; }
+    .tour-itinerary-day__header,
+    .tour-itinerary-activities__header { align-items:flex-start; flex-direction:column; }
+    .tour-itinerary-day__header { gap:10px; }
+    .tour-itinerary-activity { grid-template-columns:1fr; }
+}
+</style>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Dynamic Itinerary Builder
+    |--------------------------------------------------------------------------
+    */
+
+    const itinerary = document.querySelector('[data-itinerary-container]');
+
+    if (itinerary) {
+        const list = itinerary.querySelector('[data-itinerary-list]');
+        const addDayButton = itinerary.querySelector('[data-add-itinerary-day]');
+
+        function renumberItinerary() {
+            const days = list.querySelectorAll('[data-itinerary-day]');
+
+            days.forEach(function (day, dayIndex) {
+                const dayNumber = dayIndex + 1;
+                const numberInput = day.querySelector('[data-itinerary-day-number]');
+                const label = day.querySelector('[data-itinerary-day-label]');
+                const titleInput = day.querySelector('[data-itinerary-title]') || day.querySelector('input[name*="[title]"]');
+                const locationInput = day.querySelector('[data-itinerary-location]') || day.querySelector('input[name*="[location]"]');
+                const imageInput = day.querySelector('[data-itinerary-image-input]');
+                const descriptionInput = day.querySelector('[data-itinerary-description]') || day.querySelector('textarea[name*="[description]"]');
+
+                if (numberInput) {
+                    numberInput.value = dayNumber;
+                    numberInput.name = 'itinerary[' + dayIndex + '][day]';
+                }
+
+                if (label) {
+                    label.textContent = 'Day ' + dayNumber;
+                }
+
+                if (titleInput) {
+                    titleInput.name = 'itinerary[' + dayIndex + '][title]';
+                }
+
+                if (locationInput) {
+                    locationInput.name = 'itinerary[' + dayIndex + '][location]';
+                }
+
+                if (imageInput) {
+                    imageInput.name = 'itinerary[' + dayIndex + '][image]';
+                }
+
+                if (descriptionInput) {
+                    descriptionInput.name = 'itinerary[' + dayIndex + '][description]';
+                }
+
+                day.querySelectorAll('[data-itinerary-activity]').forEach(function (activity, activityIndex) {
+                    const input = activity.querySelector('input');
+                    if (input) {
+                        input.name = 'itinerary[' + dayIndex + '][activities][' + activityIndex + ']';
+                    }
+                });
+            });
+        }
+
+        function bindImagePreview(day) {
+            const input = day.querySelector('[data-itinerary-image-input]');
+            const preview = day.querySelector('[data-itinerary-image-preview]');
+            const previewImage = day.querySelector('[data-itinerary-image-preview-img]');
+
+            if (!input || !preview || !previewImage || input.dataset.previewBound === '1') {
+                return;
+            }
+
+            input.dataset.previewBound = '1';
+
+            input.addEventListener('change', function () {
+                const file = input.files && input.files[0];
+                if (!file) {
+                    preview.hidden = true;
+                    previewImage.removeAttribute('src');
+                    return;
+                }
+
+                const objectUrl = URL.createObjectURL(file);
+                previewImage.src = objectUrl;
+                preview.hidden = false;
+            });
+        }
+
+        function createActivity(day) {
+            const activities = day.querySelector('[data-itinerary-activities]');
+            if (!activities) return;
+
+            const activity = document.createElement('div');
+            activity.className = 'tour-itinerary-activity';
+            activity.setAttribute('data-itinerary-activity', '');
+            activity.innerHTML = `
+                <input type="text" maxlength="500" placeholder="e.g. Sightseeing / Transfer / Meal / Hotel">
+                <button type="button" class="admin-button admin-button--danger" data-remove-itinerary-activity title="Remove activity">×</button>
+            `;
+
+            activities.appendChild(activity);
+            renumberItinerary();
+
+            const input = activity.querySelector('input');
+            if (input) input.focus();
+        }
+
+        function createDay() {
+            const dayIndex = list.querySelectorAll('[data-itinerary-day]').length;
+            const day = document.createElement('div');
+            day.className = 'tour-itinerary-day';
+            day.setAttribute('data-itinerary-day', '');
+
+            day.innerHTML = `
+                <input type="hidden" value="${dayIndex + 1}" data-itinerary-day-number>
+
+                <div class="tour-itinerary-day__header">
+                    <div>
+                        <span class="tour-itinerary-day__number" data-itinerary-day-label>Day ${dayIndex + 1}</span>
+                        <strong>Day Itinerary</strong>
+                    </div>
+                    <button type="button" class="admin-button admin-button--danger" data-remove-itinerary-day>Remove Day</button>
+                </div>
+
+                <div class="admin-form-grid">
+                    <div class="admin-form-group admin-form-group--full">
+                        <label>Day Title <span>*</span></label>
+                        <input type="text" maxlength="255" placeholder="e.g. Kashi Vishwanath Temple & Spiritual Varanasi" required data-itinerary-title>
+                    </div>
+
+                    <div class="admin-form-group">
+                        <label>Location / Places Covered</label>
+                        <input type="text" maxlength="500" placeholder="e.g. Varanasi – Kashi Vishwanath, Vishalakshi & Annapurna" data-itinerary-location>
+                        <small>This is shown in the PDF only.</small>
+                    </div>
+
+                    <div class="admin-form-group">
+                        <label>Day Image</label>
+                        <input type="file" accept=".jpg,.jpeg,.png,.webp,.avif,image/jpeg,image/png,image/webp,image/avif" data-itinerary-image-input>
+                        <small>JPG, PNG, WebP or AVIF · max 5 MB · PDF only.</small>
+                        <div class="tour-itinerary-image-preview tour-itinerary-image-preview--new" data-itinerary-image-preview hidden>
+                            <img src="" alt="Selected day image" data-itinerary-image-preview-img>
+                            <span>New image selected</span>
+                        </div>
+                    </div>
+
+                    <div class="admin-form-group admin-form-group--full">
+                        <label>Day Description</label>
+                        <textarea rows="5" maxlength="10000" placeholder="Describe the day's travel, sightseeing, meals, hotel and other details..." data-itinerary-description></textarea>
+                    </div>
+                </div>
+
+                <div class="tour-itinerary-activities">
+                    <div class="tour-itinerary-activities__header">
+                        <div>
+                            <strong>Activities / Schedule</strong>
+                            <small>Add one activity or schedule item per row.</small>
+                        </div>
+                        <button type="button" class="admin-button" data-add-itinerary-activity>+ Add Activity</button>
+                    </div>
+                    <div data-itinerary-activities>
+                        <div class="tour-itinerary-activity" data-itinerary-activity>
+                            <input type="text" maxlength="500" placeholder="e.g. Sightseeing / Transfer / Meal">
+                            <button type="button" class="admin-button admin-button--danger" data-remove-itinerary-activity title="Remove activity">×</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            list.appendChild(day);
+            renumberItinerary();
+            bindImagePreview(day);
+
+            day.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        addDayButton?.addEventListener('click', createDay);
+
+        itinerary.addEventListener('click', function (event) {
+            const addActivity = event.target.closest('[data-add-itinerary-activity]');
+            if (addActivity) {
+                const day = addActivity.closest('[data-itinerary-day]');
+                if (day) createActivity(day);
+                return;
+            }
+
+            const removeActivity = event.target.closest('[data-remove-itinerary-activity]');
+            if (removeActivity) {
+                const activity = removeActivity.closest('[data-itinerary-activity]');
+                if (activity) {
+                    activity.remove();
+                    renumberItinerary();
+                }
+                return;
+            }
+
+            const removeDay = event.target.closest('[data-remove-itinerary-day]');
+            if (removeDay) {
+                const days = list.querySelectorAll('[data-itinerary-day]');
+                if (days.length <= 1) {
+                    alert('At least one itinerary day is required.');
+                    return;
+                }
+
+                const day = removeDay.closest('[data-itinerary-day]');
+                if (day) {
+                    day.remove();
+                    renumberItinerary();
+                }
+            }
+        });
+
+        list.querySelectorAll('[data-itinerary-day]').forEach(bindImagePreview);
+        renumberItinerary();
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Existing Tour Departures
+    |--------------------------------------------------------------------------
+    */
 
     const container =
         document.getElementById('tour-departures');
@@ -2361,3 +3174,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 </script>
+<style>
+/* =========================================================
+   IMPORTANT NOTES — ADMIN
+   One short point per line, matching the public SSB card UI.
+========================================================= */
+.important-notes-admin-help {
+    display: block;
+    margin-top: 8px;
+    color: #64748b;
+    line-height: 1.55;
+}
+
+.important-notes-admin-help code {
+    padding: 2px 5px;
+    border-radius: 4px;
+    background: #f1f5f9;
+    color: #334155;
+    font-size: .9em;
+}
+
+#important_notes {
+    min-height: 190px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+}
+</style>

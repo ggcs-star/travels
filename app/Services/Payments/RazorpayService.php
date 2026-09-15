@@ -17,20 +17,26 @@ class RazorpayService
     /**
      * @throws RequestException
      */
-    public function createOrder(Booking $booking): array
-    {
-        $this->ensureConfigured();
+public function createOrder(Booking $booking): array
+{
+    $this->ensureConfigured();
 
-        return $this->client()->post('/orders', [
-            'amount' => (int) round(((float) $booking->total_amount) * 100),
-            'currency' => $booking->currency,
-            'receipt' => $booking->booking_number,
-            'notes' => [
-                'booking_number' => $booking->booking_number,
-                'booking_id' => (string) $booking->id,
-            ],
-        ])->throw()->json();
-    }
+    $payableAmount = $booking->payableAmount();
+
+    return $this->client()->post('/orders', [
+        'amount' => (int) round($payableAmount * 100),
+        'currency' => $booking->currency,
+        'receipt' => $booking->booking_number,
+        'notes' => [
+            'booking_number' => $booking->booking_number,
+            'booking_id' => (string) $booking->id,
+            'total_amount' => (string) $booking->total_amount,
+            'points_redeemed' => (string) $booking->points_redeemed,
+            'points_discount' => (string) $booking->points_discount,
+            'payable_amount' => (string) $payableAmount,
+        ],
+    ])->throw()->json();
+}
 
     public function verifyPaymentSignature(
         string $orderId,

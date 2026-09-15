@@ -6,6 +6,9 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Models\UserPointWallet;
+use App\Models\UserProfile;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -74,6 +77,15 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Booking::class);
     }
+    
+    public function pointWallet(): HasOne
+{
+    return $this->hasOne(UserPointWallet::class);
+}
+public function profile(): HasOne
+{
+    return $this->hasOne(UserProfile::class);
+}
     public function blogs()
 {
     return $this->hasMany(

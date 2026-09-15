@@ -1,810 +1,291 @@
 @extends('layouts.app')
 
-@section('title', 'My Profile | ' . config('travels.brand.name', 'Travels'))
+@section('title', 'My Profile')
 
 @section('content')
+<div class="profile-page">
 
-@php
-    $user = auth()->user();
+    <section class="profile-hero">
+        <div class="profile-hero__image"></div>
+        <div class="profile-hero__overlay"></div>
 
-    $userName = $user->username ?: $user->name ?: 'Traveller';
-    $initials = collect(preg_split('/\s+/', trim($userName)))
-        ->filter()
-        ->map(fn ($word) => strtoupper(substr($word, 0, 1)))
-        ->take(2)
-        ->implode('');
+        <div class="profile-hero__content">
+            <div class="profile-hero__inner">
 
-    $initials = $initials ?: strtoupper(substr($userName, 0, 1));
+                <div class="profile-breadcrumb">
+                    <span>Account</span>
+                    <span>/</span>
+                    <strong>Profile</strong>
+                </div>
 
-    /*
-    |--------------------------------------------------------------------------
-    | Static profile data for now
-    |--------------------------------------------------------------------------
-    */
+                <span class="profile-hero__eyebrow">
+                    YOUR TRAVEL ACCOUNT
+                </span>
 
-    $totalTrips = 8;
-    $upcomingTrips = 1;
-    $completedTrips = 7;
-    $rewardPoints = 2450;
+                <h1>My Profile</h1>
 
-    $upcomingTrip = [
-        'name' => 'Kerala Escape',
-        'location' => 'Munnar · Alleppey · Kochi',
-        'date' => '18 Sep 2026',
-        'duration' => '5 Days / 4 Nights',
-        'travellers' => '2 Travellers',
-        'status' => 'Confirmed',
-        'image' => asset('images/hero/tour-bg.jpg'),
-    ];
+                <p>
+                    Manage your personal details, travel points and account activity.
+                </p>
 
-    $travelHistory = [
-        [
-            'name' => 'Rajasthan Heritage Tour',
-            'location' => 'Jaipur · Jodhpur · Udaipur',
-            'date' => '12 Feb 2026',
-            'duration' => '6 Days',
-            'image' => asset('images/hero/tour-bg.jpg'),
-        ],
-        [
-            'name' => 'Goa Beach Escape',
-            'location' => 'North Goa · South Goa',
-            'date' => '20 Nov 2025',
-            'duration' => '4 Days',
-            'image' => asset('images/hero/tour-bg.jpg'),
-        ],
-        [
-            'name' => 'Himalayan Adventure',
-            'location' => 'Manali · Solang Valley',
-            'date' => '08 Jun 2025',
-            'duration' => '5 Days',
-            'image' => asset('images/hero/tour-bg.jpg'),
-        ],
-    ];
-@endphp
+            </div>
+        </div>
+    </section>
 
+    <main class="profile-content">
 
-<div class="travel-profile-page">
+        @if(session('success'))
+            <div class="profile-alert success">
+                {{ session('success') }}
+            </div>
+        @endif
 
-    <div class="travel-profile-container">
+        @if(session('error'))
+            <div class="profile-alert error">
+                {{ session('error') }}
+            </div>
+        @endif
 
+        {{-- PROFILE IDENTITY --}}
+        <section class="account-profile-card">
 
-        {{-- =====================================================
-             TOP ACCOUNT BAR
-        ====================================================== --}}
+            <div class="account-profile-main">
 
-        <div class="travel-profile-topbar">
+                <div class="account-avatar">
+                    @if($profile->profile_photo)
+                        <img
+                            src="{{ asset('storage/' . $profile->profile_photo) }}"
+                            alt="{{ $user->name }}"
+                        >
+                    @else
+                        {{ strtoupper(substr($user->name ?: $user->username, 0, 1)) }}
+                    @endif
+                </div>
 
-            <div class="travel-profile-breadcrumb">
+                <div class="account-profile-info">
+                    <span class="account-profile-label">TRAVEL MEMBER</span>
 
-                <a href="{{ route('home') }}">
-                    Home
-                </a>
+                    <h2>{{ $user->name }}</h2>
 
-                <span>•</span>
+                    <p class="account-username">
+                        {{ '@' . $user->username }}
+                    </p>
 
-                <strong>
-                    My Account
-                </strong>
+                    <p class="account-email">
+                        {{ $user->email }}
+                    </p>
+                </div>
 
             </div>
 
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                <a
+                    href="{{ route('profile.edit') }}"
+                    class="profile-edit-button"
+                    aria-label="Edit profile"
+                >
+                    <span>✎</span>
+                    Edit profile
+                </a>
 
-            <a
-                href="{{ route('tours.index') }}"
-                class="travel-profile-explore"
-            >
-                Explore journeys
-                <span>↗</span>
-            </a>
+                <div class="account-profile-status">
+                    <span class="account-status-dot"></span>
+                    <span>Active account</span>
+                </div>
+            </div>
 
-        </div>
+        </section>
 
+        {{-- ACCOUNT INFORMATION --}}
+        <section class="account-section">
 
-        {{-- =====================================================
-             MAIN ACCOUNT LAYOUT
-        ====================================================== --}}
-
-        <div class="travel-account-layout">
-
-
-            {{-- =================================================
-                 LEFT ACCOUNT NAVIGATION
-            ================================================== --}}
-
-            <aside class="travel-account-sidebar">
-
-                <div class="travel-account-user">
-
-                    <div class="travel-account-avatar">
-                        {{ $initials }}
-                    </div>
-
-                    <div class="travel-account-user-info">
-
-                        <span>WELCOME BACK</span>
-
-                        <strong>
-                            {{ $userName }}
-                        </strong>
-
-                    </div>
-
+            <div class="account-section-heading account-section-heading--with-action">
+                <div>
+                    <span>ACCOUNT INFORMATION</span>
+                    <h2>Personal details</h2>
                 </div>
 
+                <a
+                    href="{{ route('profile.edit') }}"
+                    class="profile-section-action"
+                >
+                    Edit details
+                    <span>→</span>
+                </a>
+            </div>
 
-                <nav class="travel-account-nav">
+            <div class="account-details-grid">
 
-                    <span class="travel-account-nav-label">
-                        ACCOUNT
+                <div class="account-detail">
+                    <span>Full name</span>
+                    <strong>{{ $user->name }}</strong>
+                </div>
+
+                <div class="account-detail">
+                    <span>Username</span>
+                    <strong>{{ '@' . $user->username }}</strong>
+                </div>
+
+                <div class="account-detail">
+                    <span>Email address</span>
+                    <strong>{{ $user->email }}</strong>
+                </div>
+
+                <div class="account-detail">
+                    <span>Phone number</span>
+                    <strong class="{{ $profile->phone ? '' : 'is-muted' }}">
+                        {{ $profile->phone ?: 'Not added yet' }}
+                    </strong>
+                </div>
+
+            </div>
+
+        </section>
+
+        {{-- CLICKABLE WALLET --}}
+        <section
+            class="travel-wallet travel-wallet--clickable"
+            role="link"
+            tabindex="0"
+            onclick="window.location.href='{{ route('profile.points') }}'"
+            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='{{ route('profile.points') }}';}"
+        >
+
+            <div class="travel-wallet__top">
+
+                <div>
+                    <span class="travel-wallet__eyebrow">
+                        TRAVEL REWARDS
                     </span>
 
+                    <h2>My Travel Points</h2>
 
-                    <a
-                        href="{{ route('profile') }}"
-                        class="travel-account-nav-item active"
-                    >
-                        <span class="travel-account-nav-icon">
-                            ◉
-                        </span>
+                    <p>
+                        See your balance, earned points, redeemed points and complete point history.
+                    </p>
+                </div>
 
-                        <span>
-                            Overview
-                        </span>
-                    </a>
+                <div class="travel-wallet__balance">
+                    <span>AVAILABLE BALANCE</span>
 
+                    <strong>
+                        {{ number_format($wallet->balance) }}
+                    </strong>
 
-                    <a
-                        href="{{ route('bookings.index') }}"
-                        class="travel-account-nav-item"
-                    >
-                        <span class="travel-account-nav-icon">
-                            ✈
-                        </span>
+                    <small>points</small>
+                </div>
 
-                        <span>
-                            My Trips
-                        </span>
-                    </a>
+            </div>
 
+            <div class="travel-wallet__stats">
 
-                    <a
-                        href="#travel-rewards"
-                        class="travel-account-nav-item"
-                    >
-                        <span class="travel-account-nav-icon">
-                            ◆
-                        </span>
+                <div>
+                    <span>Total earned</span>
+                    <strong>{{ number_format($wallet->total_earned) }}</strong>
+                </div>
 
-                        <span>
-                            Travel Rewards
-                        </span>
-                    </a>
+                <div>
+                    <span>Total redeemed</span>
+                    <strong>{{ number_format($wallet->total_redeemed) }}</strong>
+                </div>
 
+                <div>
+                    <span>Total expired</span>
+                    <strong>{{ number_format($wallet->total_expired) }}</strong>
+                </div>
 
-                    <a
-                        href="#personal-details"
-                        class="travel-account-nav-item"
-                    >
-                        <span class="travel-account-nav-icon">
-                            ○
-                        </span>
+            </div>
 
-                        <span>
-                            Personal Details
-                        </span>
-                    </a>
+            <div class="travel-wallet__footer">
+                <span>Your points activity is updated automatically.</span>
 
+                <span>
+                    View full wallet
+                    <span>→</span>
+                </span>
+            </div>
 
-                    <span class="travel-account-nav-label travel-account-nav-label--space">
-                        DISCOVER
-                    </span>
+        </section>
 
+        {{-- RECENT ACTIVITY --}}
+        <section class="activity-section">
 
-                    <a
-                        href="{{ route('tours.index') }}"
-                        class="travel-account-nav-item"
-                    >
-                        <span class="travel-account-nav-icon">
-                            ◎
-                        </span>
+            <div class="activity-section__heading">
 
-                        <span>
-                            Explore Tours
-                        </span>
-                    </a>
+                <div>
+                    <span>ACCOUNT ACTIVITY</span>
+                    <h2>Recent point activity</h2>
+                </div>
 
+                <a
+                    href="{{ route('profile.points') }}"
+                    class="activity-view-all"
+                >
+                    View all
+                    <span>→</span>
+                </a>
 
-                    <a
-                        href="{{ route('blog.index') }}"
-                        class="travel-account-nav-item"
-                    >
-                        <span class="travel-account-nav-icon">
-                            ▤
-                        </span>
+            </div>
 
-                        <span>
-                            Travel Stories
-                        </span>
-                    </a>
+            @if($recentTransactions->isNotEmpty())
 
-                </nav>
+                <div class="activity-list">
 
+                    @foreach($recentTransactions as $transaction)
 
-                <div class="travel-account-sidebar-bottom">
+                        @php
+                            $isCredit = $transaction->direction === 'credit';
+                        @endphp
 
-                    <div class="travel-account-help">
+                        <div class="activity-item">
 
-                        <span class="travel-account-help-icon">
-                            ?
-                        </span>
+                            <div class="activity-icon {{ $isCredit ? 'is-credit' : 'is-debit' }}">
+                                {{ $isCredit ? '+' : '−' }}
+                            </div>
 
-                        <div>
-                            <strong>
-                                Need help?
-                            </strong>
+                            <div class="activity-info">
 
-                            <small>
-                                Our travel team is here.
-                            </small>
+                                <strong>
+                                    {{ ucwords(str_replace('_', ' ', $transaction->source)) }}
+                                </strong>
+
+                                <p>
+                                    {{ $transaction->description ?: 'Points transaction' }}
+                                </p>
+
+                                <time>
+                                    {{ $transaction->created_at->format('d M Y, h:i A') }}
+                                </time>
+
+                            </div>
+
+                            <div class="activity-points {{ $isCredit ? 'is-credit' : 'is-debit' }}">
+                                {{ $isCredit ? '+' : '-' }}{{ number_format($transaction->points) }}
+                                <small>pts</small>
+                            </div>
+
                         </div>
 
-                    </div>
-
-
-                    <a
-                        href="{{ route('contact') }}"
-                        class="travel-account-contact"
-                    >
-                        Contact us
-                        <span>→</span>
-                    </a>
-
-
-                    <form
-                        method="POST"
-                        action="{{ route('logout') }}"
-                    >
-                        @csrf
-
-                        <button
-                            type="submit"
-                            class="travel-account-logout"
-                        >
-                            <span>↪</span>
-                            Sign out
-                        </button>
-
-                    </form>
+                    @endforeach
 
                 </div>
 
-            </aside>
+            @else
 
+                <div class="activity-empty">
+                    <div class="activity-empty__icon">—</div>
 
-            {{-- =================================================
-                 RIGHT CONTENT
-            ================================================== --}}
+                    <h3>No point activity yet</h3>
 
-            <main class="travel-account-content">
-
-
-                {{-- =================================================
-                     PROFILE INTRO
-                ================================================== --}}
-
-                <section class="travel-profile-intro">
-
-                    <div class="travel-profile-intro-copy">
-
-                        <span class="travel-profile-kicker">
-                            YOUR TRAVEL JOURNEY
-                        </span>
-
-                        <h1>
-                            Hello, {{ $userName }}.
-                        </h1>
-
-                        <p>
-                            Everything you need for your next adventure,
-                            all in one place.
-                        </p>
-
-                    </div>
-
-
-                    <div class="travel-profile-member">
-
-                        <span class="travel-profile-member-dot"></span>
-
-                        <span>
-                            Traveller account
-                        </span>
-
-                    </div>
-
-                </section>
-
-
-                {{-- =================================================
-                     STATS STRIP
-                ================================================== --}}
-
-                <section class="travel-stat-strip">
-
-                    <div class="travel-stat">
-
-                        <span class="travel-stat-number">
-                            {{ $totalTrips }}
-                        </span>
-
-                        <span class="travel-stat-label">
-                            Trips taken
-                        </span>
-
-                    </div>
-
-
-                    <div class="travel-stat">
-
-                        <span class="travel-stat-number">
-                            {{ $upcomingTrips }}
-                        </span>
-
-                        <span class="travel-stat-label">
-                            Upcoming
-                        </span>
-
-                    </div>
-
-
-                    <div class="travel-stat">
-
-                        <span class="travel-stat-number">
-                            {{ $completedTrips }}
-                        </span>
-
-                        <span class="travel-stat-label">
-                            Completed
-                        </span>
-
-                    </div>
-
-
-                    <div class="travel-stat travel-stat--reward">
-
-                        <span class="travel-stat-number">
-                            {{ number_format($rewardPoints) }}
-                        </span>
-
-                        <span class="travel-stat-label">
-                            Reward points
-                        </span>
-
-                    </div>
-
-                </section>
-
-
-                {{-- =================================================
-                     UPCOMING JOURNEY
-                ================================================== --}}
-
-                <section class="travel-journey-section">
-
-                    <div class="travel-section-heading">
-
-                        <div>
-
-                            <span>
-                                NEXT ADVENTURE
-                            </span>
-
-                            <h2>
-                                Your upcoming journey
-                            </h2>
-
-                        </div>
-
-                        <a href="{{ route('bookings.index') }}">
-                            View all trips →
-                        </a>
-
-                    </div>
-
-
-                    <article class="travel-next-trip">
-
-                        <div class="travel-next-trip-image">
-
-                            <img
-                                src="{{ $upcomingTrip['image'] }}"
-                                alt="{{ $upcomingTrip['name'] }}"
-                                loading="lazy"
-                            >
-
-                            <span class="travel-next-trip-status">
-                                {{ $upcomingTrip['status'] }}
-                            </span>
-
-                        </div>
-
-
-                        <div class="travel-next-trip-content">
-
-                            <span class="travel-next-trip-label">
-                                YOUR NEXT DESTINATION
-                            </span>
-
-                            <h3>
-                                {{ $upcomingTrip['name'] }}
-                            </h3>
-
-                            <p class="travel-next-trip-location">
-                                {{ $upcomingTrip['location'] }}
-                            </p>
-
-
-                            <div class="travel-next-trip-details">
-
-                                <div>
-                                    <span>DEPARTURE</span>
-                                    <strong>
-                                        {{ $upcomingTrip['date'] }}
-                                    </strong>
-                                </div>
-
-                                <div>
-                                    <span>DURATION</span>
-                                    <strong>
-                                        {{ $upcomingTrip['duration'] }}
-                                    </strong>
-                                </div>
-
-                                <div>
-                                    <span>TRAVELLERS</span>
-                                    <strong>
-                                        {{ $upcomingTrip['travellers'] }}
-                                    </strong>
-                                </div>
-
-                            </div>
-
-
-                            <div class="travel-next-trip-footer">
-
-                                <div>
-
-                                    <span>
-                                        Ready for your next adventure?
-                                    </span>
-
-                                    <strong>
-                                        Your booking is confirmed.
-                                    </strong>
-
-                                </div>
-
-
-                                <a
-                                    href="{{ route('bookings.index') }}"
-                                    class="travel-trip-button"
-                                >
-                                    View booking
-                                    <span>→</span>
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-                </section>
-
-
-                {{-- =================================================
-                     TRAVEL HISTORY
-                ================================================== --}}
-
-                <section class="travel-history-section">
-
-                    <div class="travel-section-heading">
-
-                        <div>
-
-                            <span>
-                                YOUR JOURNEY
-                            </span>
-
-                            <h2>
-                                Places you've explored
-                            </h2>
-
-                        </div>
-
-                        <span class="travel-history-total">
-                            {{ $completedTrips }} completed trips
-                        </span>
-
-                    </div>
-
-
-                    <div class="travel-history-list">
-
-                        @foreach($travelHistory as $trip)
-
-                            <article class="travel-history-item">
-
-                                <div class="travel-history-image">
-
-                                    <img
-                                        src="{{ $trip['image'] }}"
-                                        alt="{{ $trip['name'] }}"
-                                        loading="lazy"
-                                    >
-
-                                </div>
-
-
-                                <div class="travel-history-main">
-
-                                    <span class="travel-history-date">
-                                        {{ $trip['date'] }}
-                                    </span>
-
-                                    <h3>
-                                        {{ $trip['name'] }}
-                                    </h3>
-
-                                    <p>
-                                        {{ $trip['location'] }}
-                                    </p>
-
-                                </div>
-
-
-                                <div class="travel-history-meta">
-
-                                    <span>
-                                        {{ $trip['duration'] }}
-                                    </span>
-
-                                    <strong>
-                                        Completed
-                                    </strong>
-
-                                </div>
-
-
-                                <a
-                                    href="{{ route('bookings.index') }}"
-                                    class="travel-history-arrow"
-                                    aria-label="View trip"
-                                >
-                                    →
-                                </a>
-
-                            </article>
-
-                        @endforeach
-
-                    </div>
-
-
-                    <div class="travel-history-more">
-
-                        <a
-                            href="{{ route('bookings.index') }}"
-                            class="travel-view-all"
-                        >
-                            View complete travel history
-                            <span>→</span>
-                        </a>
-
-                    </div>
-
-                </section>
-
-
-                {{-- =================================================
-                     BOTTOM GRID
-                ================================================== --}}
-
-                <div class="travel-profile-bottom-grid">
-
-
-                    {{-- REWARDS --}}
-                    <section
-                        class="travel-reward-card"
-                        id="travel-rewards"
-                    >
-
-                        <div class="travel-reward-top">
-
-                            <div>
-
-                                <span>
-                                    TRAVEL REWARDS
-                                </span>
-
-                                <h2>
-                                    {{ number_format($rewardPoints) }}
-                                    <small>points</small>
-                                </h2>
-
-                            </div>
-
-                            <div class="travel-reward-symbol">
-                                ◆
-                            </div>
-
-                        </div>
-
-
-                        <p>
-                            Keep exploring and earn more points
-                            on every journey you complete.
-                        </p>
-
-
-                        <div class="travel-reward-progress">
-
-                            <div
-                                class="travel-reward-progress-bar"
-                                style="width: 68%;"
-                            ></div>
-
-                        </div>
-
-
-                        <div class="travel-reward-progress-info">
-
-                            <span>
-                                2,450 points
-                            </span>
-
-                            <span>
-                                3,600 next level
-                            </span>
-
-                        </div>
-
-
-                        <a
-                            href="#travel-rewards"
-                            class="travel-reward-link"
-                        >
-                            Learn about rewards →
-                        </a>
-
-                    </section>
-
-
-                    {{-- PERSONAL DETAILS --}}
-                    <section
-                        class="travel-details-card"
-                        id="personal-details"
-                    >
-
-                        <div class="travel-details-heading">
-
-                            <div>
-
-                                <span>
-                                    YOUR ACCOUNT
-                                </span>
-
-                                <h2>
-                                    Personal details
-                                </h2>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="travel-detail-row">
-
-                            <span>
-                                Full name
-                            </span>
-
-                            <strong>
-                                {{ $userName }}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="travel-detail-row">
-
-                            <span>
-                                Email address
-                            </span>
-
-                            <strong>
-                                {{ $user->email ?: 'Not added yet' }}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="travel-detail-row">
-
-                            <span>
-                                Phone
-                            </span>
-
-                            <strong>
-                                {{ $user->phone ?? 'Not added yet' }}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="travel-detail-row">
-
-                            <span>
-                                Member since
-                            </span>
-
-                            <strong>
-                                {{ optional($user->created_at)->format('M Y') ?: '2026' }}
-                            </strong>
-
-                        </div>
-
-
-                        <a
-                            href="#personal-details"
-                            class="travel-details-edit"
-                        >
-                            Manage personal details
-                            <span>→</span>
-                        </a>
-
-                    </section>
-
+                    <p>
+                        Your earned, redeemed and expired points will appear here.
+                    </p>
                 </div>
 
+            @endif
 
-                {{-- =================================================
-                     EXPLORE CTA
-                ================================================== --}}
+        </section>
 
-                <section class="travel-profile-cta">
-
-                    <div>
-
-                        <span>
-                            READY FOR SOMEWHERE NEW?
-                        </span>
-
-                        <h2>
-                            Your next favourite place
-                            could be one trip away.
-                        </h2>
-
-                    </div>
-
-
-                    <a
-                        href="{{ route('tours.index') }}"
-                        class="travel-profile-cta-button"
-                    >
-                        Explore tours
-                        <span>→</span>
-                    </a>
-
-                </section>
-
-
-            </main>
-
-        </div>
-
-    </div>
-
+    </main>
 </div>
-
 @endsection

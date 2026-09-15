@@ -17,7 +17,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             AdminUserSeeder::class,
-            TravelCatalogSeeder::class,
+            // TravelCatalogSeeder::class,
+            PointSettingSeeder::class,
         ]);
     }
 }

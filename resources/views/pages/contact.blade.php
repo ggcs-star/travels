@@ -4,6 +4,75 @@
 
 @section('content')
 
+@php
+    /*
+    |--------------------------------------------------------------------------
+    | CONTACT SETTINGS
+    |--------------------------------------------------------------------------
+    | Values are loaded from Admin > Settings > General.
+    | Fallbacks are used only when a setting is empty/missing.
+    */
+
+    $settings = app(\App\Services\SettingsService::class);
+
+    $contactPhone = trim((string) $settings->get(
+        'site.phone',
+        config('travels.contact.phone_primary', '+91 0000000000')
+    ));
+
+    $contactEmail = trim((string) $settings->get(
+        'site.email',
+        config('travels.contact.email', 'bookings@travels.com')
+    ));
+
+    $contactAddress = trim((string) $settings->get(
+        'site.address',
+        config('travels.contact.address', 'India')
+    ));
+
+    $contactWorkingHours = trim((string) $settings->get(
+        'site.working_hours',
+        'Mon – Sat | 9:00 AM – 7:00 PM'
+    ));
+
+    /*
+    |--------------------------------------------------------------------------
+    | PHONE FOR TEL LINK
+    |--------------------------------------------------------------------------
+    */
+
+    $contactPhoneLink = preg_replace(
+        '/[^0-9+]/',
+        '',
+        $contactPhone
+    );
+
+    /*
+    |--------------------------------------------------------------------------
+    | WORKING HOURS DISPLAY
+    |--------------------------------------------------------------------------
+    | Admin can enter:
+    | Mon – Sat | 9:00 AM – 7:00 PM
+    |
+    | We split it into title + time for the existing design.
+    */
+
+    $workingHoursTitle = 'Working Hours';
+    $workingHoursTime = $contactWorkingHours;
+
+    if (str_contains($contactWorkingHours, '|')) {
+        [$workingHoursTitle, $workingHoursTime] = array_pad(
+            array_map(
+                'trim',
+                explode('|', $contactWorkingHours, 2)
+            ),
+            2,
+            ''
+        );
+    }
+@endphp
+
+
 <section class="contact-page">
 
     {{-- =====================================================
@@ -63,9 +132,11 @@
 
             <div class="contact-info-grid">
 
-                {{-- PHONE --}}
+                {{-- =================================================
+                     PHONE
+                ================================================== --}}
                 <a
-                    href="tel:{{ preg_replace('/[^0-9+]/', '', config('travels.contact.phone_primary', '+91 0000000000')) }}"
+                    href="tel:{{ $contactPhoneLink }}"
                     class="contact-info-card"
                 >
 
@@ -75,10 +146,12 @@
 
                     <div class="contact-info-card__content">
 
-                        <span>PHONE</span>
+                        <span>
+                            PHONE
+                        </span>
 
                         <strong>
-                            {{ config('travels.contact.phone_primary', '+91 0000000000') }}
+                            {{ $contactPhone }}
                         </strong>
 
                         <small>
@@ -90,9 +163,11 @@
                 </a>
 
 
-                {{-- EMAIL --}}
+                {{-- =================================================
+                     EMAIL
+                ================================================== --}}
                 <a
-                    href="mailto:{{ config('travels.contact.email', 'bookings@travels.com') }}"
+                    href="mailto:{{ $contactEmail }}"
                     class="contact-info-card"
                 >
 
@@ -102,10 +177,12 @@
 
                     <div class="contact-info-card__content">
 
-                        <span>EMAIL</span>
+                        <span>
+                            EMAIL
+                        </span>
 
                         <strong>
-                            {{ config('travels.contact.email', 'bookings@travels.com') }}
+                            {{ $contactEmail }}
                         </strong>
 
                         <small>
@@ -117,7 +194,9 @@
                 </a>
 
 
-                {{-- ADDRESS --}}
+                {{-- =================================================
+                     ADDRESS
+                ================================================== --}}
                 <div class="contact-info-card">
 
                     <div class="contact-info-card__icon">
@@ -126,10 +205,12 @@
 
                     <div class="contact-info-card__content">
 
-                        <span>OFFICE</span>
+                        <span>
+                            OFFICE
+                        </span>
 
                         <strong>
-                            {{ config('travels.contact.address', 'India') }}
+                            {{ $contactAddress }}
                         </strong>
 
                         <small>
@@ -141,7 +222,9 @@
                 </div>
 
 
-                {{-- WORKING HOURS --}}
+                {{-- =================================================
+                     WORKING HOURS
+                ================================================== --}}
                 <div class="contact-info-card">
 
                     <div class="contact-info-card__icon">
@@ -150,14 +233,16 @@
 
                     <div class="contact-info-card__content">
 
-                        <span>WORKING HOURS</span>
+                        <span>
+                            WORKING HOURS
+                        </span>
 
                         <strong>
-                            Mon – Sat
+                            {{ $workingHoursTitle }}
                         </strong>
 
                         <small>
-                            9:00 AM – 7:00 PM
+                            {{ $workingHoursTime }}
                         </small>
 
                     </div>
@@ -201,42 +286,67 @@
 
                 <div class="contact-form-card">
 
+
+                    {{-- =================================================
+                         SUCCESS MESSAGE
+                    ================================================== --}}
                     @if(session('success'))
 
-                        <div class="contact-alert contact-alert--success">
+                        <div
+                            class="contact-alert contact-alert--success"
+                            role="alert"
+                        >
                             {{ session('success') }}
                         </div>
 
                     @endif
 
 
+                    {{-- =================================================
+                         GENERAL ERROR MESSAGE
+                    ================================================== --}}
                     @if(session('error'))
 
-                        <div class="contact-alert contact-alert--error">
+                        <div
+                            class="contact-alert contact-alert--error"
+                            role="alert"
+                        >
                             {{ session('error') }}
                         </div>
 
                     @endif
 
 
+                    {{-- =================================================
+                         VALIDATION ERRORS
+                    ================================================== --}}
                     @if($errors->any())
 
-                        <div class="contact-alert contact-alert--error">
-                            Please check the form and try again.
+                        <div
+                            class="contact-alert contact-alert--error"
+                            role="alert"
+                        >
+                            Please check the highlighted fields and try again.
                         </div>
 
                     @endif
 
 
+                    {{-- =================================================
+                         CONTACT FORM
+                    ================================================== --}}
                     <form
                         method="POST"
-                        action="{{ url('/contact') }}"
+                        action="{{ route('contact.store') }}"
                         class="contact-form"
                     >
 
                         @csrf
 
 
+                        {{-- =================================================
+                             NAME + EMAIL
+                        ================================================== --}}
                         <div class="contact-form-row">
 
                             {{-- NAME --}}
@@ -252,6 +362,8 @@
                                     name="name"
                                     value="{{ old('name', auth()->user()->name ?? '') }}"
                                     placeholder="Enter your full name"
+                                    maxlength="100"
+                                    autocomplete="name"
                                     required
                                 >
 
@@ -275,6 +387,8 @@
                                     name="email"
                                     value="{{ old('email', auth()->user()->email ?? '') }}"
                                     placeholder="Enter your email address"
+                                    maxlength="150"
+                                    autocomplete="email"
                                     required
                                 >
 
@@ -287,6 +401,9 @@
                         </div>
 
 
+                        {{-- =================================================
+                             PHONE + SUBJECT
+                        ================================================== --}}
                         <div class="contact-form-row">
 
                             {{-- PHONE --}}
@@ -302,6 +419,8 @@
                                     name="phone"
                                     value="{{ old('phone') }}"
                                     placeholder="+91 98765 43210"
+                                    maxlength="30"
+                                    autocomplete="tel"
                                 >
 
                                 @error('phone')
@@ -374,7 +493,9 @@
                         </div>
 
 
-                        {{-- MESSAGE --}}
+                        {{-- =================================================
+                             MESSAGE
+                        ================================================== --}}
                         <div class="contact-field">
 
                             <label for="contact_message">
@@ -397,7 +518,9 @@
                         </div>
 
 
-                        {{-- SUBMIT --}}
+                        {{-- =================================================
+                             SUBMIT
+                        ================================================== --}}
                         <div class="contact-form-footer">
 
                             <p>
@@ -409,8 +532,13 @@
                                 type="submit"
                                 class="contact-submit-button"
                             >
-                                <span>Send Message</span>
+
+                                <span>
+                                    Send Message
+                                </span>
+
                                 <i class="fas fa-arrow-right"></i>
+
                             </button>
 
                         </div>

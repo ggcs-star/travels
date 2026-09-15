@@ -40,6 +40,12 @@ class Booking extends Model
         'subtotal',
         'tax_amount',
         'total_amount',
+
+        // Points redemption
+        'points_redeemed',
+        'points_discount',
+        'payable_amount',
+
         'currency',
         'status',
         'payment_status',
@@ -53,6 +59,12 @@ class Booking extends Model
             'subtotal' => 'decimal:2',
             'tax_amount' => 'decimal:2',
             'total_amount' => 'decimal:2',
+
+            // Points redemption
+            'points_redeemed' => 'integer',
+            'points_discount' => 'decimal:2',
+            'payable_amount' => 'decimal:2',
+
             'expires_at' => 'datetime',
             'paid_at' => 'datetime',
         ];
@@ -70,7 +82,10 @@ class Booking extends Model
 
     public function departure()
     {
-        return $this->belongsTo(TourDeparture::class, 'tour_departure_id');
+        return $this->belongsTo(
+            TourDeparture::class,
+            'tour_departure_id'
+        );
     }
 
     public function travellers()
@@ -86,11 +101,19 @@ class Booking extends Model
     public function scopeReserving(Builder $query): Builder
     {
         return $query->where(function (Builder $query) {
-            $query->where('status', self::STATUS_CONFIRMED)
-                ->orWhere(function (Builder $query) {
-                    $query->where('status', self::STATUS_PENDING_PAYMENT)
-                        ->where('expires_at', '>', now());
-                });
+            $query->where(
+                'status',
+                self::STATUS_CONFIRMED
+            )->orWhere(function (Builder $query) {
+                $query->where(
+                    'status',
+                    self::STATUS_PENDING_PAYMENT
+                )->where(
+                    'expires_at',
+                    '>',
+                    now()
+                );
+            });
         });
     }
 
@@ -99,5 +122,19 @@ class Booking extends Model
         return $this->status === self::STATUS_PENDING_PAYMENT
             && $this->payment_status === self::PAYMENT_UNPAID
             && $this->expires_at?->isFuture();
+    }
+
+    /**
+     * Get the amount that should actually be paid.
+     *
+     * Falls back to total_amount for existing bookings
+     * created before points redemption was introduced.
+     */
+    public function payableAmount(): float
+    {
+        return (float) (
+            $this->payable_amount
+            ?? $this->total_amount
+        );
     }
 }
