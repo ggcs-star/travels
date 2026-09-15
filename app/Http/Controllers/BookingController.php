@@ -62,14 +62,20 @@ class BookingController extends Controller
 
         return redirect()
             ->route('bookings.show', $booking)
-            ->with('success', 'Your seats are on hold. Complete payment to confirm your booking.');
+            ->with(
+                'success',
+                'Your seats are on hold. Complete payment to confirm your booking.'
+            );
     }
 
     public function index(Request $request): View
     {
         $bookings = $request->user()
             ->bookings()
-            ->with(['tourPackage:id,name,slug', 'departure:id,tour_package_id,departure_date,return_date'])
+            ->with([
+                'tourPackage:id,name,slug,cover_image',
+                'departure:id,tour_package_id,departure_date,return_date',
+            ])
             ->latest('id')
             ->paginate(10);
 
@@ -81,6 +87,7 @@ class BookingController extends Controller
         $this->authorizeBooking($booking, $request);
 
         $booking = $this->bookingService->expireIfPastDue($booking);
+
         $booking->load([
             'tourPackage',
             'departure',
@@ -91,13 +98,19 @@ class BookingController extends Controller
         return view('bookings.show', compact('booking'));
     }
 
-    public function cancel(Booking $booking, Request $request): RedirectResponse
-    {
+    public function cancel(
+        Booking $booking,
+        Request $request
+    ): RedirectResponse {
         $this->authorizeBooking($booking, $request);
+
         $booking = $this->bookingService->expireIfPastDue($booking);
 
         if (! $booking->isPayable()) {
-            return back()->with('error', 'Only unpaid booking holds can be cancelled online.');
+            return back()->with(
+                'error',
+                'Only unpaid booking holds can be cancelled online.'
+            );
         }
 
         $booking->update([
@@ -106,13 +119,19 @@ class BookingController extends Controller
 
         return redirect()
             ->route('bookings.index')
-            ->with('success', 'Your booking hold was cancelled.');
+            ->with(
+                'success',
+                'Your booking hold was cancelled.'
+            );
     }
 
-    private function authorizeBooking(Booking $booking, Request $request): void
-    {
+    private function authorizeBooking(
+        Booking $booking,
+        Request $request
+    ): void {
         abort_unless(
-            $booking->user_id === $request->user()->id || $request->user()->isAdmin(),
+            $booking->user_id === $request->user()->id
+            || $request->user()->isAdmin(),
             403
         );
     }

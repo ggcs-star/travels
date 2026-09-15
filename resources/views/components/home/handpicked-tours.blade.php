@@ -37,562 +37,176 @@
 
         <div class="handpicked-track">
 
+            @forelse($allTours as $tour)
 
-            {{-- =================================================
-                 CARD 01
-            ================================================== --}}
+                <a
+                    href="{{ route('tours.show', $tour->slug) }}"
+                    class="handpicked-card {{ $tour->featured ? 'handpicked-card-active' : '' }}"
+                >
 
-            <a href="#" class="handpicked-card">
+                    {{-- =================================================
+                         IMAGE
+                    ================================================== --}}
 
-                <div class="handpicked-card-image">
+                    <div class="handpicked-card-image">
 
-                    <img
-                        src="{{ asset('images/tours/temple-tour.jpg') }}"
-                        alt="Temple Tour"
-                        loading="lazy"
-                    >
+                        @if($tour->cover_image_url)
 
-                    <div class="handpicked-image-overlay"></div>
+                            <img
+                                src="{{ $tour->cover_image_url }}"
+                                alt="{{ $tour->name }}"
+                                loading="lazy"
+                            >
 
-                    <span class="handpicked-featured">
-                        ★ Featured
-                    </span>
+                        @else
 
-                    <span class="handpicked-duration">
-                        3 Days
-                    </span>
+                            <div
+                                style="
+                                    width:100%;
+                                    height:100%;
+                                    display:flex;
+                                    align-items:center;
+                                    justify-content:center;
+                                    background:#f1f1f1;
+                                "
+                            >
+                                No Image
+                            </div>
 
-                </div>
+                        @endif
 
 
-                <div class="handpicked-card-body">
+                        <div class="handpicked-image-overlay"></div>
 
-                    <span class="handpicked-category">
-                        <span>♜</span>
-                        SPIRITUAL &amp; PILGRIMAGE
-                    </span>
 
-                    <h3>
-                        PENUGONDA KANYAKA
-                        PARAMESWARI YATRA
-                    </h3>
+                        {{-- Featured --}}
 
-                    <p class="handpicked-location">
-                        <span>●</span>
-                        Sri Vasavi Kanyaka Parameswari Temple
-                    </p>
+                        @if($tour->featured)
 
-                    <div class="handpicked-card-bottom">
+                            <span class="handpicked-featured">
+                                ★ Featured
+                            </span>
 
-                        <div>
-                            <small>from</small>
+                        @endif
 
-                            <strong>
-                                ₹3,450
-                            </strong>
-                        </div>
 
-                        <span class="handpicked-arrow">
-                            →
+                        {{-- Duration --}}
+
+                        @if($tour->duration_days)
+
+                            <span class="handpicked-duration">
+                                {{ $tour->duration_days }}
+                                {{ $tour->duration_days == 1 ? 'Day' : 'Days' }}
+                            </span>
+
+                        @endif
+
+                    </div>
+
+
+                    {{-- =================================================
+                         CARD BODY
+                    ================================================== --}}
+
+                    <div class="handpicked-card-body">
+
+
+                        {{-- Category --}}
+
+                        <span class="handpicked-category">
+
+                            <span>♜</span>
+
+                            {{ strtoupper($tour->category?->name ?? 'TOURS') }}
+
                         </span>
 
-                    </div>
 
-                </div>
+                        {{-- Tour Name --}}
 
-            </a>
-
-
-            {{-- =================================================
-                 CARD 02
-            ================================================== --}}
-
-            <a href="#" class="handpicked-card">
-
-                <div class="handpicked-card-image">
-
-                    <img
-                        src="{{ asset('images/tours/dubai-tour.jpg') }}"
-                        alt="Dubai Group Tour"
-                        loading="lazy"
-                    >
-
-                    <div class="handpicked-image-overlay"></div>
-
-                    <span class="handpicked-featured">
-                        ★ Featured
-                    </span>
-
-                    <span class="handpicked-duration">
-                        6 Days
-                    </span>
-
-                </div>
+                        <h3>
+                            {{ $tour->name }}
+                        </h3>
 
 
-                <div class="handpicked-card-body">
+                        {{-- Location --}}
 
-                    <span class="handpicked-category">
-                        <span>♜</span>
-                        HOLIDAYS
-                    </span>
+                        <p class="handpicked-location">
 
-                    <h3>
-                        DUBAI GROUP TOUR
-                    </h3>
+                            <span>●</span>
 
-                    <p class="handpicked-location">
-                        <span>●</span>
-                        Dubai · United Arab Emirates
-                    </p>
+                            {{ $tour->destination }}
 
-                    <div class="handpicked-card-bottom">
+                        </p>
 
-                        <div>
-                            <small>from</small>
 
-                            <strong>
-                                ₹1,04,500
-                            </strong>
+                        {{-- Bottom --}}
+
+                        <div class="handpicked-card-bottom">
+
+                            <div>
+
+                                <small>
+                                    from
+                                </small>
+
+
+                                @php
+                                    $price = $tour->lowestUpcomingPrice();
+                                @endphp
+
+                                @if($price !== null)
+
+                                    <strong>
+                                        ₹{{ number_format($price) }}
+                                    </strong>
+
+                                @else
+
+                                    <strong>
+                                        Contact Us
+                                    </strong>
+
+                                @endif
+
+                            </div>
+
+
+                            <span class="handpicked-arrow">
+                                →
+                            </span>
+
                         </div>
 
-                        <span class="handpicked-arrow">
-                            →
-                        </span>
-
                     </div>
 
-                </div>
+                </a>
 
-            </a>
+            @empty
 
+                {{-- =================================================
+                     NO TOURS
+                ================================================== --}}
 
-            {{-- =================================================
-                 CARD 03
-            ================================================== --}}
-
-            <a href="#" class="handpicked-card">
-
-                <div class="handpicked-card-image">
-
-                    <img
-                        src="{{ asset('images/tours/sri-lanka.jpg') }}"
-                        alt="Sri Lanka Trip"
-                        loading="lazy"
-                    >
-
-                    <div class="handpicked-image-overlay"></div>
-
-                    <span class="handpicked-featured">
-                        ★ Featured
-                    </span>
-
-                    <span class="handpicked-duration">
-                        7 Days
-                    </span>
-
-                </div>
-
-
-                <div class="handpicked-card-body">
-
-                    <span class="handpicked-category">
-                        <span>♜</span>
-                        SPIRITUAL &amp; PILGRIMAGE
-                    </span>
+                <div
+                    style="
+                        width:100%;
+                        padding:60px 20px;
+                        text-align:center;
+                    "
+                >
 
                     <h3>
-                        SRI LANKA TRIP
+                        No tours available right now.
                     </h3>
 
-                    <p class="handpicked-location">
-                        <span>●</span>
-                        Jaffna · Colombo · Sri Lanka
+                    <p>
+                        Please check back soon for upcoming packages.
                     </p>
 
-                    <div class="handpicked-card-bottom">
-
-                        <div>
-                            <small>from</small>
-
-                            <strong>
-                                ₹66,450
-                            </strong>
-                        </div>
-
-                        <span class="handpicked-arrow">
-                            →
-                        </span>
-
-                    </div>
-
                 </div>
 
-            </a>
-
-
-            {{-- =================================================
-                 CARD 04
-            ================================================== --}}
-
-            <a href="#" class="handpicked-card handpicked-card-active">
-
-                <div class="handpicked-card-image">
-
-                    <img
-                        src="{{ asset('images/tours/canton-fair.jpg') }}"
-                        alt="Canton Fair Business Tour"
-                        loading="lazy"
-                    >
-
-                    <div class="handpicked-image-overlay"></div>
-
-                    <span class="handpicked-featured">
-                        ★ Featured
-                    </span>
-
-                    <span class="handpicked-duration">
-                        1 Days
-                    </span>
-
-                </div>
-
-
-                <div class="handpicked-card-body">
-
-                    <span class="handpicked-category">
-                        <span>▣</span>
-                        BUSINESS TRIPS
-                    </span>
-
-                    <h3>
-                        CN 140th Canton Fair Business Tour –
-                        Autumn 2026
-                    </h3>
-
-                    <p class="handpicked-location">
-                        <span>●</span>
-                        HK Hong Kong · CN Shenzhen · CN Foshan
-                    </p>
-
-                    <div class="handpicked-card-bottom">
-
-                        <div>
-                            <small>from</small>
-
-                            <strong>
-                                ₹69,450
-                            </strong>
-                        </div>
-
-                        <span class="handpicked-arrow">
-                            →
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </a>
-
-
-            {{-- =================================================
-                 CARD 05
-            ================================================== --}}
-
-            <a href="#" class="handpicked-card">
-
-                <div class="handpicked-card-image">
-
-                    <img
-                        src="{{ asset('images/tours/guangdong.jpg') }}"
-                        alt="CN Guangdong Business Trade Tour"
-                        loading="lazy"
-                    >
-
-                    <div class="handpicked-image-overlay"></div>
-
-                    <span class="handpicked-featured">
-                        ★ Featured
-                    </span>
-
-                    <span class="handpicked-duration">
-                        6 Days
-                    </span>
-
-                </div>
-
-
-                <div class="handpicked-card-body">
-
-                    <span class="handpicked-category">
-                        <span>▣</span>
-                        BUSINESS TRIPS
-                    </span>
-
-                    <h3>
-                        CN Guangdong Business
-                        Trade Tour
-                    </h3>
-
-                    <p class="handpicked-location">
-                        <span>●</span>
-                        Hong Kong · Foshan · Dongguan
-                    </p>
-
-                    <div class="handpicked-card-bottom">
-
-                        <div>
-                            <small>from</small>
-
-                            <strong>
-                                ₹79,450
-                            </strong>
-                        </div>
-
-                        <span class="handpicked-arrow">
-                            →
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </a>
-
-
-            {{-- =================================================
-                 CARD 06
-            ================================================== --}}
-
-            <a href="#" class="handpicked-card">
-
-                <div class="handpicked-card-image">
-
-                    <img
-                        src="{{ asset('images/tours/thailand.jpg') }}"
-                        alt="Thailand Tour"
-                        loading="lazy"
-                    >
-
-                    <div class="handpicked-image-overlay"></div>
-
-                    <span class="handpicked-featured">
-                        ★ Featured
-                    </span>
-
-                    <span class="handpicked-duration">
-                        6 Days
-                    </span>
-
-                </div>
-
-
-                <div class="handpicked-card-body">
-
-                    <span class="handpicked-category">
-                        <span>♜</span>
-                        HOLIDAYS
-                    </span>
-
-                    <h3>
-                        Thailand Tour
-                    </h3>
-
-                    <p class="handpicked-location">
-                        <span>●</span>
-                        Pattaya · Bangkok · Thailand
-                    </p>
-
-                    <div class="handpicked-card-bottom">
-
-                        <div>
-                            <small>from</small>
-
-                            <strong>
-                                ₹27,500
-                            </strong>
-                        </div>
-
-                        <span class="handpicked-arrow">
-                            →
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </a>
-
-
-            {{-- =================================================
-                 DUPLICATE CARDS
-                 Infinite scrolling ke liye
-            ================================================== --}}
-
-            <a href="#" class="handpicked-card">
-
-                <div class="handpicked-card-image">
-
-                    <img
-                        src="{{ asset('images/tours/temple-tour.jpg') }}"
-                        alt=""
-                        loading="lazy"
-                    >
-
-                    <div class="handpicked-image-overlay"></div>
-
-                    <span class="handpicked-featured">
-                        ★ Featured
-                    </span>
-
-                    <span class="handpicked-duration">
-                        3 Days
-                    </span>
-
-                </div>
-
-                <div class="handpicked-card-body">
-
-                    <span class="handpicked-category">
-                        <span>♜</span>
-                        SPIRITUAL &amp; PILGRIMAGE
-                    </span>
-
-                    <h3>
-                        PENUGONDA KANYAKA
-                        PARAMESWARI YATRA
-                    </h3>
-
-                    <p class="handpicked-location">
-                        <span>●</span>
-                        Sri Vasavi Kanyaka Parameswari Temple
-                    </p>
-
-                    <div class="handpicked-card-bottom">
-
-                        <div>
-                            <small>from</small>
-                            <strong>₹3,450</strong>
-                        </div>
-
-                        <span class="handpicked-arrow">
-                            →
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </a>
-
-
-            <a href="#" class="handpicked-card">
-
-                <div class="handpicked-card-image">
-
-                    <img
-                        src="{{ asset('images/tours/dubai-tour.jpg') }}"
-                        alt=""
-                        loading="lazy"
-                    >
-
-                    <div class="handpicked-image-overlay"></div>
-
-                    <span class="handpicked-featured">
-                        ★ Featured
-                    </span>
-
-                    <span class="handpicked-duration">
-                        6 Days
-                    </span>
-
-                </div>
-
-                <div class="handpicked-card-body">
-
-                    <span class="handpicked-category">
-                        <span>♜</span>
-                        HOLIDAYS
-                    </span>
-
-                    <h3>
-                        DUBAI GROUP TOUR
-                    </h3>
-
-                    <p class="handpicked-location">
-                        <span>●</span>
-                        Dubai · United Arab Emirates
-                    </p>
-
-                    <div class="handpicked-card-bottom">
-
-                        <div>
-                            <small>from</small>
-                            <strong>₹1,04,500</strong>
-                        </div>
-
-                        <span class="handpicked-arrow">→</span>
-
-                    </div>
-
-                </div>
-
-            </a>
-
-
-            <a href="#" class="handpicked-card">
-
-                <div class="handpicked-card-image">
-
-                    <img
-                        src="{{ asset('images/tours/sri-lanka.jpg') }}"
-                        alt=""
-                        loading="lazy"
-                    >
-
-                    <div class="handpicked-image-overlay"></div>
-
-                    <span class="handpicked-featured">
-                        ★ Featured
-                    </span>
-
-                    <span class="handpicked-duration">
-                        7 Days
-                    </span>
-
-                </div>
-
-                <div class="handpicked-card-body">
-
-                    <span class="handpicked-category">
-                        <span>♜</span>
-                        SPIRITUAL &amp; PILGRIMAGE
-                    </span>
-
-                    <h3>
-                        SRI LANKA TRIP
-                    </h3>
-
-                    <p class="handpicked-location">
-                        <span>●</span>
-                        Jaffna · Colombo · Sri Lanka
-                    </p>
-
-                    <div class="handpicked-card-bottom">
-
-                        <div>
-                            <small>from</small>
-                            <strong>₹66,450</strong>
-                        </div>
-
-                        <span class="handpicked-arrow">→</span>
-
-                    </div>
-
-                </div>
-
-            </a>
+            @endforelse
 
         </div>
 
@@ -605,7 +219,7 @@
 
     <div class="handpicked-view-all">
 
-        <a href="#">
+        <a href="{{ route('tours.index') }}">
             View All Tours
         </a>
 

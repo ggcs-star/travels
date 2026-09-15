@@ -8,8 +8,10 @@
 
     {{-- HERO --}}
 
-    <section class="user-blog-hero">
-
+<section
+    class="user-blog-hero"
+    style="background-image: url('{{ asset('images/hero/blog.png') }}');"
+>
         <div class="user-blog-container">
 
             <span class="user-blog-eyebrow">

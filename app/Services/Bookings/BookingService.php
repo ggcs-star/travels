@@ -7,6 +7,8 @@ use App\Models\Payment;
 use App\Models\TourDeparture;
 use App\Models\TourPackage;
 use App\Models\User;
+use App\Services\Points\PointWalletService;
+use App\Services\Points\PointSettingService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -14,6 +16,12 @@ use Illuminate\Validation\ValidationException;
 
 class BookingService
 {
+    public function __construct(
+        private readonly PointWalletService $pointWalletService,
+        private readonly PointSettingService $pointSettingService
+    ) {
+    }
+
     /**
      * Create a new booking and temporarily reserve seats.
      */
@@ -198,6 +206,21 @@ class BookingService
                         $totalInPaise
                     ),
 
+                /*
+                |--------------------------------------------------------------------------
+                | Points Redemption Defaults
+                |--------------------------------------------------------------------------
+                */
+
+                'points_redeemed' => 0,
+
+                'points_discount' => 0,
+
+                'payable_amount' =>
+                    $this->moneyFromPaise(
+                        $totalInPaise
+                    ),
+
                 'currency' =>
                     $departure->currency,
 
@@ -232,9 +255,9 @@ class BookingService
                     ?? null;
 
                 /*
-                |--------------------------------------------------------------
+                |--------------------------------------------------------------------------
                 | Remove UploadedFile From Raw Data
-                |--------------------------------------------------------------
+                |--------------------------------------------------------------------------
                 */
 
                 unset(
@@ -242,9 +265,9 @@ class BookingService
                 );
 
                 /*
-                |--------------------------------------------------------------
+                |--------------------------------------------------------------------------
                 | Store ID Proof Privately
-                |--------------------------------------------------------------
+                |--------------------------------------------------------------------------
                 */
 
                 if ($document instanceof UploadedFile) {
@@ -261,9 +284,9 @@ class BookingService
                 }
 
                 /*
-                |--------------------------------------------------------------
+                |--------------------------------------------------------------------------
                 | Create Traveller
-                |--------------------------------------------------------------
+                |--------------------------------------------------------------------------
                 */
 
                 $booking->travellers()->create(
@@ -281,6 +304,262 @@ class BookingService
                 'tourPackage',
                 'departure',
                 'travellers',
+            ]);
+        });
+    }
+
+    /**
+     * Apply travel points to a pending booking.
+     *
+     * Points are NOT deducted from the wallet here.
+     * They are deducted only after successful payment.
+     */
+    public function applyPoints(
+        Booking $booking,
+        User $user,
+        int $points
+    ): Booking {
+        return DB::transaction(function () use (
+            $booking,
+            $user,
+            $points
+        ) {
+            /*
+            |--------------------------------------------------------------------------
+            | Lock Booking
+            |--------------------------------------------------------------------------
+            */
+
+            $booking = Booking::query()
+                ->lockForUpdate()
+                ->findOrFail($booking->id);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Verify Ownership
+            |--------------------------------------------------------------------------
+            */
+
+            if ((int) $booking->user_id !== (int) $user->id) {
+                throw ValidationException::withMessages([
+                    'points' =>
+                        'You cannot use points on this booking.',
+                ]);
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Verify Booking Is Payable
+            |--------------------------------------------------------------------------
+            */
+
+            if (! $booking->isPayable()) {
+                throw ValidationException::withMessages([
+                    'points' =>
+                        'This booking is no longer available for payment.',
+                ]);
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Validate Requested Points
+            |--------------------------------------------------------------------------
+            */
+
+            if ($points <= 0) {
+                throw ValidationException::withMessages([
+                    'points' =>
+                        'Please enter a valid number of points.',
+                ]);
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Lock Wallet
+            |--------------------------------------------------------------------------
+            */
+
+            $wallet = $user->pointWallet()
+                ->lockForUpdate()
+                ->first();
+
+            if (! $wallet) {
+                throw ValidationException::withMessages([
+                    'points' =>
+                        'Points wallet is not available.',
+                ]);
+            }
+
+            $availablePoints = (int) $wallet->balance;
+
+            if ($availablePoints <= 0) {
+                throw ValidationException::withMessages([
+                    'points' =>
+                        'You do not have any available points.',
+                ]);
+            }
+
+            if ($points > $availablePoints) {
+                throw ValidationException::withMessages([
+                    'points' =>
+                        "You only have {$availablePoints} point(s) available.",
+                ]);
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Calculate Maximum Allowed Redemption
+            |--------------------------------------------------------------------------
+            */
+
+            $calculation = $this->pointSettingService
+                ->calculateRedemption(
+                    availablePoints: $availablePoints,
+                    bookingAmount: (float) $booking->total_amount
+                );
+
+            if (! $calculation['enabled']) {
+                throw ValidationException::withMessages([
+                    'points' =>
+                        'Points redemption is currently unavailable.',
+                ]);
+            }
+
+            $maximumAllowed =
+                (int) $calculation['points_to_redeem'];
+
+            if ($maximumAllowed <= 0) {
+                throw ValidationException::withMessages([
+                    'points' =>
+                        'Points cannot be redeemed for this booking.',
+                ]);
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Prevent Browser From Bypassing Limits
+            |--------------------------------------------------------------------------
+            */
+
+            if ($points > $maximumAllowed) {
+                throw ValidationException::withMessages([
+                    'points' =>
+                        "You can redeem a maximum of {$maximumAllowed} point(s) for this booking.",
+                ]);
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Calculate Final Payable Amount
+            |--------------------------------------------------------------------------
+            */
+
+            $payable = $this->pointSettingService
+                ->calculatePayableAmount(
+                    bookingAmount: (float) $booking->total_amount,
+                    pointsToRedeem: $points
+                );
+
+            if ($payable['points_redeemed'] <= 0) {
+                throw ValidationException::withMessages([
+                    'points' =>
+                        'The selected points cannot be applied.',
+                ]);
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Save Redemption On Booking
+            |--------------------------------------------------------------------------
+            */
+
+            $booking->update([
+                'points_redeemed' =>
+                    $payable['points_redeemed'],
+
+                'points_discount' =>
+                    $payable['points_discount'],
+
+                'payable_amount' =>
+                    $payable['payable_amount'],
+            ]);
+
+            return $booking->fresh([
+                'tourPackage',
+                'departure',
+                'travellers',
+                'payments',
+            ]);
+        });
+    }
+
+    /**
+     * Remove applied travel points from a pending booking.
+     *
+     * The wallet is untouched because points have not yet
+     * been deducted.
+     */
+    public function removePoints(
+        Booking $booking,
+        User $user
+    ): Booking {
+        return DB::transaction(function () use (
+            $booking,
+            $user
+        ) {
+            /*
+            |--------------------------------------------------------------------------
+            | Lock Booking
+            |--------------------------------------------------------------------------
+            */
+
+            $booking = Booking::query()
+                ->lockForUpdate()
+                ->findOrFail($booking->id);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Verify Ownership
+            |--------------------------------------------------------------------------
+            */
+
+            if ((int) $booking->user_id !== (int) $user->id) {
+                throw ValidationException::withMessages([
+                    'points' =>
+                        'You cannot modify points on this booking.',
+                ]);
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Verify Booking Is Payable
+            |--------------------------------------------------------------------------
+            */
+
+            if (! $booking->isPayable()) {
+                throw ValidationException::withMessages([
+                    'points' =>
+                        'This booking can no longer be modified.',
+                ]);
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Reset Redemption
+            |--------------------------------------------------------------------------
+            */
+
+            $booking->update([
+                'points_redeemed' => 0,
+                'points_discount' => 0,
+                'payable_amount' => $booking->total_amount,
+            ]);
+
+            return $booking->fresh([
+                'tourPackage',
+                'departure',
+                'travellers',
+                'payments',
             ]);
         });
     }
@@ -314,7 +593,6 @@ class BookingService
         string $signature,
         array $metadata = []
     ): Booking {
-
         return DB::transaction(function () use (
             $payment,
             $providerPaymentId,
@@ -419,6 +697,31 @@ class BookingService
 
             /*
             |--------------------------------------------------------------------------
+            | Finalize Redeemed Points
+            |--------------------------------------------------------------------------
+            |
+            | Points are deducted ONLY after successful payment.
+            |
+            */
+
+            $this->redeemBookingPoints(
+                booking: $booking,
+                payment: $payment
+            );
+
+            /*
+            |--------------------------------------------------------------------------
+            | Award Booking Reward
+            |--------------------------------------------------------------------------
+            */
+
+            $this->awardBookingPoints(
+                booking: $booking,
+                payment: $payment
+            );
+
+            /*
+            |--------------------------------------------------------------------------
             | Return Complete Booking
             |--------------------------------------------------------------------------
             */
@@ -430,6 +733,116 @@ class BookingService
                 'payments',
             ]);
         });
+    }
+
+    /**
+     * Deduct points used by a successfully paid booking.
+     *
+     * The unique booking reference prevents duplicate deductions
+     * if payment verification and webhook processing both happen.
+     */
+    private function redeemBookingPoints(
+        Booking $booking,
+        Payment $payment
+    ): void {
+        if (! $booking->user_id) {
+            return;
+        }
+
+        $points = (int) $booking->points_redeemed;
+
+        if ($points <= 0) {
+            return;
+        }
+
+        $reference = 'BOOKING_REDEMPTION:' . $booking->id;
+
+        /*
+        |--------------------------------------------------------------------------
+        | Check Existing Redemption
+        |--------------------------------------------------------------------------
+        */
+
+        $alreadyRedeemed = \App\Models\PointTransaction::query()
+            ->where('reference', $reference)
+            ->exists();
+
+        if ($alreadyRedeemed) {
+            return;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Debit Wallet
+        |--------------------------------------------------------------------------
+        */
+
+        $this->pointWalletService->debit(
+            user: $booking->user,
+            points: $points,
+            source: 'booking_redemption',
+            description: "Points redeemed for booking {$booking->booking_number}.",
+            referenceModel: $booking,
+            reference: $reference,
+            metadata: [
+                'booking_id' => $booking->id,
+                'booking_number' => $booking->booking_number,
+                'payment_id' => $payment->id,
+                'provider' => $payment->provider,
+                'provider_order_id' => $payment->provider_order_id,
+                'provider_payment_id' => $payment->provider_payment_id,
+                'booking_amount' => (string) $booking->total_amount,
+                'points_redeemed' => $points,
+                'points_discount' => (string) $booking->points_discount,
+                'payable_amount' => (string) $booking->payable_amount,
+                'currency' => $booking->currency,
+            ],
+        );
+    }
+
+    /**
+     * Award points for a successfully paid booking.
+     *
+     * The reward is calculated from the active admin point setting.
+     * The booking reference makes the reward idempotent.
+     */
+    private function awardBookingPoints(
+        Booking $booking,
+        Payment $payment
+    ): void {
+        if (! $booking->user_id) {
+            return;
+        }
+
+        $points = $this->pointSettingService->calculateBookingPoints(
+            (float) $payment->amount
+        );
+
+        if ($points <= 0) {
+            return;
+        }
+
+        $reference = 'BOOKING_REWARD:' . $booking->id;
+
+        $this->pointWalletService->creditOnce(
+            user: $booking->user,
+            points: $points,
+            source: 'booking_payment',
+            reference: $reference,
+            description: "Points earned for booking {$booking->booking_number}.",
+            referenceModel: $booking,
+            metadata: [
+                'booking_id' => $booking->id,
+                'booking_number' => $booking->booking_number,
+                'payment_id' => $payment->id,
+                'provider' => $payment->provider,
+                'provider_order_id' => $payment->provider_order_id,
+                'provider_payment_id' => $payment->provider_payment_id,
+                'amount' => (string) $payment->amount,
+                'currency' => $payment->currency,
+                'reward_points' => $points,
+            ],
+        );
     }
 
     /**

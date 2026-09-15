@@ -8,9 +8,12 @@
 @import './components.css';
 @import './sections.css';
 @import './responsive.css';
-@import './admin.css';  
+@import './admin.css';
 @import './storefront.css';
 @import './blog.css';
+
+/* Visual Settings - Admin controlled theme */
+@import './visual-settings.css';
 
 @theme {
     --font-sans:

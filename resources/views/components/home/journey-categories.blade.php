@@ -2,10 +2,7 @@
 
     <div class="container">
 
-        {{-- =====================================================
-             SECTION HEADER
-        ====================================================== --}}
-
+        {{-- SECTION HEADER --}}
         <div class="journey-section-header">
 
             <span class="journey-eyebrow">
@@ -27,10 +24,7 @@
         </div>
 
 
-        {{-- =====================================================
-             DYNAMIC CATEGORY CARDS
-        ====================================================== --}}
-
+        {{-- DYNAMIC CATEGORY CARDS --}}
         @if($categories->isNotEmpty())
 
             <div class="journey-grid">
@@ -42,21 +36,13 @@
                         class="journey-card"
                     >
 
-                        {{-- =================================================
-                             CATEGORY IMAGE
-                        ================================================== --}}
-
+                        {{-- CATEGORY IMAGE --}}
                         <div class="journey-card-image">
 
                             @php
-                                /*
-                                 * If category image support is added in the
-                                 * future, use it here.
-                                 *
-                                 * For now, use a common fallback image.
-                                 */
-                                $categoryImage = $category->image_url
-                                    ?? asset('images/hero/tour-bg.jpg');
+                                $categoryImage = $category->image
+                                    ? asset('storage/' . $category->image)
+                                    : asset('images/hero/tour-bg.jpg');
                             @endphp
 
                             <img
@@ -71,10 +57,7 @@
                         </div>
 
 
-                        {{-- =================================================
-                             CATEGORY CONTENT
-                        ================================================== --}}
-
+                        {{-- CATEGORY CONTENT --}}
                         <div class="journey-card-content">
 
                             <span class="journey-card-icon">
@@ -86,7 +69,9 @@
                             </h3>
 
                             <p>
-                                Explore {{ $category->name }} tours
+                                {{ $category->short_description
+                                    ?? 'Explore ' . $category->name . ' tours'
+                                }}
                             </p>
 
                             <span class="journey-card-link">

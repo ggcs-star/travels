@@ -67,6 +67,84 @@ class UpdateTourPackageRequest extends StoreTourPackageRequest
 
                 /*
                 |--------------------------------------------------------------------------
+                | Itinerary
+                |--------------------------------------------------------------------------
+                */
+
+                'itinerary' => [
+                    'nullable',
+                    'array',
+                    'max:50',
+                ],
+
+                'itinerary.*' => [
+                    'required',
+                    'array',
+                ],
+
+                'itinerary.*.day' => [
+                    'required',
+                    'integer',
+                    'min:1',
+                    'max:365',
+                ],
+
+                'itinerary.*.title' => [
+                    'required',
+                    'string',
+                    'max:255',
+                ],
+
+                'itinerary.*.description' => [
+                    'nullable',
+                    'string',
+                    'max:10000',
+                ],
+
+                'itinerary.*.activities' => [
+                    'nullable',
+                    'array',
+                    'max:50',
+                ],
+
+                'itinerary.*.activities.*' => [
+                    'required',
+                    'string',
+                    'max:500',
+                ],
+
+                /*
+                |--------------------------------------------------------------------------
+                | Tour Policies / Notes
+                |--------------------------------------------------------------------------
+                */
+
+                'important_notes' => [
+                    'nullable',
+                    'string',
+                    'max:30000',
+                ],
+
+                'terms_conditions' => [
+                    'nullable',
+                    'string',
+                    'max:30000',
+                ],
+
+                'cancellation_policy' => [
+                    'nullable',
+                    'string',
+                    'max:30000',
+                ],
+
+                'privacy_policy' => [
+                    'nullable',
+                    'string',
+                    'max:30000',
+                ],
+
+                /*
+                |--------------------------------------------------------------------------
                 | Cover Image
                 |--------------------------------------------------------------------------
                 */
@@ -144,6 +222,77 @@ class UpdateTourPackageRequest extends StoreTourPackageRequest
                     'distinct',
                     'exists:tour_package_images,id',
                 ],
+
+                /*
+|--------------------------------------------------------------------------
+| Tour Departures
+|--------------------------------------------------------------------------
+*/
+
+'departures' => [
+    'nullable',
+    'array',
+    'max:100',
+],
+
+'departures.*.id' => [
+    'nullable',
+    'integer',
+],
+
+'departures.*.departure_date' => [
+    'required',
+    'date',
+    'after_or_equal:today',
+],
+
+'departures.*.return_date' => [
+    'required',
+    'date',
+    'after_or_equal:departures.*.departure_date',
+],
+
+'departures.*.capacity' => [
+    'required',
+    'integer',
+    'min:1',
+    'max:1000',
+],
+
+'departures.*.price' => [
+    'required',
+    'decimal:0,2',
+    'min:0',
+],
+
+'departures.*.sale_price' => [
+    'nullable',
+    'decimal:0,2',
+    'min:0',
+    'lt:departures.*.price',
+],
+
+'departures.*.currency' => [
+    'required',
+    'string',
+    'size:3',
+    'alpha',
+],
+
+'departures.*.meeting_point' => [
+    'nullable',
+    'string',
+    'max:255',
+],
+
+'departures.*.status' => [
+    'required',
+    Rule::in([
+        'open',
+        'closed',
+        'cancelled',
+    ]),
+],
             ]
         );
     }
@@ -296,6 +445,36 @@ class UpdateTourPackageRequest extends StoreTourPackageRequest
 
                 'remove_gallery.max' =>
                     'You can remove a maximum of 20 gallery images at once.',
+
+                'itinerary.array' =>
+                    'Tour itinerary must be a valid list.',
+
+                'itinerary.*.day.required' =>
+                    'Itinerary day number is required.',
+
+                'itinerary.*.title.required' =>
+                    'Itinerary day title is required.',
+
+                'itinerary.*.description.max' =>
+                    'Itinerary day description is too long.',
+
+                'itinerary.*.activities.array' =>
+                    'Itinerary activities must be a valid list.',
+
+                'itinerary.*.activities.*.required' =>
+                    'Itinerary activity cannot be empty.',
+
+                'important_notes.max' =>
+                    'Important notes may not exceed 30,000 characters.',
+
+                'terms_conditions.max' =>
+                    'Terms & Conditions may not exceed 30,000 characters.',
+
+                'cancellation_policy.max' =>
+                    'Cancellation Policy may not exceed 30,000 characters.',
+
+                'privacy_policy.max' =>
+                    'Privacy Policy may not exceed 30,000 characters.',
             ]
         );
     }
@@ -318,6 +497,15 @@ class UpdateTourPackageRequest extends StoreTourPackageRequest
                 'remove_cover_image' => 'remove cover image',
                 'gallery_order.*' => 'gallery image',
                 'remove_gallery.*' => 'gallery image',
+
+                'itinerary.*.day' => 'itinerary day',
+                'itinerary.*.title' => 'itinerary day title',
+                'itinerary.*.description' => 'itinerary day description',
+                'itinerary.*.activities.*' => 'itinerary activity',
+                'important_notes' => 'important notes',
+                'terms_conditions' => 'terms & conditions',
+                'cancellation_policy' => 'cancellation policy',
+                'privacy_policy' => 'privacy policy',
             ]
         );
     }

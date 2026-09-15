@@ -1,3 +1,4 @@
+import './visual-settings';
 /*
 |--------------------------------------------------------------------------
 | Application Initialization

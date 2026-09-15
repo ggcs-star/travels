@@ -11,8 +11,8 @@ html {
 body {
     margin: 0;
 
-    background: var(--color-background);
-    color: var(--color-text);
+    background: var(--site-background);
+    color: var(--site-text);
 
     font-family: var(--font-body);
     font-size: var(--font-size-base);
@@ -98,7 +98,7 @@ ol {
 
     margin-bottom: var(--space-4);
 
-    color: var(--color-primary);
+    color: var(--site-primary);
 
     font-size: var(--font-size-xs);
     font-weight: 800;
@@ -119,7 +119,7 @@ ol {
 }
 
 .section-title {
-    color: var(--color-heading);
+    color: var(--site-text);
 
     font-family: var(--font-heading);
 
@@ -134,11 +134,8 @@ ol {
 
     margin-top: var(--space-4);
 
-    color: var(--color-text);
+    color: var(--site-text);
 
     font-size: var(--font-size-base);
     line-height: 1.8;
 }
-
-
-

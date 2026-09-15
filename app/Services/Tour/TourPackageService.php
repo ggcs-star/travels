@@ -3,6 +3,7 @@
 namespace App\Services\Tour;
 
 use App\Models\TourPackage;
+use App\Models\TourDeparture;
 use App\Services\Media\TourPackageImageService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -41,6 +42,10 @@ class TourPackageService
                 &$uploadedPaths
             ) {
                 $data = $this->preparePackageData($data);
+                $data['itinerary'] = $this->processItineraryImages(
+                    $data['itinerary'] ?? [],
+                    $uploadedPaths
+                );
 
                 /*
                  * Always generate a unique package slug.
@@ -143,29 +148,37 @@ class TourPackageService
         $galleryOrder = $data['gallery_order'] ?? [];
 
         $removeGallery = $data['remove_gallery'] ?? [];
-
+$hasDepartures = array_key_exists('departures', $data);
+$departures = $data['departures'] ?? [];
         unset(
-            $data['gallery'],
-            $data['gallery_order'],
-            $data['remove_gallery']
-        );
-
+    $data['gallery'],
+    $data['gallery_order'],
+    $data['remove_gallery'],
+    $data['departures']
+);
         $uploadedPaths = [];
 
         $deletedGalleryPaths = [];
 
         try {
-            $updatedTour = DB::transaction(function () use (
-                $tour,
-                $data,
-                $gallery,
-                $galleryOrder,
-                $removeGallery,
-                &$uploadedPaths,
-                &$deletedGalleryPaths
-            ) {
+           $updatedTour = DB::transaction(function () use (
+    $tour,
+    $data,
+    $gallery,
+    $galleryOrder,
+    $removeGallery,
+    $hasDepartures,
+    $departures,
+    &$uploadedPaths,
+    &$deletedGalleryPaths
+) {
                 $data = $this->preparePackageData(
                     $data
+                );
+                $data['itinerary'] = $this->processItineraryImages(
+                    $data['itinerary'] ?? [],
+                    $uploadedPaths,
+                    $tour->itinerary ?? []
                 );
 
                 /*
@@ -275,8 +288,14 @@ class TourPackageService
                 |--------------------------------------------------------------------------
                 */
 
-                $tour->update($data);
+$tour->update($data);
 
+if ($hasDepartures) {
+    $this->syncDepartures(
+        $tour,
+        $departures
+    );
+}
                 /*
                 |--------------------------------------------------------------------------
                 | Remove Gallery Images
@@ -660,6 +679,12 @@ class TourPackageService
                 'meta_keywords',
                 'canonical_url',
                 'robots',
+
+                // Dynamic tour content / PDF sections.
+                'important_notes',
+                'terms_conditions',
+                'cancellation_policy',
+                'privacy_policy',
             ] as $field
         ) {
             if (
@@ -747,7 +772,218 @@ class TourPackageService
                 ->all();
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Normalize Itinerary
+        |--------------------------------------------------------------------------
+        |
+        | Keep a predictable structure so the admin UI, storefront and
+        | dynamic PDF all consume exactly the same database data.
+        |
+        */
+
+        if (array_key_exists('itinerary', $data)) {
+            if (! is_array($data['itinerary'])) {
+                $data['itinerary'] = [];
+            } else {
+                $normalizedItinerary = [];
+
+                foreach (
+                    $data['itinerary'] as $index => $day
+                ) {
+                    if (! is_array($day)) {
+                        continue;
+                    }
+
+                    $dayNumber = (int) (
+                        $day['day']
+                        ?? ($index + 1)
+                    );
+
+                    if ($dayNumber < 1) {
+                        $dayNumber = $index + 1;
+                    }
+
+                    $title = trim(
+                        (string) (
+                            $day['title']
+                            ?? $day['name']
+                            ?? $day['heading']
+                            ?? ''
+                        )
+                    );
+
+                    $description = trim(
+                        (string) (
+                            $day['description']
+                            ?? $day['details']
+                            ?? $day['content']
+                            ?? ''
+                        )
+                    );
+
+                    $location = trim(
+                        (string) (
+                            $day['location']
+                            ?? $day['places']
+                            ?? ''
+                        )
+                    );
+
+                    $image = $day['image']
+                        ?? $day['image_path']
+                        ?? null;
+
+                    if (! $image instanceof UploadedFile && $image !== null) {
+                        $image = trim((string) $image);
+                    }
+
+                    $activities = $day['activities']
+                        ?? $day['items']
+                        ?? [];
+
+                    if (is_string($activities)) {
+                        $activities = preg_split(
+                            '/\R/',
+                            $activities,
+                            -1,
+                            PREG_SPLIT_NO_EMPTY
+                        );
+                    }
+
+                    if (! is_array($activities)) {
+                        $activities = [];
+                    }
+
+                    $activities = collect($activities)
+                        ->map(function ($activity) {
+                            if (is_array($activity)) {
+                                return trim(
+                                    (string) (
+                                        $activity['title']
+                                        ?? $activity['name']
+                                        ?? $activity['text']
+                                        ?? ''
+                                    )
+                                );
+                            }
+
+                            return trim((string) $activity);
+                        })
+                        ->filter()
+                        ->values()
+                        ->all();
+
+                    // Ignore completely empty itinerary rows.
+                    if (
+                        $title === ''
+                        && $description === ''
+                        && empty($activities)
+                    ) {
+                        continue;
+                    }
+
+                    $normalizedItinerary[] = [
+                        'day' => $dayNumber,
+                        'title' => $title,
+                        'location' => $location,
+                        'description' => $description,
+                        'image' => $image,
+                        'activities' => $activities,
+                    ];
+                }
+
+                $data['itinerary'] = collect(
+                    $normalizedItinerary
+                )
+                    ->sortBy('day')
+                    ->values()
+                    ->all();
+            }
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Normalize Policy / Notes Fields
+        |--------------------------------------------------------------------------
+        |
+        | These are intentionally kept as strings because they may contain
+        | line breaks / HTML entered by the admin and will be rendered by
+        | both the website and the PDF.
+        |
+        */
+
+        foreach (
+            [
+                'important_notes',
+                'terms_conditions',
+                'cancellation_policy',
+                'privacy_policy',
+            ] as $field
+        ) {
+            if (! array_key_exists($field, $data)) {
+                continue;
+            }
+
+            if ($data[$field] === null) {
+                $data[$field] = null;
+
+                continue;
+            }
+
+            $data[$field] = trim(
+                (string) $data[$field]
+            );
+        }
+
         return $data;
+    }
+
+    /**
+     * Store images uploaded for individual itinerary days.
+     * Existing image paths are retained during updates when no replacement
+     * image is uploaded.
+     */
+    private function processItineraryImages(
+        array $itinerary,
+        array &$uploadedPaths,
+        array $existingItinerary = []
+    ): array {
+        $existingByDay = collect($existingItinerary)
+            ->filter(fn ($day) => is_array($day))
+            ->keyBy(fn ($day) => (int) ($day['day'] ?? 0));
+
+        foreach ($itinerary as $index => &$day) {
+            if (! is_array($day)) {
+                continue;
+            }
+
+            $dayNumber = (int) ($day['day'] ?? ($index + 1));
+            $uploadedImage = $day['image'] ?? null;
+
+            if ($uploadedImage instanceof UploadedFile) {
+                $path = $this->imageService->store($uploadedImage);
+                $uploadedPaths[] = $path;
+                $day['image'] = $path;
+                continue;
+            }
+
+            $currentImage = is_array($existingByDay->get($dayNumber))
+                ? ($existingByDay->get($dayNumber)['image']
+                    ?? $existingByDay->get($dayNumber)['image_path']
+                    ?? null)
+                : null;
+
+            if (! empty($currentImage)) {
+                $day['image'] = $currentImage;
+            } else {
+                $day['image'] = null;
+            }
+        }
+
+        unset($day);
+
+        return array_values($itinerary);
     }
 
     /*
@@ -926,6 +1162,107 @@ class TourPackageService
 
         return $newPath;
     }
+
+
+
+    /*
+|--------------------------------------------------------------------------
+| Sync Departures
+|--------------------------------------------------------------------------
+*/
+
+private function syncDepartures(
+    TourPackage $tour,
+    array $departures
+): void {
+    $submittedIds = [];
+
+    foreach ($departures as $departureData) {
+        $departureData = (array) $departureData;
+
+        $departureId = isset($departureData['id'])
+            ? (int) $departureData['id']
+            : null;
+
+        unset($departureData['id']);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Existing Departure
+        |--------------------------------------------------------------------------
+        */
+
+        if ($departureId) {
+            $departure = $tour->departures()
+                ->whereKey($departureId)
+                ->first();
+
+            if (! $departure) {
+                throw new \RuntimeException(
+                    'The selected departure does not belong to this tour package.'
+                );
+            }
+
+            $reservedSeats = $departure->bookings()
+                ->reserving()
+                ->sum('traveller_count');
+
+            if (
+                isset($departureData['capacity'])
+                && (int) $departureData['capacity'] < $reservedSeats
+            ) {
+                throw new \RuntimeException(
+                    "Capacity cannot be lower than the {$reservedSeats} reserved seats."
+                );
+            }
+
+            $departure->update($departureData);
+
+            $submittedIds[] = $departure->id;
+
+            continue;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | New Departure
+        |--------------------------------------------------------------------------
+        */
+
+        $newDeparture = $tour->departures()->create(
+            $departureData
+        );
+
+        $submittedIds[] = $newDeparture->id;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Removed Departures
+    |--------------------------------------------------------------------------
+    */
+
+    $existingDepartures = $tour->departures()->get();
+
+    foreach ($existingDepartures as $departure) {
+        if (in_array($departure->id, $submittedIds, true)) {
+            continue;
+        }
+
+        $hasBookings = $departure->bookings()->exists();
+
+        if ($hasBookings) {
+            $departure->update([
+                'status' => TourDeparture::STATUS_CLOSED,
+            ]);
+
+            continue;
+        }
+
+        $departure->delete();
+    }
+}
+
 
     /*
     |--------------------------------------------------------------------------

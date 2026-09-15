@@ -162,6 +162,67 @@ class StoreTourPackageRequest extends FormRequest
 
             /*
             |--------------------------------------------------------------------------
+            | Itinerary
+            |--------------------------------------------------------------------------
+            */
+
+            'itinerary' => [
+                'nullable',
+                'array',
+                'max:50',
+            ],
+
+            'itinerary.*' => [
+                'required',
+                'array',
+            ],
+
+            'itinerary.*.day' => [
+                'required',
+                'integer',
+                'min:1',
+                'max:365',
+            ],
+
+            'itinerary.*.title' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'itinerary.*.location' => [
+                'nullable',
+                'string',
+                'max:500',
+            ],
+
+            'itinerary.*.description' => [
+                'nullable',
+                'string',
+                'max:10000',
+            ],
+
+            'itinerary.*.image' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp,avif',
+                'max:5120',
+            ],
+
+            'itinerary.*.activities' => [
+                'nullable',
+                'array',
+                'max:50',
+            ],
+
+            'itinerary.*.activities.*' => [
+                'nullable',
+                'string',
+                'max:500',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
             | Highlights
             |--------------------------------------------------------------------------
             */
@@ -212,6 +273,109 @@ class StoreTourPackageRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Tour Itinerary
+            |--------------------------------------------------------------------------
+            |
+            | Each itinerary day contains:
+            | - day
+            | - title
+            | - description
+            | - activities
+            |
+            */
+
+            'itinerary' => [
+                'nullable',
+                'array',
+                'max:50',
+            ],
+
+            'itinerary.*' => [
+                'required',
+                'array',
+            ],
+
+            'itinerary.*.day' => [
+                'required',
+                'integer',
+                'min:1',
+                'max:365',
+            ],
+
+            'itinerary.*.title' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'itinerary.*.description' => [
+                'nullable',
+                'string',
+                'max:10000',
+            ],
+
+            'itinerary.*.activities' => [
+                'nullable',
+                'array',
+                'max:50',
+            ],
+
+            'itinerary.*.activities.*' => [
+                'required',
+                'string',
+                'max:500',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Important Notes
+            |--------------------------------------------------------------------------
+            */
+
+            'important_notes' => [
+                'nullable',
+                'string',
+                'max:30000',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Terms & Conditions
+            |--------------------------------------------------------------------------
+            */
+
+            'terms_conditions' => [
+                'nullable',
+                'string',
+                'max:30000',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Cancellation Policy
+            |--------------------------------------------------------------------------
+            */
+
+            'cancellation_policy' => [
+                'nullable',
+                'string',
+                'max:30000',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Privacy Policy
+            |--------------------------------------------------------------------------
+            */
+
+            'privacy_policy' => [
+                'nullable',
+                'string',
+                'max:30000',
             ],
 
             /*
@@ -492,6 +656,150 @@ class StoreTourPackageRequest extends FormRequest
 
         /*
         |--------------------------------------------------------------------------
+        | Itinerary normalization
+        |--------------------------------------------------------------------------
+        */
+
+        $itinerary = $this->input('itinerary', []);
+
+        if (is_array($itinerary)) {
+            $normalizedItinerary = [];
+
+            foreach ($itinerary as $index => $day) {
+                if (! is_array($day)) {
+                    continue;
+                }
+
+                $dayNumber = (int) (
+                    $day['day']
+                    ?? ($index + 1)
+                );
+
+                $title = trim(
+                    (string) (
+                        $day['title']
+                        ?? $day['name']
+                        ?? $day['heading']
+                        ?? ''
+                    )
+                );
+
+                $description = trim(
+                    (string) (
+                        $day['description']
+                        ?? $day['details']
+                        ?? $day['content']
+                        ?? ''
+                    )
+                );
+
+                $activities = $day['activities']
+                    ?? $day['items']
+                    ?? [];
+
+                if (is_string($activities)) {
+                    $activities = preg_split(
+                        '/\R/',
+                        $activities,
+                        -1,
+                        PREG_SPLIT_NO_EMPTY
+                    );
+                }
+
+                if (! is_array($activities)) {
+                    $activities = [];
+                }
+
+                $activities = collect($activities)
+                    ->map(function ($activity) {
+                        if (is_array($activity)) {
+                            return trim(
+                                (string) (
+                                    $activity['title']
+                                    ?? $activity['name']
+                                    ?? $activity['text']
+                                    ?? ''
+                                )
+                            );
+                        }
+
+                        return trim((string) $activity);
+                    })
+                    ->filter()
+                    ->values()
+                    ->all();
+
+                $normalizedItinerary[] = [
+                    'day' => $dayNumber,
+                    'title' => $title,
+                    'description' => $description,
+                    'activities' => $activities,
+                ];
+            }
+
+            $data['itinerary'] = collect($normalizedItinerary)
+                ->sortBy('day')
+                ->values()
+                ->all();
+        } else {
+            $data['itinerary'] = [];
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Policy/content text normalization
+        |--------------------------------------------------------------------------
+        */
+
+        foreach ([
+            'important_notes',
+            'terms_conditions',
+            'cancellation_policy',
+            'privacy_policy',
+        ] as $field) {
+            $value = $this->input($field);
+
+            if ($value === null) {
+                continue;
+            }
+
+            $data[$field] = trim((string) $value);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Itinerary normalization
+        |--------------------------------------------------------------------------
+        */
+
+        $itinerary = $this->input('itinerary', []);
+
+        if (is_array($itinerary)) {
+            foreach ($itinerary as $index => $day) {
+                if (! is_array($day)) {
+                    continue;
+                }
+
+                $itinerary[$index]['day'] = (int) ($day['day'] ?? ($index + 1));
+                $itinerary[$index]['title'] = trim((string) ($day['title'] ?? ''));
+                $itinerary[$index]['location'] = trim((string) ($day['location'] ?? ''));
+                $itinerary[$index]['description'] = trim((string) ($day['description'] ?? ''));
+
+                $activities = $day['activities'] ?? [];
+                if (is_string($activities)) {
+                    $activities = preg_split('/\R/', $activities, -1, PREG_SPLIT_NO_EMPTY);
+                }
+
+                $itinerary[$index]['activities'] = is_array($activities)
+                    ? collect($activities)->map(fn ($item) => trim((string) $item))->filter()->values()->all()
+                    : [];
+            }
+
+            $data['itinerary'] = array_values($itinerary);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
         | Departure normalization
         |--------------------------------------------------------------------------
         */
@@ -644,6 +952,24 @@ class StoreTourPackageRequest extends FormRequest
             'age_max.gte' =>
                 'Maximum age must be greater than or equal to minimum age.',
 
+            'itinerary.required' =>
+                'Please add the tour itinerary.',
+
+            'itinerary.*.title.required' =>
+                'Day title is required.',
+
+            'itinerary.*.location.max' =>
+                'Day location may not be longer than 500 characters.',
+
+            'itinerary.*.description.max' =>
+                'Day description may not be longer than 10,000 characters.',
+
+            'itinerary.*.image.image' =>
+                'The day image must be a valid image.',
+
+            'itinerary.*.image.max' =>
+                'The day image may not be larger than 5 MB.',
+
             'cover_image.required' =>
                 'Main package image is required.',
 
@@ -679,6 +1005,39 @@ class StoreTourPackageRequest extends FormRequest
 
             'status.required' =>
                 'Package status is required.',
+
+            'itinerary.array' =>
+                'Tour itinerary must be a valid list.',
+
+            'itinerary.*.array' =>
+                'Each itinerary day must be a valid section.',
+
+            'itinerary.*.day.required' =>
+                'Itinerary day number is required.',
+
+            'itinerary.*.title.required' =>
+                'Itinerary day title is required.',
+
+            'itinerary.*.description.max' =>
+                'Itinerary day description is too long.',
+
+            'itinerary.*.activities.array' =>
+                'Itinerary activities must be a valid list.',
+
+            'itinerary.*.activities.*.required' =>
+                'Itinerary activity cannot be empty.',
+
+            'important_notes.max' =>
+                'Important notes may not exceed 30,000 characters.',
+
+            'terms_conditions.max' =>
+                'Terms & Conditions may not exceed 30,000 characters.',
+
+            'cancellation_policy.max' =>
+                'Cancellation Policy may not exceed 30,000 characters.',
+
+            'privacy_policy.max' =>
+                'Privacy Policy may not exceed 30,000 characters.',
 
             /*
             |--------------------------------------------------------------------------
@@ -762,7 +1121,23 @@ class StoreTourPackageRequest extends FormRequest
 
             'age_max' => 'maximum age',
 
+            'itinerary.*.title' => 'day title',
+            'itinerary.*.location' => 'day location',
+            'itinerary.*.description' => 'day description',
+            'itinerary.*.image' => 'day image',
+            'itinerary.*.activities.*' => 'day activity',
+
             'best_time' => 'best time',
+
+            'itinerary.*.day' => 'itinerary day',
+            'itinerary.*.title' => 'itinerary day title',
+            'itinerary.*.description' => 'itinerary day description',
+            'itinerary.*.activities.*' => 'itinerary activity',
+
+            'important_notes' => 'important notes',
+            'terms_conditions' => 'terms & conditions',
+            'cancellation_policy' => 'cancellation policy',
+            'privacy_policy' => 'privacy policy',
 
             'cover_image' => 'main image',
 

@@ -3,28 +3,141 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreTourCategoryRequest;
+use App\Http\Requests\Admin\UpdateTourCategoryRequest;
 use App\Models\TourCategory;
+use App\Services\Tour\TourCategoryService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class TourCategoryController extends Controller
 {
+    public function __construct(
+        private readonly TourCategoryService $categoryService
+    ) {}
+
     /**
      * Display tour categories.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Filters
+        |--------------------------------------------------------------------------
+        */
+
+        $search = trim((string) $request->input('search', ''));
+
+        $status = $request->input('status');
+
+        $featured = $request->input('featured');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Category Query
+        |--------------------------------------------------------------------------
+        */
+
         $categories = TourCategory::query()
-            ->withCount('packages')
+            ->with([
+                'parent:id,name',
+            ])
+            ->withCount([
+                'packages',
+                'children',
+            ])
+
+            ->when(
+                $search !== '',
+                function ($query) use ($search) {
+                    $query->where(function ($query) use ($search) {
+
+                        $query
+                            ->where('name', 'like', "%{$search}%")
+                            ->orWhere('slug', 'like', "%{$search}%")
+                            ->orWhere(
+                                'short_description',
+                                'like',
+                                "%{$search}%"
+                            );
+                    });
+                }
+            )
+
+            ->when(
+                $status !== null && $status !== '',
+                function ($query) use ($status) {
+                    $query->where(
+                        'status',
+                        (bool) $status
+                    );
+                }
+            )
+
+            ->when(
+                $featured !== null && $featured !== '',
+                function ($query) use ($featured) {
+                    $query->where(
+                        'featured',
+                        (bool) $featured
+                    );
+                }
+            )
+
             ->orderBy('sort_order')
             ->orderBy('name')
-            ->paginate(20);
+
+            ->paginate(20)
+
+            ->withQueryString();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Global Statistics
+        |--------------------------------------------------------------------------
+        |
+        | These are calculated independently from pagination.
+        | Therefore page 2/3/etc. will not change the statistics.
+        |
+        */
+
+        $totalCategories = TourCategory::query()->count();
+
+        $activeCategories = TourCategory::query()
+            ->where('status', true)
+            ->count();
+
+        $inactiveCategories = TourCategory::query()
+            ->where('status', false)
+            ->count();
+
+        $featuredCategories = TourCategory::query()
+            ->where('featured', true)
+            ->count();
+
+        $assignedPackages = TourCategory::query()
+            ->withCount('packages')
+            ->get()
+            ->sum('packages_count');
+
 
         return view(
             'admin.tour-categories.index',
-            compact('categories')
+            compact(
+                'categories',
+                'search',
+                'status',
+                'featured',
+                'totalCategories',
+                'activeCategories',
+                'inactiveCategories',
+                'featuredCategories',
+                'assignedPackages'
+            )
         );
     }
 
@@ -34,64 +147,33 @@ class TourCategoryController extends Controller
      */
     public function create(): View
     {
-        return view('admin.tour-categories.create');
+        $parentCategories = TourCategory::query()
+            ->whereNull('parent_id')
+            ->where('status', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get([
+                'id',
+                'name',
+            ]);
+
+        return view(
+            'admin.tour-categories.create',
+            compact('parentCategories')
+        );
     }
 
 
     /**
      * Store category.
      */
-    public function store(Request $request): RedirectResponse
-    {
-        $data = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:100',
-            ],
-
-            'slug' => [
-                'nullable',
-                'string',
-                'max:120',
-                'unique:tour_categories,slug',
-            ],
-
-            'icon' => [
-                'nullable',
-                'string',
-                'max:100',
-            ],
-
-            'description' => [
-                'nullable',
-                'string',
-            ],
-
-            'sort_order' => [
-                'nullable',
-                'integer',
-                'min:0',
-            ],
-
-            'status' => [
-                'required',
-                'boolean',
-            ],
-        ]);
-
-
-        $data['slug'] = filled($data['slug'] ?? null)
-            ? Str::slug($data['slug'])
-            : Str::slug($data['name']);
-
-        $data['sort_order'] = (int) ($data['sort_order'] ?? 0);
-
-        $data['status'] = (bool) $data['status'];
-
-
-        TourCategory::create($data);
-
+    public function store(
+        StoreTourCategoryRequest $request
+    ): RedirectResponse {
+        $this->categoryService->create(
+            $request->validated(),
+            (int) $request->user()->id
+        );
 
         return redirect()
             ->route('admin.tour-categories.index')
@@ -103,13 +185,56 @@ class TourCategoryController extends Controller
 
 
     /**
+     * Show category.
+     */
+    public function show(
+        TourCategory $category
+    ): View {
+        $category->load([
+            'parent:id,name',
+
+            'children' => function ($query) {
+                $query
+                    ->withCount('packages')
+                    ->orderBy('sort_order')
+                    ->orderBy('name');
+            },
+        ]);
+
+        $category->loadCount('packages');
+
+        return view(
+            'admin.tour-categories.show',
+            [
+                'tourCategory' => $category,
+            ]
+        );
+    }
+
+
+    /**
      * Show edit form.
      */
-    public function edit(TourCategory $tourCategory): View
-    {
+    public function edit(
+        TourCategory $category
+    ): View {
+        $parentCategories = TourCategory::query()
+            ->whereNull('parent_id')
+            ->where('status', true)
+            ->where('id', '!=', $category->id)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get([
+                'id',
+                'name',
+            ]);
+
         return view(
             'admin.tour-categories.edit',
-            compact('tourCategory')
+            [
+                'tourCategory' => $category,
+                'parentCategories' => $parentCategories,
+            ]
         );
     }
 
@@ -118,58 +243,13 @@ class TourCategoryController extends Controller
      * Update category.
      */
     public function update(
-        Request $request,
-        TourCategory $tourCategory
+        UpdateTourCategoryRequest $request,
+        TourCategory $category
     ): RedirectResponse {
-        $data = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:100',
-            ],
-
-            'slug' => [
-                'nullable',
-                'string',
-                'max:120',
-                'unique:tour_categories,slug,' . $tourCategory->id,
-            ],
-
-            'icon' => [
-                'nullable',
-                'string',
-                'max:100',
-            ],
-
-            'description' => [
-                'nullable',
-                'string',
-            ],
-
-            'sort_order' => [
-                'nullable',
-                'integer',
-                'min:0',
-            ],
-
-            'status' => [
-                'required',
-                'boolean',
-            ],
-        ]);
-
-
-        $data['slug'] = filled($data['slug'] ?? null)
-            ? Str::slug($data['slug'])
-            : Str::slug($data['name']);
-
-        $data['sort_order'] = (int) ($data['sort_order'] ?? 0);
-
-        $data['status'] = (bool) $data['status'];
-
-
-        $tourCategory->update($data);
-
+        $this->categoryService->update(
+            $category,
+            $request->validated()
+        );
 
         return redirect()
             ->route('admin.tour-categories.index')
@@ -181,16 +261,65 @@ class TourCategoryController extends Controller
 
 
     /**
+     * Duplicate category.
+     */
+    public function duplicate(
+        TourCategory $category
+    ): RedirectResponse {
+        $this->categoryService->duplicate(
+            $category
+        );
+
+        return redirect()
+            ->route('admin.tour-categories.index')
+            ->with(
+                'success',
+                'Tour category duplicated successfully.'
+            );
+    }
+
+
+    /**
+     * Change category status.
+     */
+    public function status(
+        Request $request,
+        TourCategory $category
+    ): RedirectResponse {
+        $data = $request->validate([
+            'status' => [
+                'required',
+                'boolean',
+            ],
+        ]);
+
+        $this->categoryService->changeStatus(
+            $category,
+            (bool) $data['status']
+        );
+
+        return redirect()
+            ->route('admin.tour-categories.index')
+            ->with(
+                'success',
+                'Tour category status updated successfully.'
+            );
+    }
+
+
+    /**
      * Delete category.
      */
     public function destroy(
-        TourCategory $tourCategory
+        TourCategory $category
     ): RedirectResponse {
         /*
-         * Prevent deleting a category that is already
-         * assigned to tour packages.
-         */
-        if ($tourCategory->packages()->exists()) {
+        |--------------------------------------------------------------------------
+        | Packages Check
+        |--------------------------------------------------------------------------
+        */
+
+        if ($category->packages()->exists()) {
             return redirect()
                 ->route('admin.tour-categories.index')
                 ->with(
@@ -200,8 +329,29 @@ class TourCategoryController extends Controller
         }
 
 
-        $tourCategory->delete();
+        /*
+        |--------------------------------------------------------------------------
+        | Children Check
+        |--------------------------------------------------------------------------
+        */
 
+        if ($category->children()->exists()) {
+            return redirect()
+                ->route('admin.tour-categories.index')
+                ->with(
+                    'error',
+                    'This category contains sub-categories. Remove or move them before deleting the category.'
+                );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Delete
+        |--------------------------------------------------------------------------
+        */
+
+        $category->delete();
 
         return redirect()
             ->route('admin.tour-categories.index')

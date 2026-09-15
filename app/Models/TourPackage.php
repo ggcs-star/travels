@@ -65,6 +65,11 @@ class TourPackage extends Model
         'highlights',
         'included_items',
         'excluded_items',
+        'itinerary',
+        'important_notes',
+        'terms_conditions',
+        'cancellation_policy',
+        'privacy_policy',
 
         // Media
         'cover_image',
@@ -103,6 +108,7 @@ class TourPackage extends Model
         'highlights' => 'array',
         'included_items' => 'array',
         'excluded_items' => 'array',
+        'itinerary' => 'array',
 
         'featured' => 'boolean',
     ];
