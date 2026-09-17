@@ -9,8 +9,10 @@
 @import './sections.css';
 @import './responsive.css';
 @import './admin.css';
+@import './admin-preferences.css';
 @import './storefront.css';
 @import './blog.css';
+@import './auth-extra.css';
 
 /* Visual Settings - Admin controlled theme */
 @import './visual-settings.css';

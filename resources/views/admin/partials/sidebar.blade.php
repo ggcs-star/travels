@@ -428,10 +428,25 @@
 
                     </a>
 
+{{-- PREFERENCES --}}
 
+<a
+    href="{{ route('admin.settings.preferences') }}"
+    class="admin-nav-sublink {{ request()->routeIs('admin.settings.preferences') ? 'active' : '' }}"
+>
+
+    <span class="admin-nav-subicon">
+        •
+    </span>
+
+    <span>
+        Preferences
+    </span>
+
+</a>
                     {{-- FONT SETTINGS --}}
 
-                    <a
+                    <!-- <a
                         href="{{ route('admin.settings.fonts') }}"
                         class="admin-nav-sublink {{ request()->routeIs('admin.settings.fonts') ? 'active' : '' }}"
                     >
@@ -444,7 +459,7 @@
                             Font Settings
                         </span>
 
-                    </a>
+                    </a> -->
 
 
                     {{-- HOME PAGE SETTINGS --}}

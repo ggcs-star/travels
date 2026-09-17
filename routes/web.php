@@ -36,6 +36,7 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\ContactInquiryController;
 use App\Http\Controllers\Admin\SeoController;
+use App\Http\Controllers\Admin\PreferenceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -129,6 +130,12 @@ Route::middleware('guest')->group(function () {
 
     Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])
         ->name('password.email');
+
+    Route::get('/reset-password/{token}', [AuthController::class, 'showResetPassword'])
+        ->name('password.reset');
+
+    Route::post('/reset-password', [AuthController::class, 'resetPassword'])
+        ->name('password.store');
 });
 
 
@@ -273,6 +280,10 @@ Route::get(
     Route::post('/change-password', [AuthController::class, 'changePassword'])
         ->name('password.change.update');
 
+    // Backward-compatible route name used by the existing login UI.
+    Route::post('/change-password', [AuthController::class, 'changePassword'])
+        ->name('password.update');
+
 
     /*
     |--------------------------------------------------------------------------
@@ -398,6 +409,37 @@ Route::post(
     '/settings/seo/generate-sitemap',
     [SeoController::class, 'generateSitemap']
 )->name('settings.seo.generate-sitemap');
+
+/*
+|--------------------------------------------------------------------------
+| PREFERENCES
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/settings/preferences',
+    [PreferenceController::class, 'index']
+)->name('settings.preferences');
+
+Route::put(
+    '/settings/preferences/uploads',
+    [PreferenceController::class, 'updateUploads']
+)->name('settings.preferences.uploads.update');
+
+Route::put(
+    '/settings/preferences/payments',
+    [PreferenceController::class, 'updatePayments']
+)->name('settings.preferences.payments.update');
+
+Route::post(
+    '/settings/preferences/payments/test',
+    [PreferenceController::class, 'testPayments']
+)->name('settings.preferences.payments.test');
+
+Route::post(
+    '/settings/preferences/reset',
+    [PreferenceController::class, 'reset']
+)->name('settings.preferences.reset');
 
         /*
         |--------------------------------------------------------------------------
@@ -938,6 +980,6 @@ Route::put('/settings', [SettingsController::class, 'update'])
 */
 
 Route::get('/{slug}', [PageController::class, 'show'])
-    ->where('slug', '.*')
+    ->where('slug', '(?!api(?:/|$)).*')
     ->name('pages.public');
 

@@ -9,6 +9,10 @@ class BookingTraveller extends Model
 {
     use HasFactory;
 
+ protected $hidden = [
+        'id_proof_document',
+    ];
+
  protected $fillable = [
     'booking_id',
     'full_name',

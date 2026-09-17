@@ -6,12 +6,18 @@ use App\Models\Booking;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 
+use App\Services\Payments\PaymentSettingsService;
+
 class RazorpayService
 {
+    public function __construct(
+        protected PaymentSettingsService $settings,
+    ) {
+    }
+
     public function isConfigured(): bool
     {
-        return filled(config('services.razorpay.key_id'))
-            && filled(config('services.razorpay.key_secret'));
+        return $this->settings->isConfigured();
     }
 
     /**
@@ -48,7 +54,7 @@ public function createOrder(Booking $booking): array
         $expectedSignature = hash_hmac(
             'sha256',
             $orderId.'|'.$paymentId,
-            config('services.razorpay.key_secret')
+            $this->settings->getKeySecret()
         );
 
         return hash_equals($expectedSignature, $signature);
@@ -58,7 +64,7 @@ public function createOrder(Booking $booking): array
         string $payload,
         ?string $signature
     ): bool {
-        $webhookSecret = config('services.razorpay.webhook_secret');
+        $webhookSecret = $this->settings->getWebhookSecret();
 
         if (! filled($webhookSecret) || ! $signature) {
             return false;
@@ -73,11 +79,11 @@ public function createOrder(Booking $booking): array
     private function client()
     {
         return Http::baseUrl(rtrim(
-            config('services.razorpay.base_url'),
+            $this->settings->getBaseUrl(),
             '/'
         ))->acceptJson()->withBasicAuth(
-            config('services.razorpay.key_id'),
-            config('services.razorpay.key_secret')
+            $this->settings->getKeyId(),
+            $this->settings->getKeySecret()
         );
     }
 
@@ -85,7 +91,7 @@ public function createOrder(Booking $booking): array
     {
         if (! $this->isConfigured()) {
             throw new \LogicException(
-                'Razorpay is not configured. Add RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET.'
+                'Razorpay is not configured. Please configure Razorpay from Admin > Settings > Preferences.'
             );
         }
     }

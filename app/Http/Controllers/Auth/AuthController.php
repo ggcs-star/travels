@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Events\Registered;
 
@@ -263,6 +264,81 @@ class AuthController extends Controller
                 'Registration successful. Please verify your email address.'
             );
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Send Password Reset Link
+    |--------------------------------------------------------------------------
+    */
+
+    public function sendResetLink(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => ['required', 'email', 'max:200'],
+        ]);
+
+        $status = Password::sendResetLink([
+            'email' => strtolower(trim($validated['email'])),
+        ]);
+
+        if ($status !== Password::RESET_LINK_SENT) {
+            throw ValidationException::withMessages([
+                'email' => 'We could not send a password reset link to that email address.',
+            ]);
+        }
+
+        return back()->with(
+            'success',
+            'If an account exists for that email address, a password reset link has been sent.'
+        );
+    }
+
+    public function showResetPassword(string $token)
+    {
+        return view('auth.reset-password', [
+            'token' => $token,
+            'email' => request()->query('email', ''),
+        ]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $validated = $request->validate([
+            'token' => ['required', 'string'],
+            'email' => ['required', 'email', 'max:200'],
+            'password' => ['required', 'string', 'min:4', 'max:200', 'confirmed'],
+        ]);
+
+        $status = Password::reset(
+            [
+                'token' => $validated['token'],
+                'email' => strtolower(trim($validated['email'])),
+                'password' => $validated['password'],
+                'password_confirmation' => $request->input('password_confirmation'),
+            ],
+            function (User $user, string $password): void {
+                $user->forceFill([
+                    'password' => Hash::make($password),
+                ])->save();
+
+                $user->apiTokens()->delete();
+            }
+        );
+
+        if ($status !== Password::PASSWORD_RESET) {
+            throw ValidationException::withMessages([
+                'email' => 'This password reset link is invalid or has expired.',
+            ]);
+        }
+
+        return redirect()
+            ->route('login')
+            ->with(
+                'success',
+                'Your password has been reset successfully. You can now sign in.'
+            );
+    }
+
 /*
 |--------------------------------------------------------------------------
 | Register Page
