@@ -153,7 +153,7 @@ $headerLogo = $settings->get(
 
 @if($headerEnabled)
 
-<header class="site-header kanila-site-header">
+<header class="site-header kanila-site-header {{ request()->routeIs('blog.*') ? 'site-header--blog' : '' }}">
 
     <div class="container site-header-inner">
 

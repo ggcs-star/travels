@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@php($razorpaySettings = app(\App\Services\Payments\PaymentSettingsService::class))
+
 @section('title', 'Secure payment | '.config('travels.brand.name'))
 
 @section('content')
@@ -306,7 +308,7 @@
 
                 const checkout = new Razorpay({
 
-                    key: @json(config('services.razorpay.key_id')),
+                    key: @json($razorpaySettings->getKeyId()),
 
                     /*
                      * This comes from the Razorpay order created

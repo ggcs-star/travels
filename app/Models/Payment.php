@@ -17,6 +17,10 @@ class Payment extends Model
 
     public const STATUS_REFUNDED = 'refunded';
 
+    protected $hidden = [
+        'signature',
+    ];
+
     protected $fillable = [
         'booking_id',
         'provider',
