@@ -1,9 +1,12 @@
 :root {
-    --site-primary: var(--color-primary);
-    --site-secondary: var(--color-secondary);
-    --site-accent: var(--color-accent);
-    --site-text: var(--color-text);
-    --site-background: var(--color-background);
-    --site-container-width: var(--container-width);
-    --site-border-radius: var(--radius-md);
+    --site-primary: var(--color-primary, #2563eb);
+    --site-secondary: var(--color-secondary, #64748b);
+    --site-accent: var(--color-accent, #f59e0b);
+    --site-text: var(--color-text, #111827);
+    --site-background: var(--color-background, #ffffff);
+    --site-container-width: var(--container-width, 1200px);
+    --site-border-radius: var(--radius-md, 8px);
+
+    --font-body: 'Cabinet Grotesk', 'Space Grotesk', var(--font-sans), system-ui, sans-serif;
+    --font-heading: 'Cabinet Grotesk', 'Space Grotesk', var(--font-sans), system-ui, sans-serif;
 }

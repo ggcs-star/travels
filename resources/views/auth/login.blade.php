@@ -56,7 +56,10 @@
 
                 $settingsService = app(\App\Services\SettingsService::class);
 
-                $loginLogo = $settingsService->get('visual.login_logo');
+                $loginLogo = $settingsService->get('visual.login_logo')
+                    ?: $settingsService->get('visual.logo')
+                    ?: $settingsService->get('header.logo');
+
                 $loginLogoUrl = null;
 
                 if (!empty($loginLogo)) {
@@ -71,6 +74,8 @@
                     // Prevent browser cache from showing an older login logo.
                     $loginLogoUrl .= (str_contains($loginLogoUrl, '?') ? '&' : '?')
                         . 'v=' . rawurlencode($loginLogo);
+                } else {
+                    $loginLogoUrl = asset('images/logo.jpeg');
                 }
             @endphp
 

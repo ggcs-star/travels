@@ -70,10 +70,10 @@
     ];
 
     $socials = !empty($settings['footer.socials']) ? $settings['footer.socials'] : [
-        ['name' => 'Facebook', 'icon' => 'f', 'url' => '#', 'enabled' => true],
-        ['name' => 'YouTube', 'icon' => '▶', 'url' => '#', 'enabled' => true],
-        ['name' => 'Instagram', 'icon' => '◎', 'url' => '#', 'enabled' => true],
-        ['name' => 'WhatsApp', 'icon' => '◉', 'url' => '#', 'enabled' => true],
+        ['name' => 'Facebook', 'icon' => 'fa-brands fa-facebook-f', 'url' => '#', 'enabled' => true],
+        ['name' => 'YouTube', 'icon' => 'fa-brands fa-youtube', 'url' => '#', 'enabled' => true],
+        ['name' => 'Instagram', 'icon' => 'fa-brands fa-instagram', 'url' => '#', 'enabled' => true],
+        ['name' => 'WhatsApp', 'icon' => 'fa-brands fa-whatsapp', 'url' => '#', 'enabled' => true],
     ];
 
     $footerColumns = !empty($settings['footer.columns']) ? $settings['footer.columns'] : [
@@ -81,25 +81,25 @@
             'title' => 'TOUR PACKAGES',
             'enabled' => true,
             'links' => [
-                ['label' => 'Spiritual & Pilgrimage', 'icon' => '♨', 'url' => '#', 'enabled' => true],
-                ['label' => 'Holidays', 'icon' => '♨', 'url' => '#', 'enabled' => true],
-                ['label' => 'School & College', 'icon' => '♟', 'url' => '#', 'enabled' => true],
-                ['label' => 'Business Trips', 'icon' => '▣', 'url' => '#', 'enabled' => true],
-                ['label' => 'Monthly Tours', 'icon' => '⟳', 'url' => '#', 'enabled' => true],
-                ['label' => 'View All Packages', 'icon' => '✈', 'url' => '#', 'enabled' => true],
+                ['label' => 'Spiritual & Pilgrimage', 'icon' => 'fa-solid fa-hands-praying', 'url' => '#', 'enabled' => true],
+                ['label' => 'Holidays', 'icon' => 'fa-solid fa-umbrella-beach', 'url' => '#', 'enabled' => true],
+                ['label' => 'School & College', 'icon' => 'fa-solid fa-person-hiking', 'url' => '#', 'enabled' => true],
+                ['label' => 'Business Trips', 'icon' => 'fa-solid fa-briefcase', 'url' => '#', 'enabled' => true],
+                ['label' => 'Monthly Tours', 'icon' => 'fa-solid fa-repeat', 'url' => '#', 'enabled' => true],
+                ['label' => 'View All Packages', 'icon' => 'fa-solid fa-plane', 'url' => '#', 'enabled' => true],
             ],
         ],
         [
             'title' => 'QUICK LINKS',
             'enabled' => true,
             'links' => [
-                ['label' => 'About Us', 'icon' => '●', 'url' => url('/about'), 'enabled' => true],
-                ['label' => 'Travel Blog', 'icon' => '✎', 'url' => url('/blog'), 'enabled' => true],
-                ['label' => 'Contact Us', 'icon' => '◉', 'url' => url('/contact'), 'enabled' => true],
-                ['label' => 'Get Free Quote', 'icon' => '▤', 'url' => url('/contact'), 'enabled' => true],
-                ['label' => 'Become a Partner', 'icon' => '♧', 'url' => url('/contact'), 'enabled' => true],
-                ['label' => 'Terms & Conditions', 'icon' => '⚖', 'url' => '/terms', 'enabled' => true],
-                ['label' => 'Privacy Policy', 'icon' => '◈', 'url' => '/privacy', 'enabled' => true],
+                ['label' => 'About Us', 'icon' => 'fa-solid fa-circle-info', 'url' => url('/about'), 'enabled' => true],
+                ['label' => 'Travel Blog', 'icon' => 'fa-solid fa-pen-nib', 'url' => url('/blog'), 'enabled' => true],
+                ['label' => 'Contact Us', 'icon' => 'fa-solid fa-headset', 'url' => url('/contact'), 'enabled' => true],
+                ['label' => 'Get Free Quote', 'icon' => 'fa-solid fa-file-lines', 'url' => url('/contact'), 'enabled' => true],
+                ['label' => 'Become a Partner', 'icon' => 'fa-solid fa-handshake', 'url' => url('/contact'), 'enabled' => true],
+                ['label' => 'Terms & Conditions', 'icon' => 'fa-solid fa-scale-balanced', 'url' => '/terms', 'enabled' => true],
+                ['label' => 'Privacy Policy', 'icon' => 'fa-solid fa-shield-halved', 'url' => '/privacy', 'enabled' => true],
             ],
         ],
     ];
@@ -109,18 +109,18 @@
     ));
 
     $footerContacts = !empty($settings['footer.contacts']) ? $settings['footer.contacts'] : [
-        ['label' => 'PHONE / WHATSAPP', 'value' => '+91-9182498843, +91-9014534878', 'url' => 'tel:+919182498843', 'icon' => '☎', 'enabled' => true],
-        ['label' => 'EMAIL US', 'value' => 'bookings@ssbtravelz.com', 'url' => 'mailto:bookings@ssbtravelz.com', 'icon' => '✉', 'enabled' => true],
-        ['label' => 'OUR OFFICE', 'value' => 'Hyderabad, Telangana, India', 'url' => '', 'icon' => '●', 'enabled' => true],
-        ['label' => 'REGISTERED ADDRESS', 'value' => '32-83/2, SN 14 Sainik Nagar, Ramanakrishna Puram, Hyderabad - 500056', 'url' => '', 'icon' => '▣', 'enabled' => true],
-        ['label' => 'BRANCH OFFICE', 'value' => 'Near Kamineni Hospital Bypass Rd, beside HP petrol bunk, Sivaganga Colony, LB Nagar to Nagol Rd, Hyderabad, Telangana, 500074 India', 'url' => '', 'icon' => '●', 'enabled' => true],
-        ['label' => 'WORKING HOURS', 'value' => 'Mon–Sat · 9am–7pm', 'url' => '', 'icon' => '◷', 'enabled' => true],
+        ['label' => 'PHONE / WHATSAPP', 'value' => '+91-9182498843, +91-9014534878', 'url' => 'tel:+919182498843', 'icon' => 'fa-solid fa-phone', 'enabled' => true],
+        ['label' => 'EMAIL US', 'value' => 'bookings@ssbtravelz.com', 'url' => 'mailto:bookings@ssbtravelz.com', 'icon' => 'fa-solid fa-envelope', 'enabled' => true],
+        ['label' => 'OUR OFFICE', 'value' => 'Hyderabad, Telangana, India', 'url' => '', 'icon' => 'fa-solid fa-location-dot', 'enabled' => true],
+        ['label' => 'REGISTERED ADDRESS', 'value' => '32-83/2, SN 14 Sainik Nagar, Ramanakrishna Puram, Hyderabad - 500056', 'url' => '', 'icon' => 'fa-solid fa-building', 'enabled' => true],
+        ['label' => 'BRANCH OFFICE', 'value' => 'Near Kamineni Hospital Bypass Rd, beside HP petrol bunk, Sivaganga Colony, LB Nagar to Nagol Rd, Hyderabad, Telangana, 500074 India', 'url' => '', 'icon' => 'fa-solid fa-location-dot', 'enabled' => true],
+        ['label' => 'WORKING HOURS', 'value' => 'Mon–Sat · 9am–7pm', 'url' => '', 'icon' => 'fa-solid fa-clock', 'enabled' => true],
     ];
 
     $trustBadges = !empty($settings['footer.trust_badges']) ? $settings['footer.trust_badges'] : [
-        ['title' => '4.9 Google Rating', 'subtitle' => '', 'icon' => '★', 'enabled' => true],
-        ['title' => 'IATA Affiliated', 'subtitle' => '', 'icon' => '✓', 'enabled' => true],
-        ['title' => 'Secure Payments', 'subtitle' => '', 'icon' => '🔒', 'enabled' => true],
+        ['title' => '4.9 Google Rating', 'subtitle' => '', 'icon' => 'fa-solid fa-star', 'enabled' => true],
+        ['title' => 'IATA Affiliated', 'subtitle' => '', 'icon' => 'fa-solid fa-circle-check', 'enabled' => true],
+        ['title' => 'Secure Payments', 'subtitle' => '', 'icon' => 'fa-solid fa-lock', 'enabled' => true],
     ];
 
     $destinationsTitle = trim((string) ($settings['footer.destinations_title'] ?? ''));
@@ -250,7 +250,7 @@
                         @foreach($footerContacts as $contact)
                             @if(!empty($contact['enabled']) && !empty($contact['value']) && str_starts_with((string)($contact['url'] ?? ''), 'tel:'))
                                 <a href="{{ $footerUrl($contact['url']) }}" class="footer-call-button">
-                                    <span>{{ $contact['icon'] ?? '☎' }}</span>
+                                    <span><i class="{{ $contact['icon'] ?? 'fa-solid fa-phone' }}"></i></span>
                                     {{ $contact['value'] }}
                                 </a>
                                 @break
@@ -284,7 +284,7 @@
                                        aria-label="{{ $social['name'] }}"
                                        target="_blank"
                                        rel="noopener noreferrer">
-                                        {{ $social['icon'] ?? '↗' }}
+                                        <i class="{{ $social['icon'] ?? 'fa-solid fa-arrow-up-right' }}"></i>
                                     </a>
                                 @endif
                             @endforeach
@@ -296,7 +296,7 @@
                             @foreach($trustBadges as $badge)
                                 @if(!empty($badge['enabled']) && !empty($badge['title']))
                                     <span>
-                                        {{ $badge['icon'] ?? '✓' }}
+                                        <i class="{{ $badge['icon'] ?? 'fa-solid fa-circle-check' }}"></i>
                                         {{ $badge['title'] }}
                                         @if(!empty($badge['subtitle']))
                                             · {{ $badge['subtitle'] }}
@@ -321,7 +321,7 @@
                                         @if(!empty($link['enabled']) && !empty($link['label']))
                                             <li>
                                                 <a href="{{ $footerUrl($link['url'] ?? '#') }}">
-                                                    @if(!empty($link['icon'])){{ $link['icon'] }} @endif{{ $link['label'] }}
+                                                    @if(!empty($link['icon']))<i class="{{ $link['icon'] }}"></i> @endif{{ $link['label'] }}
                                                 </a>
                                             </li>
                                         @endif
@@ -353,7 +353,7 @@
                     @foreach($footerContacts as $contact)
                         @if(!empty($contact['enabled']) && !empty($contact['value']))
                             <div class="footer-contact-item">
-                                <div class="footer-contact-icon">{{ $contact['icon'] ?? '●' }}</div>
+                                <div class="footer-contact-icon"><i class="{{ $contact['icon'] ?? 'fa-solid fa-circle' }}"></i></div>
                                 <div>
                                     @if(!empty($contact['label']))
                                         <small>{{ $contact['label'] }}</small>
@@ -381,7 +381,7 @@
             <div class="container">
                 <div class="footer-destination-inner">
                     <div class="footer-destination-title">
-                        <span>●</span>
+                        <span><i class="fa-solid fa-location-dot"></i></span>
                         {{ $destinationsTitle }}
                     </div>
 

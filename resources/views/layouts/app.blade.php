@@ -314,6 +314,22 @@
 
 
     {{-- =========================================================
+         FONTS
+    ========================================================== --}}
+
+    <link rel="preconnect" href="https://api.fontshare.com">
+    <link
+        href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700,600,500,400&f[]=space-grotesk@700,500,400&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    >
+
+
+    {{-- =========================================================
          HEAD STACK
     ========================================================== --}}
 

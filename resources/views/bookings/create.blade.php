@@ -34,13 +34,9 @@
     data-booking-form
 >
 
-    <div class="container booking-layout">
+    <div class="container">
 
-        {{-- =========================================================
-             MAIN BOOKING FORM
-             ========================================================= --}}
-
-        <div>
+        <div class="booking-header">
 
             <a
                 href="{{ route('tours.show', $tour) }}"
@@ -91,6 +87,16 @@
 
             @endif
 
+        </div>
+
+
+        <div class="booking-layout">
+
+        {{-- =========================================================
+             MAIN BOOKING FORM
+             ========================================================= --}}
+
+        <div>
 
             {{-- =====================================================
                  BOOKING FORM
@@ -537,6 +543,8 @@
             </div>
 
         </aside>
+
+        </div>
 
     </div>
 
