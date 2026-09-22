@@ -7292,13 +7292,13 @@ body:has(.my-bookings-page) .kanila-site-header .nav-dropdown-trigger:hover {
 
 
 /*
-   Booking page has no hero image behind the header, so the
+   Booking pages have no hero image behind the header, so the
    default transparent/absolute header (designed to sit over a
    dark hero) becomes invisible and overlaps the page content.
    Give it the same solid dark header used on other non-hero pages.
 */
 
-body:has(.booking-page) .site-header.kanila-site-header {
+body:has(.booking-page, .booking-details-page) .site-header.kanila-site-header {
     position: absolute !important;
     top: 48px !important;
     left: 0 !important;
@@ -7322,18 +7322,22 @@ body:has(.booking-page) .site-header.kanila-site-header {
     z-index: 9999 !important;
 }
 
-body:has(.booking-page) .kanila-site-header .nav-link,
-body:has(.booking-page) .kanila-site-header .nav-dropdown-trigger {
+body:has(.booking-page, .booking-details-page) .kanila-site-header .nav-link,
+body:has(.booking-page, .booking-details-page) .kanila-site-header .nav-dropdown-trigger {
     color: rgba(255,255,255,.94) !important;
 }
 
-body:has(.booking-page) .kanila-site-header .nav-link:hover,
-body:has(.booking-page) .kanila-site-header .nav-dropdown-trigger:hover,
-body:has(.booking-page) .kanila-site-header .nav-link.active {
+body:has(.booking-page, .booking-details-page) .kanila-site-header .nav-link:hover,
+body:has(.booking-page, .booking-details-page) .kanila-site-header .nav-dropdown-trigger:hover,
+body:has(.booking-page, .booking-details-page) .kanila-site-header .nav-link.active {
     color: #f28a24 !important;
 }
 
 body:has(.booking-page) .storefront-section.booking-page {
+    padding-top: 150px !important;
+}
+
+body:has(.booking-details-page) .storefront-section.booking-details-page {
     padding-top: 150px !important;
 }
 
