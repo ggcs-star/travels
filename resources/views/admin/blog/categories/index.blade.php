@@ -343,8 +343,10 @@
                                         <a
                                             href="{{ route('admin.blog-categories.edit', $category) }}"
                                             class="admin-table-action"
+                                            title="Edit"
                                         >
-                                            Edit
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                                            <span class="admin-sr-only">Edit</span>
                                         </a>
 
 
@@ -364,9 +366,11 @@
 
                                             <button
                                                 type="submit"
-                                                class="admin-table-action admin-table-action--status"
+                                                class="admin-table-action"
+                                                title="{{ $category->is_active ? 'Disable' : 'Enable' }}"
                                             >
-                                                {{ $category->is_active ? 'Disable' : 'Enable' }}
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></svg>
+                                                <span class="admin-sr-only">{{ $category->is_active ? 'Disable' : 'Enable' }}</span>
                                             </button>
 
                                         </form>
@@ -383,9 +387,11 @@
 
                                             <button
                                                 type="submit"
-                                                class="admin-table-action admin-table-action--danger"
+                                                class="admin-table-action"
+                                                title="Delete"
                                             >
-                                                Delete
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                                <span class="admin-sr-only">Delete</span>
                                             </button>
 
                                         </form>
@@ -407,15 +413,11 @@
 
             {{-- PAGINATION --}}
 
-            @if($categories->hasPages())
+            <div class="admin-pagination">
 
-                <div class="admin-pagination">
+                {{ $categories->links() }}
 
-                    {{ $categories->links() }}
-
-                </div>
-
-            @endif
+            </div>
 
         @else
 

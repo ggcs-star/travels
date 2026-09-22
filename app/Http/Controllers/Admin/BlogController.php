@@ -69,7 +69,7 @@ class BlogController extends Controller
                     )
             )
             ->latest('id')
-            ->paginate(15)
+            ->paginate(10)
             ->withQueryString();
 
         $categories = BlogCategory::query()

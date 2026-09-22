@@ -1,24 +1,14 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', 'Welcome back, '.auth()->user()->username)
+
+@section('description', 'Manage your travel website from one place.')
 
 @section('content')
 
 <div class="admin-page">
 
     <div class="admin-page__header">
-
-        <div>
-            <span class="admin-eyebrow">OVERVIEW</span>
-
-            <h1 class="admin-page__title">
-                Welcome back, {{ auth()->user()->username }}
-            </h1>
-
-            <p class="admin-page__description">
-                Manage your travel website from one place.
-            </p>
-        </div>
 
         <a
             href="{{ route('home') }}"

@@ -2,6 +2,8 @@
 
 @section('title', 'Tour Packages')
 
+@section('description', 'Create, manage and publish your travel tour packages.')
+
 @section('content')
 
 <div class="admin-page">
@@ -9,23 +11,9 @@
     {{-- Header --}}
     <div class="admin-page__header">
 
-        <div>
-            <span class="admin-eyebrow">
-                TOURS
-            </span>
-
-            <h1 class="admin-page__title">
-                Tour Packages
-            </h1>
-
-            <p class="admin-page__description">
-                Create, manage and publish your travel tour packages.
-            </p>
-        </div>
-
         <a
             href="{{ route('admin.tours.create') }}"
-            class="admin-button admin-button--dark"
+            class="admin-button admin-button--primary"
         >
             <span>+</span>
             Add Tour Package
@@ -208,7 +196,7 @@
 
                 <button
                     type="submit"
-                    class="admin-button admin-button--dark"
+                    class="admin-button admin-button--primary"
                 >
                     Search
                 </button>
@@ -372,7 +360,8 @@
                                             class="admin-icon-button"
                                             title="View"
                                         >
-                                            View
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                            <span class="admin-sr-only">View</span>
                                         </a>
 
                                         <a
@@ -380,7 +369,8 @@
                                             class="admin-icon-button"
                                             title="Edit"
                                         >
-                                            Edit
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                                            <span class="admin-sr-only">Edit</span>
                                         </a>
 
                                         <form
@@ -392,8 +382,10 @@
                                             <button
                                                 type="submit"
                                                 class="admin-icon-button"
+                                                title="Duplicate"
                                             >
-                                                Duplicate
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                                <span class="admin-sr-only">Duplicate</span>
                                             </button>
                                         </form>
 
@@ -414,15 +406,11 @@
 
             {{-- Pagination --}}
 
-            @if($tours->hasPages())
+            <div class="admin-pagination">
 
-                <div class="admin-pagination">
+                {{ $tours->links() }}
 
-                    {{ $tours->links() }}
-
-                </div>
-
-            @endif
+            </div>
 
         @else
 
@@ -442,7 +430,7 @@
 
                 <a
                     href="{{ route('admin.tours.create') }}"
-                    class="admin-button admin-button--dark"
+                    class="admin-button admin-button--primary"
                 >
                     Add Tour Package
                 </a>

@@ -32,7 +32,7 @@ class ContactInquiryController extends Controller
 
         $inquiries = $query
             ->latest()
-            ->paginate(15)
+            ->paginate(10)
             ->withQueryString();
 
         $counts = [

@@ -19,7 +19,7 @@ class AdminPointWalletService
      */
     public function users(
         ?string $search = null,
-        int $perPage = 20
+        int $perPage = 10
     ): LengthAwarePaginator {
         return User::query()
             ->with('pointWallet')
@@ -55,7 +55,7 @@ class AdminPointWalletService
      */
     public function walletDetails(
         User $user,
-        int $perPage = 20
+        int $perPage = 10
     ): array {
         $wallet = $this->walletFor($user);
 

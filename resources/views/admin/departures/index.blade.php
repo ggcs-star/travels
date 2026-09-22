@@ -12,7 +12,7 @@
         </div>
         <div class="admin-page__actions">
             <a href="{{ route('admin.tours.edit', $tour) }}" class="admin-button">Back to tour</a>
-            <a href="{{ route('admin.tours.departures.create', $tour) }}" class="admin-button admin-button--dark">+ Add departure</a>
+            <a href="{{ route('admin.tours.departures.create', $tour) }}" class="admin-button admin-button--primary">+ Add departure</a>
         </div>
     </div>
 
@@ -32,11 +32,11 @@
                             <td>{{ $departure->available_seats }} / {{ $departure->capacity }}</td>
                             <td><span class="admin-badge {{ $departure->status === 'open' ? 'admin-badge--success' : '' }}">{{ Str::headline($departure->status) }}</span></td>
                             <td>
-                                <a href="{{ route('admin.tours.departures.edit', [$tour, $departure]) }}" class="admin-table-action">Edit</a>
+                                <a href="{{ route('admin.tours.departures.edit', [$tour, $departure]) }}" class="admin-table-action" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg><span class="admin-sr-only">Edit</span></a>
                                 @if(!$departure->bookings()->exists())
                                     <form method="POST" action="{{ route('admin.tours.departures.destroy', [$tour, $departure]) }}" class="admin-inline-form" onsubmit="return confirm('Delete this departure?');">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="admin-table-action">Delete</button>
+                                        <button type="submit" class="admin-table-action" title="Delete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg><span class="admin-sr-only">Delete</span></button>
                                     </form>
                                 @endif
                             </td>

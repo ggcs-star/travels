@@ -90,7 +90,7 @@ class TourCategoryController extends Controller
             ->orderBy('sort_order')
             ->orderBy('name')
 
-            ->paginate(20)
+            ->paginate(10)
 
             ->withQueryString();
 

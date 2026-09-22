@@ -631,15 +631,11 @@
         </div>
 
 
-        @if($transactions->hasPages())
+        <div class="transaction-pagination">
 
-            <div class="transaction-pagination">
+            {{ $transactions->withQueryString()->links() }}
 
-                {{ $transactions->withQueryString()->links() }}
-
-            </div>
-
-        @endif
+        </div>
 
     </div>
 
