@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@php($razorpaySettings = app(\App\Services\Payments\PaymentSettingsService::class))
+@php
+    $razorpaySettings = app(\App\Services\Payments\PaymentSettingsService::class);
+@endphp
 
 @section('title', 'Secure payment | '.config('travels.brand.name'))
 
