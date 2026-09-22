@@ -26,7 +26,7 @@ class AdminPointWalletController extends Controller
 
         $users = $this->walletService->users(
             search: $search !== '' ? $search : null,
-            perPage: 20
+            perPage: 10
         );
 
         return view(
@@ -42,7 +42,7 @@ class AdminPointWalletController extends Controller
 {
     $data = $this->walletService->walletDetails(
         user: $user,
-        perPage: 20
+        perPage: 10
     );
 
     return view('admin.point-wallets.show', $data);

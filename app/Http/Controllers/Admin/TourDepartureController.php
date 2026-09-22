@@ -19,7 +19,7 @@ class TourDepartureController extends Controller
                 'bookings as reserved_seats' => fn ($query) => $query->reserving(),
             ], 'traveller_count')
             ->orderBy('departure_date')
-            ->paginate(20);
+            ->paginate(10);
 
         return view('admin.departures.index', compact('tour', 'departures'));
     }

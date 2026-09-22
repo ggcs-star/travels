@@ -1,4 +1,7 @@
 @extends('admin.layouts.app')
+
+@section('title', 'Points Wallets')
+
 @section('content')
 
 <div class="admin-wallet-index">
@@ -286,13 +289,9 @@
 
 
         {{-- Pagination --}}
-        @if($users->hasPages())
-
-            <div class="wallet-pagination">
-                {{ $users->withQueryString()->links() }}
-            </div>
-
-        @endif
+        <div class="wallet-pagination">
+            {{ $users->withQueryString()->links() }}
+        </div>
 
     </div>
 
@@ -322,10 +321,11 @@
 
 .wallet-eyebrow {
     margin-bottom: 7px;
-    color: #8992a0;
-    font-size: 9px;
+    color: var(--admin-primary);
+    font-size: 11px;
     font-weight: 750;
     letter-spacing: 1.2px;
+    text-transform: uppercase;
 }
 
 .wallet-page-header h1 {
@@ -451,16 +451,16 @@
     padding: 0 19px;
     border: 0;
     border-radius: 8px;
-    background: #202b3e;
+    background: var(--admin-primary);
     color: #fff;
     cursor: pointer;
     font-family: inherit;
-    font-size: 11px;
+    font-size: 12.5px;
     font-weight: 650;
 }
 
 .wallet-search-form button:hover {
-    background: #111a2a;
+    background: var(--admin-primary-dark);
 }
 
 
@@ -512,21 +512,22 @@
 }
 
 .wallet-table th {
-    padding: 12px 15px;
+    padding: 13px 15px;
     border-bottom: 1px solid #e8ebef;
     background: #fafbfc;
     color: #737d8d;
     text-align: left;
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 750;
     text-transform: uppercase;
     letter-spacing: .45px;
 }
 
 .wallet-table td {
-    padding: 14px 15px;
+    padding: 15px;
     border-bottom: 1px solid #edf0f3;
     vertical-align: middle;
+    font-size: 13px;
 }
 
 .wallet-table tbody tr:last-child td {

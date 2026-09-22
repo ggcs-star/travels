@@ -2,32 +2,11 @@
 
 @section('title', 'Bookings')
 
+@section('description', 'Monitor customer reservations and payment status.')
+
 @section('content')
 
 <div class="admin-page">
-
-    {{-- =====================================================
-         PAGE HEADER
-    ====================================================== --}}
-    <div class="admin-page__header">
-
-        <div>
-
-            <span class="admin-eyebrow">
-                SALES
-            </span>
-
-            <h1 class="admin-page__title">
-                Bookings
-            </h1>
-
-            <p class="admin-page__description">
-                Monitor customer reservations and payment status.
-            </p>
-
-        </div>
-
-    </div>
 
 
     {{-- =====================================================
@@ -312,8 +291,10 @@
                                     <a
                                         href="{{ route('admin.bookings.show', $booking) }}"
                                         class="admin-table-action"
+                                        title="View"
                                     >
-                                        View
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                        <span class="admin-sr-only">View</span>
                                     </a>
 
                                 </td>
@@ -330,15 +311,11 @@
 
 
             {{-- Pagination --}}
-            @if($bookings->hasPages())
+            <div class="admin-pagination">
 
-                <div class="admin-pagination">
+                {{ $bookings->links() }}
 
-                    {{ $bookings->links() }}
-
-                </div>
-
-            @endif
+            </div>
 
 
         @else

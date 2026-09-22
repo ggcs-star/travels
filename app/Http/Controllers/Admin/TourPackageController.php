@@ -83,7 +83,7 @@ class TourPackageController extends Controller
                     )
             )
             ->latest('id')
-            ->paginate(15)
+            ->paginate(10)
             ->withQueryString();
 
         return view(

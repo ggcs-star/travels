@@ -2,6 +2,8 @@
 
 @section('title', 'Tour Categories')
 
+@section('description', 'Manage tour categories, sub-categories, visibility, featured status and package assignments.')
+
 @section('content')
 
 <div class="admin-page">
@@ -9,26 +11,11 @@
     {{-- Page Header --}}
     <div class="admin-page__header">
 
-        <div>
-            <span class="admin-eyebrow">
-                CATEGORY MANAGEMENT
-            </span>
-
-            <h1 class="admin-page__title">
-                Tour Categories
-            </h1>
-
-            <p class="admin-page__description">
-                Manage tour categories, sub-categories, visibility,
-                featured status and package assignments.
-            </p>
-        </div>
-
         <div class="admin-page__actions">
 
             <a
                 href="{{ route('admin.tour-categories.create') }}"
-                class="admin-button admin-button--dark"
+                class="admin-button admin-button--primary"
             >
                 <span>+</span>
                 Create Category
@@ -442,7 +429,8 @@
                                             class="admin-icon-button"
                                             title="View"
                                         >
-                                            View
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                            <span class="admin-sr-only">View</span>
                                         </a>
 
 
@@ -452,7 +440,8 @@
                                             class="admin-icon-button"
                                             title="Edit"
                                         >
-                                            Edit
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                                            <span class="admin-sr-only">Edit</span>
                                         </a>
 
 
@@ -471,7 +460,8 @@
                                                 class="admin-icon-button"
                                                 title="Duplicate"
                                             >
-                                                Copy
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                                <span class="admin-sr-only">Duplicate</span>
                                             </button>
 
                                         </form>
@@ -498,7 +488,8 @@
                                                 class="admin-icon-button"
                                                 title="{{ $category->status ? 'Deactivate' : 'Activate' }}"
                                             >
-                                                {{ $category->status ? 'Off' : 'On' }}
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></svg>
+                                                <span class="admin-sr-only">{{ $category->status ? 'Deactivate' : 'Activate' }}</span>
                                             </button>
 
                                         </form>
@@ -522,7 +513,8 @@
                                                     class="admin-icon-button"
                                                     title="Delete"
                                                 >
-                                                    Delete
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                                    <span class="admin-sr-only">Delete</span>
                                                 </button>
 
                                             </form>
@@ -545,15 +537,11 @@
 
 
             {{-- Pagination --}}
-            @if($categories->hasPages())
+            <div class="admin-pagination">
 
-                <div class="admin-pagination">
+                {{ $categories->links() }}
 
-                    {{ $categories->links() }}
-
-                </div>
-
-            @endif
+            </div>
 
         @else
 
@@ -574,7 +562,7 @@
 
                 <a
                     href="{{ route('admin.tour-categories.create') }}"
-                    class="admin-button admin-button--dark"
+                    class="admin-button admin-button--primary"
                 >
                     + Create Category
                 </a>

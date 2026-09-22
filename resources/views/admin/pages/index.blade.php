@@ -30,12 +30,13 @@
 }
 
 .pages-add-button {
-    background: #2563eb;
+    background: var(--admin-primary);
     color: #fff;
     padding: 11px 17px;
     border-radius: 8px;
     text-decoration: none;
     font-weight: 700;
+    font-size: 13px;
 }
 
 .pages-alert {
@@ -72,7 +73,7 @@
 
 .pages-filter button {
     border: 0;
-    background: #0f172a;
+    background: var(--admin-primary);
     color: #fff;
     border-radius: 8px;
     padding: 10px 16px;
@@ -103,8 +104,14 @@
 .pages-table th {
     background: #f8fafc;
     color: #475569;
-    font-size: 12px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .05em;
     text-transform: uppercase;
+}
+
+.pages-table td {
+    font-size: 13px;
 }
 
 .pages-title {
@@ -158,8 +165,8 @@
 }
 
 .pages-edit {
-    background: #eff6ff;
-    color: #1d4ed8;
+    background: var(--admin-primary-soft);
+    color: var(--admin-primary-dark);
 }
 
 .pages-view {
@@ -552,13 +559,9 @@
         </table>
 
 
-        @if($pages->hasPages())
-
-            <div class="pages-pagination">
-                {{ $pages->links() }}
-            </div>
-
-        @endif
+        <div class="pages-pagination">
+            {{ $pages->links() }}
+        </div>
 
     </div>
 

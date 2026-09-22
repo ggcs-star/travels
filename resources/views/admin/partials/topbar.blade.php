@@ -15,13 +15,13 @@
         </button>
 
         <div>
-            <span class="admin-breadcrumb">
-                Admin
-            </span>
 
             <strong>
                 @yield('title', 'Dashboard')
             </strong>
+
+            <p>@yield('description', '')</p>
+
         </div>
 
     </div>

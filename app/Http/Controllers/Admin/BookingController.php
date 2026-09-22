@@ -85,7 +85,7 @@ class BookingController extends Controller
             )
 
             ->latest('id')
-            ->paginate(25)
+            ->paginate(10)
             ->withQueryString();
 
 

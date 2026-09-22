@@ -32,7 +32,119 @@
 
     <main class="auth-page">
 
-        <div class="auth-card">
+        <svg
+            class="auth-page-decor auth-page-decor--plane"
+            viewBox="0 0 100 70"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+        >
+            <path d="M4 60C22 56 34 46 42 34C50 22 62 12 92 8" stroke="currentColor" stroke-width="2" stroke-dasharray="1 7" stroke-linecap="round"/>
+            <g transform="translate(72,2) rotate(28)">
+                <path d="M0 9L24 0L21 5L10 7.5L7 14L3 12Z" fill="currentColor"/>
+            </g>
+        </svg>
+
+        <svg
+            class="auth-page-decor auth-page-decor--leaf"
+            viewBox="0 0 160 160"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+        >
+            <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M100 160C92 120 74 98 40 86"/>
+                <path d="M110 160C100 115 86 88 56 62"/>
+                <path d="M124 160C122 112 132 82 160 66"/>
+                <path d="M134 160C138 116 156 96 160 94"/>
+                <path d="M114 160C112 105 112 70 112 20"/>
+            </g>
+        </svg>
+
+        <div class="auth-shell">
+
+
+            {{-- =====================================================
+                 HERO PANEL
+            ====================================================== --}}
+
+            <aside
+                class="auth-hero"
+                style="background-image: url('{{ asset('images/login.png') }}'), linear-gradient(180deg, #bfe3f7 0%, #eaf4fb 30%, #fbe7c8 65%, #f3c98a 100%)"
+            >
+
+                <div class="auth-hero-content">
+
+                    <h2>
+                        Explore the World
+                        <span>With {{ config('travels.brand.name', 'Travels') }}</span>
+                    </h2>
+
+                    <p>
+                        Discover amazing destinations, create unforgettable
+                        memories and experience the world like never before.
+                    </p>
+
+
+                    <div class="auth-hero-features">
+
+                        <div class="auth-hero-feature">
+
+                            <span class="auth-hero-feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 13.5L21 3.5L18.5 21L13 15.5L9.5 18L9 13.5L2 13.5Z" fill="currentColor" transform="rotate(35 12 12)"/></svg>
+                            </span>
+
+                            <strong>Best Deals</strong>
+                            <small>on Flights &amp; Hotels</small>
+
+                        </div>
+
+
+                        <div class="auth-hero-feature">
+
+                            <span class="auth-hero-feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21C15.5 17.4 19 13.9 19 10a7 7 0 1 0-14 0c0 3.9 3.5 7.4 7 11Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.6"/></svg>
+                            </span>
+
+                            <strong>Worldwide</strong>
+                            <small>Destinations</small>
+
+                        </div>
+
+
+                        <div class="auth-hero-feature">
+
+                            <span class="auth-hero-feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3L4.5 6v5.2c0 4.8 3.2 8.7 7.5 9.8 4.3-1.1 7.5-5 7.5-9.8V6L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </span>
+
+                            <strong>Safe &amp; Secure</strong>
+                            <small>Booking</small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="auth-hero-tagline">
+
+                    <span class="auth-hero-tagline-text">
+                        <span>Your Journey</span>
+                        <span>Our Priority</span>
+                    </span>
+
+                </div>
+
+            </aside>
+
+
+            {{-- =====================================================
+                 FORM PANEL
+            ====================================================== --}}
+
+            <div class="auth-card">
 
 
             {{-- =====================================================
@@ -56,7 +168,10 @@
 
                 $settingsService = app(\App\Services\SettingsService::class);
 
-                $loginLogo = $settingsService->get('visual.login_logo');
+                $loginLogo = $settingsService->get('visual.login_logo')
+                    ?: $settingsService->get('visual.logo')
+                    ?: $settingsService->get('header.logo');
+
                 $loginLogoUrl = null;
 
                 if (!empty($loginLogo)) {
@@ -71,6 +186,8 @@
                     // Prevent browser cache from showing an older login logo.
                     $loginLogoUrl .= (str_contains($loginLogoUrl, '?') ? '&' : '?')
                         . 'v=' . rawurlencode($loginLogo);
+                } else {
+                    $loginLogoUrl = asset('images/logo.jpeg');
                 }
             @endphp
 
@@ -174,16 +291,24 @@
                             Email Address
                         </label>
 
-                        <input
-                            id="login_email"
-                            type="email"
-                            name="email"
-                            value="{{ old('_form') === 'login' ? old('email') : '' }}"
-                            placeholder="Enter your email"
-                            autocomplete="email"
-                            required
-                            autofocus
-                        >
+                        <div class="auth-input-wrapper">
+
+                            <span class="auth-input-icon">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16v12H4V6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </span>
+
+                            <input
+                                id="login_email"
+                                type="email"
+                                name="email"
+                                value="{{ old('_form') === 'login' ? old('email') : '' }}"
+                                placeholder="Enter your email"
+                                autocomplete="email"
+                                required
+                                autofocus
+                            >
+
+                        </div>
 
                         @if (old('_form') === 'login')
 
@@ -222,6 +347,10 @@
 
 
                         <div class="auth-password-wrapper">
+
+                            <span class="auth-input-icon">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 10V7a4 4 0 1 1 8 0v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                            </span>
 
                             <input
                                 id="login_password"
@@ -392,15 +521,23 @@
                             Full Name
                         </label>
 
-                        <input
-                            id="register_name"
-                            type="text"
-                            name="name"
-                            value="{{ old('_form') === 'register' ? old('name') : '' }}"
-                            placeholder="Enter your full name"
-                            autocomplete="name"
-                            required
-                        >
+                        <div class="auth-input-wrapper">
+
+                            <span class="auth-input-icon">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.6"/><path d="M5 19c1.2-3.4 4-5 7-5s5.8 1.6 7 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </span>
+
+                            <input
+                                id="register_name"
+                                type="text"
+                                name="name"
+                                value="{{ old('_form') === 'register' ? old('name') : '' }}"
+                                placeholder="Enter your full name"
+                                autocomplete="name"
+                                required
+                            >
+
+                        </div>
 
                         @if (old('_form') === 'register')
 
@@ -425,15 +562,23 @@
                             Username
                         </label>
 
-                        <input
-                            id="register_username"
-                            type="text"
-                            name="username"
-                            value="{{ old('_form') === 'register' ? old('username') : '' }}"
-                            placeholder="Enter your username"
-                            autocomplete="username"
-                            required
-                        >
+                        <div class="auth-input-wrapper">
+
+                            <span class="auth-input-icon">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.6"/><path d="M5 19c1.2-3.4 4-5 7-5s5.8 1.6 7 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </span>
+
+                            <input
+                                id="register_username"
+                                type="text"
+                                name="username"
+                                value="{{ old('_form') === 'register' ? old('username') : '' }}"
+                                placeholder="Enter your username"
+                                autocomplete="username"
+                                required
+                            >
+
+                        </div>
 
                         @if (old('_form') === 'register')
 
@@ -458,15 +603,23 @@
                             Email Address
                         </label>
 
-                        <input
-                            id="register_email"
-                            type="email"
-                            name="email"
-                            value="{{ old('_form') === 'register' ? old('email') : '' }}"
-                            placeholder="Enter your email"
-                            autocomplete="email"
-                            required
-                        >
+                        <div class="auth-input-wrapper">
+
+                            <span class="auth-input-icon">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16v12H4V6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </span>
+
+                            <input
+                                id="register_email"
+                                type="email"
+                                name="email"
+                                value="{{ old('_form') === 'register' ? old('email') : '' }}"
+                                placeholder="Enter your email"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
 
                         @if (old('_form') === 'register')
 
@@ -492,6 +645,10 @@
                         </label>
 
                         <div class="auth-password-wrapper">
+
+                            <span class="auth-input-icon">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 10V7a4 4 0 1 1 8 0v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                            </span>
 
                             <input
                                 id="register_password"
@@ -536,6 +693,10 @@
                         </label>
 
                         <div class="auth-password-wrapper">
+
+                            <span class="auth-input-icon">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 10V7a4 4 0 1 1 8 0v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                            </span>
 
                             <input
                                 id="password_confirmation"
@@ -667,15 +828,23 @@
                             Email Address
                         </label>
 
-                        <input
-                            id="forgot_email"
-                            type="email"
-                            name="email"
-                            value="{{ old('_form') === 'forgot' ? old('email') : '' }}"
-                            placeholder="Enter your email"
-                            autocomplete="email"
-                            required
-                        >
+                        <div class="auth-input-wrapper">
+
+                            <span class="auth-input-icon">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16v12H4V6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </span>
+
+                            <input
+                                id="forgot_email"
+                                type="email"
+                                name="email"
+                                value="{{ old('_form') === 'forgot' ? old('email') : '' }}"
+                                placeholder="Enter your email"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
 
                         @if (old('_form') === 'forgot')
 
@@ -798,6 +967,10 @@
 
                             <div class="auth-password-wrapper">
 
+                                <span class="auth-input-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 10V7a4 4 0 1 1 8 0v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                                </span>
+
                                 <input
                                     id="current_password"
                                     type="password"
@@ -843,6 +1016,10 @@
 
                             <div class="auth-password-wrapper">
 
+                                <span class="auth-input-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 10V7a4 4 0 1 1 8 0v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                                </span>
+
                                 <input
                                     id="change_password"
                                     type="password"
@@ -887,6 +1064,10 @@
                             </label>
 
                             <div class="auth-password-wrapper">
+
+                                <span class="auth-input-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 10V7a4 4 0 1 1 8 0v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                                </span>
 
                                 <input
                                     id="change_password_confirmation"
@@ -945,16 +1126,6 @@
             @endauth
 
 
-
-            {{-- =====================================================
-                 FOOTER
-            ====================================================== --}}
-
-            <div class="auth-footer">
-
-                <a href="{{ route('home') }}">
-                    ← Back to website
-                </a>
 
             </div>
 

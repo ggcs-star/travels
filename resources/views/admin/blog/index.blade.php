@@ -551,11 +551,9 @@
 
             </div>
 
-            @if($blogs->hasPages())
-                <div class="admin-pagination blog-pagination">
-                    {{ $blogs->links() }}
-                </div>
-            @endif
+            <div class="admin-pagination blog-pagination">
+                {{ $blogs->links() }}
+            </div>
 
         @else
 

@@ -1037,7 +1037,7 @@
    PAGE INTRO
    --------------------------------------------------------- */
 
-.booking-page > .container > div > .storefront-kicker {
+.booking-header > .storefront-kicker {
     margin-top: 5px;
 }
 
@@ -1453,11 +1453,44 @@
 }
 
 .booking-summary > p {
-    margin: 0 24px;
+    margin: 0 24px 20px;
 
     color: #84909d;
 
     font-size: 13px;
+}
+
+.booking-summary__departure,
+.booking-summary__seats,
+.booking-summary__travellers {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    margin: 0 24px;
+    padding: 12px 0;
+
+    border-top: 1px solid #eef0f3;
+}
+
+.booking-summary__departure > span,
+.booking-summary__seats > span,
+.booking-summary__travellers > span {
+    color: #8a96a3;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.booking-summary__departure > strong,
+.booking-summary__seats > strong,
+.booking-summary__travellers > strong {
+    color: var(--tour-ink);
+
+    font-size: 14px;
+    font-weight: 800;
+    text-align: right;
 }
 
 .booking-summary__total {
@@ -3163,7 +3196,7 @@
     box-shadow: 0 0 0 3px rgba(185,138,75,.10);
 }
 
-.storefront-button {
+.tour-search-card .storefront-button {
     min-height: 46px;
     display: inline-flex;
     align-items: center;
@@ -3186,13 +3219,13 @@
         box-shadow 180ms ease;
 }
 
-.storefront-button:hover {
+.tour-search-card .storefront-button:hover {
     transform: translateY(-1px);
     background: #a7793e;
     box-shadow: 0 8px 18px rgba(185,138,75,.20);
 }
 
-.storefront-button:active {
+.tour-search-card .storefront-button:active {
     transform: translateY(0);
 }
 
@@ -7255,6 +7288,57 @@ body:has(.my-bookings-page) .kanila-site-header .nav-dropdown-trigger {
 body:has(.my-bookings-page) .kanila-site-header .nav-link:hover,
 body:has(.my-bookings-page) .kanila-site-header .nav-dropdown-trigger:hover {
     color: #f28a24 !important;
+}
+
+
+/*
+   Booking pages have no hero image behind the header, so the
+   default transparent/absolute header (designed to sit over a
+   dark hero) becomes invisible and overlaps the page content.
+   Give it the same solid dark header used on other non-hero pages.
+*/
+
+body:has(.booking-page, .booking-details-page) .site-header.kanila-site-header {
+    position: absolute !important;
+    top: 48px !important;
+    left: 0 !important;
+    right: 0 !important;
+
+    width: 100% !important;
+
+    height: 94px !important;
+    min-height: 94px !important;
+
+    background: #0b302b !important;
+    background-color: #0b302b !important;
+
+    border-bottom: 1px solid rgba(255,255,255,.12) !important;
+
+    box-shadow: 0 8px 30px rgba(0,0,0,.10) !important;
+
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+
+    z-index: 9999 !important;
+}
+
+body:has(.booking-page, .booking-details-page) .kanila-site-header .nav-link,
+body:has(.booking-page, .booking-details-page) .kanila-site-header .nav-dropdown-trigger {
+    color: rgba(255,255,255,.94) !important;
+}
+
+body:has(.booking-page, .booking-details-page) .kanila-site-header .nav-link:hover,
+body:has(.booking-page, .booking-details-page) .kanila-site-header .nav-dropdown-trigger:hover,
+body:has(.booking-page, .booking-details-page) .kanila-site-header .nav-link.active {
+    color: #f28a24 !important;
+}
+
+body:has(.booking-page) .storefront-section.booking-page {
+    padding-top: 150px !important;
+}
+
+body:has(.booking-details-page) .storefront-section.booking-details-page {
+    padding-top: 150px !important;
 }
 
 

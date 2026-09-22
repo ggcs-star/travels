@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', $tour->name.' | '.config('travels.brand.name'))
 
@@ -338,17 +338,15 @@
                         rel="noopener"
                     >
                         <span class="tour-itinerary-download__icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 3v12"></path>
-                                <path d="m7 10 5 5 5-5"></path>
-                                <path d="M5 21h14"></path>
-                            </svg>
+                            <i class="fa-solid fa-file-pdf"></i>
                         </span>
                         <span class="tour-itinerary-download__text">
                             <strong>Download Itinerary</strong>
                             <small>Full day-by-day plan as a PDF</small>
                         </span>
-                        <span class="tour-itinerary-download__arrow" aria-hidden="true">↓</span>
+                        <span class="tour-itinerary-download__arrow" aria-hidden="true">
+                            <i class="fa-solid fa-download"></i>
+                        </span>
                     </a>
 
                     <div class="tour-itinerary-list">
@@ -651,6 +649,7 @@
                                 if (preg_match_all('/<li\b[^>]*>(.*?)<\/li>/is', $rawTerm, $matches)) {
                                     foreach ($matches[1] as $li) {
                                         $plain = trim(html_entity_decode(strip_tags($li), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+                                        $plain = preg_replace('/^\d+[\.\)]\s*/', '', $plain);
                                         if ($plain !== '') {
                                             $termItems[] = $plain;
                                         }
@@ -659,6 +658,7 @@
                                     $plain = trim(html_entity_decode(strip_tags($rawTerm), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
                                     foreach (preg_split('/\r\n|\r|\n/', $plain) as $line) {
                                         $line = trim($line);
+                                        $line = preg_replace('/^\d+[\.\)]\s*/', '', $line);
                                         if ($line !== '') {
                                             $termItems[] = $line;
                                         }
@@ -703,6 +703,8 @@
                                     )
                                 );
 
+                                $plain = preg_replace('/^[-•*]\s*/', '', $plain);
+
                                 if ($plain !== '') {
                                     $cancellationItems[] = $plain;
                                 }
@@ -718,6 +720,8 @@
 
                             foreach (preg_split('/\r\n|\r|\n/', $plain) as $line) {
                                 $line = trim($line);
+
+                                $line = preg_replace('/^[-•*]\s*/', '', $line);
 
                                 if ($line !== '') {
                                     $cancellationItems[] = $line;
@@ -787,7 +791,7 @@
             @if($hasItinerary)
                 <div class="overview-sidebar-card overview-sidebar-card--itinerary">
                     <div class="overview-sidebar-card__head">
-                        <span class="overview-sidebar-card__icon" aria-hidden="true">▣</span>
+                        <span class="overview-sidebar-card__icon" aria-hidden="true"><i class="fa-solid fa-file-pdf"></i></span>
                         <div>
                             <strong>TOUR ITINERARY</strong>
                             <small>Complete day-by-day plan</small>
@@ -800,7 +804,7 @@
                         target="_blank"
                         rel="noopener"
                     >
-                        <span>⇩ &nbsp; Download Itinerary</span>
+                        <span><i class="fa-solid fa-download"></i> &nbsp; Download Itinerary</span>
                     </a>
 
                     <p>Full day-by-day plan · PDF</p>
@@ -836,12 +840,12 @@
 
             <div class="sidebar-dates-card">
                 <div class="sidebar-dates-card__head">
-                    <span class="sidebar-card-icon" aria-hidden="true">▣</span>
+                    <span class="sidebar-card-icon" aria-hidden="true"><i class="fa-solid fa-calendar-days"></i></span>
                     <strong>DEPARTURE DATES</strong>
                 </div>
 
                 <div class="sidebar-dates-card__label">
-                    <span aria-hidden="true">▣</span>
+                    <span aria-hidden="true"><i class="fa-solid fa-calendar-check"></i></span>
                     <strong>{{ $sidebarCategoryName }}</strong>
                 </div>
 
@@ -853,7 +857,7 @@
                             rel="noopener"
                             class="sidebar-book-date sidebar-book-date--full"
                         >
-                            <span aria-hidden="true">◉</span>
+                            <span aria-hidden="true"><i class="fa-brands fa-whatsapp"></i></span>
                             Book This Date
                         </a>
                     @else
@@ -861,14 +865,14 @@
                             href="{{ route('contact') }}"
                             class="sidebar-book-date sidebar-book-date--full"
                         >
-                            <span aria-hidden="true">◉</span>
+                            <span aria-hidden="true"><i class="fa-brands fa-whatsapp"></i></span>
                             Book This Date
                         </a>
                     @endif
                 </div>
 
                 <div class="sidebar-dates-card__note">
-                    <span aria-hidden="true">●</span>
+                    <span aria-hidden="true"><i class="fa-solid fa-circle-info"></i></span>
                     <span>Can't find your date?</span>
                     <a href="{{ route('contact') }}">Contact us</a>
                 </div>
@@ -886,7 +890,7 @@
 
             <div class="sidebar-pkg-card">
                 <div class="sidebar-pkg-card__head">
-                    <span aria-hidden="true">◆</span>
+                    <span aria-hidden="true"><i class="fa-solid fa-tag"></i></span>
                     <strong>PACKAGES &amp; PRICING</strong>
                 </div>
 
@@ -943,7 +947,7 @@
                             href="tel:+{{ $sidebarPhoneNumber }}"
                             class="sidebar-action sidebar-action--call"
                         >
-                            <span>☎</span>
+                            <span><i class="fa-solid fa-phone"></i></span>
                             Call Now
                         </a>
                     @endif
@@ -955,7 +959,7 @@
                             rel="noopener"
                             class="sidebar-action sidebar-action--whatsapp"
                         >
-                            <span>◉</span>
+                            <span><i class="fa-brands fa-whatsapp"></i></span>
                             WhatsApp Us
                         </a>
                     @endif
@@ -966,6 +970,9 @@
 
     </div>
 </section>
+
+@include('components.home.stats')
+@include('components.home.testimonials')
 
 <style>
 
@@ -1040,62 +1047,65 @@
 .tour-itinerary-download {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
     width: 100%;
-    min-height: 74px;
-    margin: 0 0 22px;
-    padding: 14px 20px;
-    border: 1px solid #f0b2b2;
-    border-left: 4px solid #e31e24;
-    border-radius: 20px;
+    min-height: auto;
+    margin: 0 0 24px;
+    padding: 15px 18px;
+    border: 1.5px solid #fecaca;
+    border-left: 4px solid #dc2626;
+    border-radius: 24px;
     background: #fff;
     color: var(--itinerary-text);
     text-decoration: none;
-    box-shadow: 0 8px 25px rgba(22, 40, 58, .05);
-    transition: transform .2s ease, box-shadow .2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .04);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
 
 .tour-itinerary-download:hover {
+    border-color: #dc2626;
     transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(22, 40, 58, .09);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .1);
 }
 
 .tour-itinerary-download__icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 42px;
-    height: 42px;
-    flex: 0 0 42px;
-    color: #e31e24;
-}
-
-.tour-itinerary-download__icon svg {
-    width: 30px;
-    height: 30px;
+    flex: 0 0 auto;
+    color: #dc2626;
+    font-size: 26px;
 }
 
 .tour-itinerary-download__text {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    min-width: 0;
     gap: 3px;
 }
 
 .tour-itinerary-download__text strong {
     font-size: 15px;
-    font-weight: 800;
+    font-weight: 900;
 }
 
 .tour-itinerary-download__text small {
-    color: #708094;
+    color: #6b7280;
     font-size: 12px;
 }
 
 .tour-itinerary-download__arrow {
     margin-left: auto;
-    color: #e31e24;
-    font-size: 25px;
+    flex: 0 0 auto;
+    color: #dc2626;
+    font-size: 15px;
     line-height: 1;
+    transition: transform .25s ease;
+}
+
+.tour-itinerary-download:hover .tour-itinerary-download__arrow {
+    transform: translateY(2px);
 }
 
 .tour-itinerary-list {
@@ -1106,8 +1116,8 @@
 
 .tour-itinerary-item {
     display: grid;
-    grid-template-columns: 64px minmax(0, 1fr);
-    gap: 16px;
+    grid-template-columns: 54px minmax(0, 1fr);
+    gap: 18px;
     align-items: start;
 }
 
@@ -1121,38 +1131,37 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 64px;
-    height: 64px;
+    width: 54px;
+    height: 54px;
     border-radius: 50%;
-    background: var(--itinerary-orange);
-    color: #fff;
-    font-size: 13px;
-    font-weight: 800;
-    line-height: 1.1;
+    background: #f9aa1d;
+    color: #1a0a00;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1.2;
     text-align: center;
-    box-shadow: 0 6px 15px rgba(245, 154, 23, .18);
 }
 
 .tour-itinerary-item__body {
     min-width: 0;
-    padding: 22px 24px;
-    border: 1px solid var(--itinerary-border);
-    border-radius: 17px;
-    background: var(--itinerary-card);
+    padding: 18px;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    background: #f1f5f9;
 }
 
 .tour-itinerary-item__body h3 {
-    margin: 0 0 10px;
+    margin: 0 0 6px;
     color: var(--itinerary-text);
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 800;
     line-height: 1.35;
 }
 
 .tour-itinerary-item__copy {
-    color: #354a60;
-    font-size: 13px;
-    line-height: 1.75;
+    color: #4b5563;
+    font-size: 14px;
+    line-height: 1.6;
 }
 
 .tour-itinerary-item__activities {
@@ -1166,8 +1175,8 @@
 .tour-itinerary-item__activities li {
     position: relative;
     padding-left: 19px;
-    color: #354a60;
-    font-size: 13px;
+    color: #4b5563;
+    font-size: 14px;
     line-height: 1.5;
 }
 
@@ -1195,8 +1204,8 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    color: #526b82;
-    font-size: 11px;
+    color: #6b7280;
+    font-size: 12px;
     font-weight: 600;
 }
 
@@ -1236,7 +1245,7 @@
     }
 
     .tour-itinerary-download__text small {
-        font-size: 11px;
+        font-size: 15px;
     }
 
     .tour-itinerary-item {
@@ -1247,7 +1256,7 @@
     .tour-itinerary-item__marker span {
         width: 48px;
         height: 48px;
-        font-size: 10px;
+        font-size: 15px;
     }
 
     .tour-itinerary-item__body {
@@ -1262,7 +1271,7 @@
 
     .tour-itinerary-item__copy,
     .tour-itinerary-item__activities li {
-        font-size: 12px;
+        font-size: 16px;
     }
 
     .tour-itinerary-item__meta {
@@ -1320,7 +1329,7 @@
 .overview-sidebar-card__head strong {
     display: block;
     color: #17283a;
-    font-size: 11px;
+    font-size: 15px;
     font-weight: 800;
     letter-spacing: .25px;
 }
@@ -1329,7 +1338,7 @@
     display: block;
     margin-top: 3px;
     color: #778392;
-    font-size: 10px;
+    font-size: 15px;
 }
 
 .overview-sidebar-card__button {
@@ -1342,7 +1351,7 @@
     border-radius: 30px;
     background: #f59a17;
     color: #17283a;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 800;
     text-decoration: none;
     transition: transform .2s ease, background .2s ease;
@@ -1357,7 +1366,7 @@
     margin: 0 15px 14px;
     color: #687684;
     text-align: center;
-    font-size: 9.5px;
+    font-size: 14px;
 }
 
 @media (max-width: 767px) {
@@ -1428,7 +1437,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
     justify-content: center !important;
     background: #1293d5 !important;
     color: #fff !important;
-    font-size: 11px !important;
+    font-size: 15px !important;
     font-weight: 800 !important;
     line-height: 1 !important;
 }
@@ -1444,7 +1453,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 .tour-detail-page #terms-conditions .tour-terms-note .tour-rich-content strong,
 .tour-detail-page #terms-conditions .tour-terms-note .tour-rich-content b {
     color: #173b5d !important;
-    font-size: 13px !important;
+    font-size: 17px !important;
     line-height: 1.55 !important;
 }
 
@@ -1489,7 +1498,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 }
 
 .tour-detail-nav__inner a {
-    font-size: 12px !important;
+    font-size: 16px !important;
     font-weight: 700 !important;
     color: #17283a !important;
     padding: 15px 18px 12px !important;
@@ -1521,7 +1530,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
     display: block !important;
     margin: 0 0 5px !important;
     color: #d58a22 !important;
-    font-size: 9px !important;
+    font-size: 14px !important;
     line-height: 1.2 !important;
     font-weight: 800 !important;
     text-transform: uppercase !important;
@@ -1545,7 +1554,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
     margin: 0 0 18px !important;
     color: #38516a !important;
     font-family: inherit !important;
-    font-size: 12px !important;
+    font-size: 16px !important;
     line-height: 1.75 !important;
 }
 
@@ -1569,7 +1578,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
     border-radius: 16px !important;
     background: #fffdf3 !important;
     color: #304a61 !important;
-    font-size: 11px !important;
+    font-size: 15px !important;
     line-height: 1.65 !important;
 }
 
@@ -1582,7 +1591,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
     border-radius: 50% !important;
     background: #f7a719 !important;
     color: #fff !important;
-    font-size: 9px !important;
+    font-size: 14px !important;
     font-weight: 800 !important;
 }
 
@@ -1590,7 +1599,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
     display: block !important;
     margin: 0 0 3px !important;
     color: #173651 !important;
-    font-size: 11px !important;
+    font-size: 15px !important;
     line-height: 1.35 !important;
     font-weight: 800 !important;
 }
@@ -1599,7 +1608,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 .tour-detail-page .tour-rich-content {
     color: #304a61 !important;
     font-family: inherit !important;
-    font-size: 11px !important;
+    font-size: 15px !important;
     line-height: 1.65 !important;
 }
 
@@ -1609,7 +1618,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
     margin: 7px 0 5px !important;
     color: #173651 !important;
     font-family: inherit !important;
-    font-size: 12px !important;
+    font-size: 16px !important;
     line-height: 1.4 !important;
 }
 
@@ -1643,7 +1652,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 .tour-detail-page #cancellation-policy .tour-cancellation-intro {
     margin: 0 0 15px !important;
     color: #304a61 !important;
-    font-size: 12px !important;
+    font-size: 16px !important;
     line-height: 1.65 !important;
 }
 
@@ -1675,7 +1684,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 .tour-detail-page #cancellation-policy .tour-cancellation-item__text p {
     margin: 0 !important;
     color: #304a61 !important;
-    font-size: 11.5px !important;
+    font-size: 16px !important;
     line-height: 1.65 !important;
 }
 
@@ -1696,7 +1705,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
     border-radius: 8px !important;
     background: #fffaf0 !important;
     color: #8a5b1c !important;
-    font-size: 10.5px !important;
+    font-size: 15px !important;
     line-height: 1.5 !important;
 }
 
@@ -1709,7 +1718,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
     border-radius: 50% !important;
     background: #a96500 !important;
     color: #fff !important;
-    font-size: 9px !important;
+    font-size: 14px !important;
     font-weight: 800 !important;
 }
 
@@ -1742,7 +1751,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
     padding: 11px 13px !important;
     border-radius: 25px !important;
     background: #f7a719 !important;
-    font-size: 10px !important;
+    font-size: 15px !important;
 }
 
 .tour-detail-page .departure-panel h2,
@@ -1820,14 +1829,14 @@ body:has(.tour-detail-page) .tour-detail-nav {
     gap: 8px !important;
     background: #f7a719 !important;
     color: #17283a !important;
-    font-size: 10px !important;
+    font-size: 15px !important;
     line-height: 1.2 !important;
     text-align: center !important;
 }
 
 .tour-detail-page .departure-panel .overview-sidebar-card p {
     margin: -3px 12px 13px !important;
-    font-size: 9px !important;
+    font-size: 14px !important;
 }
 
 .tour-detail-page .departure-panel__top {
@@ -1856,7 +1865,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 .tour-detail-page .departure-panel__intro {
     margin: 0 !important;
     color: #778392 !important;
-    font-size: 10px !important;
+    font-size: 15px !important;
     line-height: 1.5 !important;
 }
 
@@ -1899,20 +1908,20 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
 .tour-detail-page .departure-option__details strong {
     color: #17283a !important;
-    font-size: 12px !important;
+    font-size: 16px !important;
     line-height: 1.35 !important;
     font-weight: 800 !important;
 }
 
 .tour-detail-page .departure-option__details span {
     color: #8794a1 !important;
-    font-size: 9px !important;
+    font-size: 14px !important;
     line-height: 1.4 !important;
 }
 
 .tour-detail-page .departure-option__details small {
     color: #3d9564 !important;
-    font-size: 9px !important;
+    font-size: 14px !important;
     line-height: 1.35 !important;
     font-weight: 700 !important;
 }
@@ -1938,7 +1947,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
     min-height: 34px !important;
     padding: 8px 11px !important;
     border-radius: 20px !important;
-    font-size: 9px !important;
+    font-size: 14px !important;
     line-height: 1.2 !important;
     white-space: nowrap !important;
 }
@@ -1950,7 +1959,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
 .tour-detail-page .departure-empty p {
     margin: 0 0 12px !important;
-    font-size: 10px !important;
+    font-size: 15px !important;
     line-height: 1.5 !important;
 }
 
@@ -2006,7 +2015,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 .tour-detail-page .departure-package strong {
     display: block !important;
     color: #17283a !important;
-    font-size: 10px !important;
+    font-size: 15px !important;
     line-height: 1.35 !important;
     font-weight: 800 !important;
 }
@@ -2015,14 +2024,14 @@ body:has(.tour-detail-page) .tour-detail-nav {
     display: block !important;
     margin-top: 3px !important;
     color: #7a8998 !important;
-    font-size: 9px !important;
+    font-size: 14px !important;
     line-height: 1.4 !important;
 }
 
 .tour-detail-page .departure-package b {
     flex: 0 0 auto !important;
     color: #e88a00 !important;
-    font-size: 13px !important;
+    font-size: 17px !important;
     line-height: 1.2 !important;
     font-weight: 800 !important;
     white-space: nowrap !important;
@@ -2185,7 +2194,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
     border-radius: 50% !important;
     color: #b86a00 !important;
     background: #fff1d7 !important;
-    font-size: 9px !important;
+    font-size: 14px !important;
     font-weight: 800 !important;
 }
 
@@ -2196,7 +2205,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 .tour-detail-page .overview-sidebar-card__head strong {
     display: block !important;
     color: #17283a !important;
-    font-size: 9px !important;
+    font-size: 14px !important;
     line-height: 1.25 !important;
     font-weight: 800 !important;
     letter-spacing: .15px !important;
@@ -2218,7 +2227,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
     border-radius: 20px !important;
     background: #f7a719 !important;
     color: #17283a !important;
-    font-size: 9px !important;
+    font-size: 14px !important;
     line-height: 1.2 !important;
     font-weight: 800 !important;
     text-decoration: none !important;
@@ -2228,7 +2237,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 .tour-detail-page .overview-sidebar-card p {
     margin: 0 10px 10px !important;
     color: #7b8792 !important;
-    font-size: 8px !important;
+    font-size: 13px !important;
     line-height: 1.3 !important;
     text-align: center !important;
 }
@@ -2255,7 +2264,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
 .tour-detail-page .sidebar-dates-card__head strong {
     color: #17283a !important;
-    font-size: 9px !important;
+    font-size: 14px !important;
     font-weight: 800 !important;
 }
 
@@ -2269,11 +2278,11 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
 .tour-detail-page .sidebar-dates-card__label span {
     color: #ef9200 !important;
-    font-size: 8px !important;
+    font-size: 13px !important;
 }
 
 .tour-detail-page .sidebar-dates-card__label strong {
-    font-size: 8px !important;
+    font-size: 13px !important;
     font-weight: 800 !important;
 }
 
@@ -2303,20 +2312,20 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
 .tour-detail-page .sidebar-date-item__details strong {
     color: #17283a !important;
-    font-size: 11px !important;
+    font-size: 15px !important;
     line-height: 1.25 !important;
     font-weight: 800 !important;
 }
 
 .tour-detail-page .sidebar-date-item__details span {
     color: #8a96a2 !important;
-    font-size: 8px !important;
+    font-size: 13px !important;
     line-height: 1.35 !important;
 }
 
 .tour-detail-page .sidebar-date-item__details small {
     color: #3b9867 !important;
-    font-size: 8px !important;
+    font-size: 13px !important;
     line-height: 1.3 !important;
     font-weight: 700 !important;
 }
@@ -2331,7 +2340,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
 .tour-detail-page .sidebar-date-item__action > strong {
     color: #ed7b00 !important;
-    font-size: 13px !important;
+    font-size: 17px !important;
     line-height: 1 !important;
     font-weight: 800 !important;
     white-space: nowrap !important;
@@ -2347,7 +2356,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
     border-radius: 18px !important;
     background: #ff741b !important;
     color: #fff !important;
-    font-size: 8px !important;
+    font-size: 13px !important;
     line-height: 1.15 !important;
     font-weight: 800 !important;
     text-decoration: none !important;
@@ -2367,7 +2376,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 .tour-detail-page .sidebar-dates-card__empty p {
     margin: 0 0 8px !important;
     color: #788694 !important;
-    font-size: 9px !important;
+    font-size: 14px !important;
 }
 
 .tour-detail-page .sidebar-book-date--full {
@@ -2383,13 +2392,13 @@ body:has(.tour-detail-page) .tour-detail-nav {
     border-top: 1px solid #eee5d3 !important;
     background: #fffdf7 !important;
     color: #9a6b36 !important;
-    font-size: 7.5px !important;
+    font-size: 12px !important;
     line-height: 1.3 !important;
 }
 
 .tour-detail-page .sidebar-dates-card__note > span:first-child {
     color: #a95e18 !important;
-    font-size: 6px !important;
+    font-size: 11px !important;
 }
 
 .tour-detail-page .sidebar-dates-card__note a {
@@ -2439,11 +2448,11 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
 .tour-detail-page .sidebar-pkg-card__head > span {
     color: #17283a !important;
-    font-size: 8px !important;
+    font-size: 13px !important;
 }
 
 .tour-detail-page .sidebar-pkg-card__head strong {
-    font-size: 9px !important;
+    font-size: 14px !important;
     font-weight: 800 !important;
 }
 
@@ -2462,7 +2471,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
     border-radius: 20px !important;
     background: #f7a719 !important;
     color: #17283a !important;
-    font-size: 7px !important;
+    font-size: 11px !important;
     line-height: 1 !important;
     font-weight: 800 !important;
 }
@@ -2470,7 +2479,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 .tour-detail-page .sidebar-pkg-card__name {
     display: block !important;
     color: #17283a !important;
-    font-size: 10px !important;
+    font-size: 15px !important;
     line-height: 1.3 !important;
     font-weight: 800 !important;
 }
@@ -2488,13 +2497,13 @@ body:has(.tour-detail-page) .tour-detail-nav {
     display: block !important;
     margin-top: 3px !important;
     color: #8a9199 !important;
-    font-size: 8px !important;
+    font-size: 13px !important;
 }
 
 .tour-detail-page .sidebar-pkg-card__description {
     margin: 7px 0 0 !important;
     color: #7b8792 !important;
-    font-size: 8px !important;
+    font-size: 13px !important;
     line-height: 1.4 !important;
 }
 
@@ -2508,7 +2517,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
     border-radius: 20px !important;
     background: #f7a719 !important;
     color: #17283a !important;
-    font-size: 9px !important;
+    font-size: 14px !important;
     font-weight: 800 !important;
     text-decoration: none !important;
 }
@@ -2528,7 +2537,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
     min-height: 31px !important;
     border-radius: 18px !important;
     color: #fff !important;
-    font-size: 8px !important;
+    font-size: 13px !important;
     line-height: 1 !important;
     font-weight: 800 !important;
     text-decoration: none !important;
@@ -2567,7 +2576,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
         min-height: 32px !important;
         padding-left: 12px !important;
         padding-right: 12px !important;
-        font-size: 8px !important;
+        font-size: 13px !important;
     }
 }
 
@@ -2678,7 +2687,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 .tour-detail-page .tour-inclusion-card__header strong {
     color: #173b5d !important;
 
-    font-size: 10px !important;
+    font-size: 15px !important;
     line-height: 1.3 !important;
 
     font-weight: 800 !important;
@@ -2708,7 +2717,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
     border-radius: 50% !important;
 
-    font-size: 9px !important;
+    font-size: 14px !important;
     line-height: 13px !important;
     font-weight: 900 !important;
 }
@@ -2752,7 +2761,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
     color: #476078 !important;
 
-    font-size: 9.5px !important;
+    font-size: 16px !important;
     line-height: 1.45 !important;
 }
 
@@ -2764,7 +2773,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
     margin-top: 1px !important;
 
-    font-size: 9px !important;
+    font-size: 14px !important;
     line-height: 11px !important;
 
     font-weight: 900 !important;
@@ -2787,7 +2796,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
     color: #476078 !important;
 
-    font-size: 9.5px !important;
+    font-size: 16px !important;
     line-height: 1.45 !important;
 }
 
@@ -2826,7 +2835,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
     .tour-detail-page .tour-inclusion-card__body li,
     .tour-detail-page .tour-inclusion-card__text {
-        font-size: 11px !important;
+        font-size: 15px !important;
         line-height: 1.5 !important;
     }
 
@@ -2836,7 +2845,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
     .tour-detail-page .tour-inclusion-card__body li,
     .tour-detail-page .tour-inclusion-card__text {
-        font-size: 10.5px !important;
+        font-size: 15px !important;
     }
 
 }
@@ -2896,7 +2905,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
     font-family: inherit !important;
 
-    font-size: 11px !important;
+    font-size: 15px !important;
     line-height: 1.7 !important;
 
     font-weight: 400 !important;
@@ -2909,7 +2918,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
     font-family: inherit !important;
 
-    font-size: 11px !important;
+    font-size: 15px !important;
 
     line-height: 1.7 !important;
 }
@@ -2919,7 +2928,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
     color: #38516a !important;
 
-    font-size: 11px !important;
+    font-size: 15px !important;
     line-height: 1.7 !important;
 }
 
@@ -2936,7 +2945,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
     font-family: inherit !important;
 
-    font-size: 12px !important;
+    font-size: 16px !important;
     line-height: 1.4 !important;
 
     font-weight: 800 !important;
@@ -2953,7 +2962,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
     color: #38516a !important;
 
-    font-size: 11px !important;
+    font-size: 15px !important;
     line-height: 1.55 !important;
 }
 
@@ -2977,7 +2986,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
     font-family: inherit !important;
 
-    font-size: 12px !important;
+    font-size: 16px !important;
     line-height: 1.35 !important;
 
     font-weight: 800 !important;
@@ -2986,7 +2995,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 .tour-detail-page #overview .overview-highlights h2 span {
     color: #df8a00 !important;
 
-    font-size: 12px !important;
+    font-size: 16px !important;
     line-height: 1 !important;
 }
 
@@ -3031,7 +3040,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
     color: #173651 !important;
 
-    font-size: 9.5px !important;
+    font-size: 14px !important;
 
     line-height: 1.45 !important;
 
@@ -3059,7 +3068,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
     color: #fff !important;
 
-    font-size: 8px !important;
+    font-size: 13px !important;
 
     line-height: 14px !important;
 
@@ -3075,7 +3084,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
     color: #173651 !important;
 
-    font-size: 9.5px !important;
+    font-size: 14px !important;
 
     line-height: 1.45 !important;
 
@@ -3129,7 +3138,7 @@ body:has(.tour-detail-page) .tour-detail-nav {
     .tour-detail-page #overview
     .overview-about__rich-content p {
 
-        font-size: 11px !important;
+        font-size: 15px !important;
 
         line-height: 1.7 !important;
     }
@@ -3155,13 +3164,13 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
         padding: 9px 10px !important;
 
-        font-size: 11px !important;
+        font-size: 15px !important;
     }
 
     .tour-detail-page #overview
     .overview-highlight__text {
 
-        font-size: 11px !important;
+        font-size: 15px !important;
 
         line-height: 1.5 !important;
     }
@@ -3176,6 +3185,278 @@ body:has(.tour-detail-page) .tour-detail-nav {
         padding: 8px 9px !important;
     }
 
+}
+
+/* ============================================================
+   SIDEBAR CARDS — FINAL LOOK
+   Tour Itinerary / Departure Dates / Packages & Pricing
+   ============================================================ */
+
+.tour-detail-page .departure-panel .overview-sidebar-card,
+.tour-detail-page .departure-panel .sidebar-dates-card,
+.tour-detail-page .departure-panel .sidebar-pkg-card {
+    width: 100% !important;
+    margin: 0 0 20px !important;
+    padding: 0 !important;
+    border: 1px solid #f0dfa8 !important;
+    border-radius: 18px !important;
+    background: #ffffff !important;
+    overflow: hidden !important;
+    box-shadow: 0 6px 20px rgba(24, 42, 59, .06) !important;
+}
+
+.tour-detail-page .departure-panel .overview-sidebar-card__head,
+.tour-detail-page .departure-panel .sidebar-dates-card__head,
+.tour-detail-page .departure-panel .sidebar-pkg-card__head {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    min-height: auto !important;
+    padding: 16px 18px !important;
+    background: #fdf8ea !important;
+    border-bottom: 1px solid #f0e6c8 !important;
+}
+
+.tour-detail-page .departure-panel .overview-sidebar-card__icon,
+.tour-detail-page .departure-panel .sidebar-card-icon,
+.tour-detail-page .departure-panel .sidebar-pkg-card__head > span {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 20px !important;
+    height: 20px !important;
+    flex: 0 0 20px !important;
+    background: transparent !important;
+    color: #d9820d !important;
+    font-size: 17px !important;
+}
+
+.tour-detail-page .departure-panel .overview-sidebar-card__head > div {
+    min-width: 0 !important;
+}
+
+.tour-detail-page .departure-panel .overview-sidebar-card__head strong,
+.tour-detail-page .departure-panel .sidebar-dates-card__head strong,
+.tour-detail-page .departure-panel .sidebar-pkg-card__head strong {
+    color: #16243a !important;
+    font-size: 14px !important;
+    line-height: 1.3 !important;
+    font-weight: 800 !important;
+    letter-spacing: .6px !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+}
+
+.tour-detail-page .departure-panel .overview-sidebar-card__head small {
+    display: none !important;
+}
+
+.tour-detail-page .departure-panel .overview-sidebar-card__button {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    width: calc(100% - 36px) !important;
+    min-height: 54px !important;
+    box-sizing: border-box !important;
+    margin: 18px 18px 8px !important;
+    padding: 12px 18px !important;
+    border-radius: 999px !important;
+    background: #f7a719 !important;
+    color: #16243a !important;
+    font-size: 15px !important;
+    line-height: 1.2 !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+}
+
+.tour-detail-page .departure-panel .overview-sidebar-card__button:hover {
+    background: #ed9a05 !important;
+}
+
+.tour-detail-page .departure-panel .overview-sidebar-card p {
+    margin: -3px 18px 18px !important;
+    color: #8b95a1 !important;
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+    text-align: center !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-dates-card__label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 16px 18px 8px !important;
+    color: #16243a !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-dates-card__label span {
+    display: inline-flex !important;
+    color: #ef9200 !important;
+    font-size: 15px !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-dates-card__label strong {
+    font-size: 14px !important;
+    font-weight: 800 !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-dates-card__single-action {
+    padding: 10px 18px 16px !important;
+    background: #ffffff !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-book-date {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-height: 54px !important;
+    box-sizing: border-box !important;
+    border-radius: 999px !important;
+    background: #f7a719 !important;
+    color: #16243a !important;
+    font-size: 15px !important;
+    line-height: 1.2 !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-book-date:hover {
+    background: #ed9a05 !important;
+    color: #16243a !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-dates-card__note {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    padding: 12px 16px !important;
+    border-top: 1px solid #f0e6c8 !important;
+    background: #fdf8ea !important;
+    color: #8b6b1f !important;
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-dates-card__note > span:first-child {
+    color: #c97e00 !important;
+    font-size: 13px !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-dates-card__note a {
+    color: #c97e00 !important;
+    font-weight: 800 !important;
+    text-decoration: underline !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-pkg-card__item {
+    padding: 20px 18px !important;
+    text-align: center !important;
+    border-bottom: 1px solid #f0e6c8 !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-pkg-card__badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto 10px !important;
+    padding: 5px 14px !important;
+    border-radius: 999px !important;
+    background: #f7a719 !important;
+    color: #16243a !important;
+    font-size: 12px !important;
+    line-height: 1.3 !important;
+    font-weight: 800 !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-pkg-card__name {
+    display: block !important;
+    color: #16243a !important;
+    font-size: 15px !important;
+    line-height: 1.3 !important;
+    font-weight: 800 !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-pkg-card__price {
+    display: block !important;
+    margin-top: 8px !important;
+    color: #e88a00 !important;
+    font-size: 32px !important;
+    line-height: 1.1 !important;
+    font-weight: 900 !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-pkg-card__per {
+    display: block !important;
+    margin-top: 4px !important;
+    color: #8b95a1 !important;
+    font-size: 13px !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-pkg-card__description {
+    margin: 10px 0 0 !important;
+    color: #7b8792 !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-pkg-card__book {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    min-height: 52px !important;
+    box-sizing: border-box !important;
+    margin-top: 16px !important;
+    border-radius: 999px !important;
+    background: #f7a719 !important;
+    color: #16243a !important;
+    font-size: 15px !important;
+    line-height: 1.2 !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-pkg-card__book:hover {
+    background: #ed9a05 !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-pkg-card__actions {
+    display: grid !important;
+    gap: 10px !important;
+    padding: 18px !important;
+    background: #ffffff !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-action {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    min-height: 52px !important;
+    box-sizing: border-box !important;
+    border-radius: 999px !important;
+    color: #ffffff !important;
+    font-size: 15px !important;
+    line-height: 1.2 !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-action--call {
+    background: #e21c53 !important;
+}
+
+.tour-detail-page .departure-panel .sidebar-action--whatsapp {
+    background: #22c55e !important;
 }
 </style>
 
