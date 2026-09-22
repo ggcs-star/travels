@@ -23,6 +23,22 @@ class RazorpayService
     /**
      * @throws RequestException
      */
+    public function testConnection(): array
+    {
+        $this->ensureConfigured();
+
+        $this->client()
+            ->get('/orders', ['count' => 1])
+            ->throw();
+
+        return [
+            'message' => 'Razorpay connection successful. Key ID, Key Secret and gateway status are valid.',
+        ];
+    }
+
+    /**
+     * @throws RequestException
+     */
 public function createOrder(Booking $booking): array
 {
     $this->ensureConfigured();

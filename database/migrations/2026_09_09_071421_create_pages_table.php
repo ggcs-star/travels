@@ -19,7 +19,7 @@ return new class extends Migration
 
             $table->string('title', 255);
 
-            $table->string('slug', 500)->unique();
+            $table->string('slug', 191)->unique();
 
             $table->text('excerpt')->nullable();
 
