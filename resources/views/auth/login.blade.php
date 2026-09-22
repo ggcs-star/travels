@@ -91,7 +91,7 @@
                         <div class="auth-hero-feature">
 
                             <span class="auth-hero-feature-icon">
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 16.5L22 8L20.5 5.5L2 11V16.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12.5L9 20L11.5 18.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5 21L11 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 13.5L21 3.5L18.5 21L13 15.5L9.5 18L9 13.5L2 13.5Z" fill="currentColor" transform="rotate(35 12 12)"/></svg>
                             </span>
 
                             <strong>Best Deals</strong>
@@ -129,7 +129,12 @@
 
 
                 <div class="auth-hero-tagline">
-                    Your Journey, Our Priority
+
+                    <span class="auth-hero-tagline-text">
+                        <span>Your Journey</span>
+                        <span>Our Priority</span>
+                    </span>
+
                 </div>
 
             </aside>

@@ -2202,22 +2202,22 @@
 }
 
 .auth-hero-feature-icon {
-    width: 42px;
-    height: 42px;
+    width: 46px;
+    height: 46px;
     margin-bottom: 6px;
     display: grid;
     place-items: center;
     border-radius: 50%;
-    background: var(--admin-primary, #d97706);
-    color: #fff;
+    background: #fff;
+    color: var(--admin-primary, #d97706);
     box-shadow:
-        0 8px 18px rgba(217, 119, 6, .32),
+        0 8px 18px rgba(16, 24, 40, .16),
         0 0 0 1px rgba(16, 24, 40, .04);
 }
 
 .auth-hero-feature-icon svg {
-    width: 19px;
-    height: 19px;
+    width: 21px;
+    height: 21px;
 }
 
 .auth-hero-feature strong {
@@ -2232,10 +2232,21 @@
 }
 
 .auth-hero-tagline {
-    color: var(--admin-text, #17263d);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    color: #fff;
     font-family: Georgia, "Times New Roman", serif;
     font-size: 17px;
     font-style: italic;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, .4);
+}
+
+.auth-hero-tagline-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
 }
 
 @media (min-width: 901px) {
@@ -2284,13 +2295,13 @@
     }
 
     .auth-shell .auth-logo {
-        width: 56px;
-        height: 46px;
-        margin-bottom: 8px;
+        width: 88px;
+        height: 74px;
+        margin-bottom: 10px;
     }
 
     .auth-shell .auth-header {
-        margin-bottom: 12px;
+        margin-bottom: 8px;
     }
 
     .auth-shell .auth-eyebrow {
@@ -2298,38 +2309,38 @@
     }
 
     .auth-shell .auth-header h1 {
-        font-size: 33px;
+        font-size: 28px;
     }
 
     .auth-shell .auth-header p {
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .auth-shell .auth-form {
-        gap: 8px;
+        gap: 6px;
     }
 
     .auth-shell .auth-field label,
     .auth-shell .auth-label-row label {
-        font-size: 13px;
+        font-size: 12.5px;
     }
 
     .auth-shell .auth-field input {
-        min-height: 46px;
-        font-size: 14.5px;
+        min-height: 40px;
+        font-size: 14px;
     }
 
     .auth-shell .auth-submit {
-        min-height: 46px;
-        font-size: 14.5px;
+        min-height: 40px;
+        font-size: 14px;
     }
 
 }
 
 .auth-logo {
-    width: 50px;
-    height: 42px;
-    margin: 0 auto 6px;
+    width: 72px;
+    height: 60px;
+    margin: 0 auto 10px;
     display: grid;
     place-items: center;
     overflow: hidden;
@@ -2689,9 +2700,9 @@
 @media (max-width: 900px) {
 
     .auth-logo {
-        width: 68px;
-        height: 56px;
-        margin-bottom: 14px;
+        width: 92px;
+        height: 78px;
+        margin-bottom: 16px;
     }
 
     .auth-header {
@@ -2771,8 +2782,8 @@
     }
 
     .auth-logo {
-        width: 64px;
-        height: 64px;
+        width: 80px;
+        height: 80px;
         margin-bottom: 20px;
         border-radius: 14px;
     }
