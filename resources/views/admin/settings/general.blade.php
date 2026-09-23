@@ -2,6 +2,8 @@
 
 @section('title', 'General Settings')
 
+@section('description', 'Manage your website identity and general contact information.')
+
 @section('content')
 
 @php
@@ -11,32 +13,6 @@
 
 
 <div class="website-settings">
-
-
-    {{-- =====================================================
-         PAGE HEADER
-    ====================================================== --}}
-
-    <div class="settings-heading">
-
-        <div>
-
-            <div class="settings-breadcrumb">
-                Settings / General Settings
-            </div>
-
-            <h1>
-                General Settings
-            </h1>
-
-            <p>
-                Manage your website identity and general contact information.
-            </p>
-
-        </div>
-
-    </div>
-
 
 
     {{-- =====================================================
@@ -154,7 +130,7 @@
                         id="site_name"
                         name="site_name"
                         value="{{ $value('site_name') }}"
-                        placeholder="SSB Travelz"
+                        placeholder="travels"
                         maxlength="255"
                     >
 

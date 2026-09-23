@@ -889,7 +889,7 @@
                                 name="title"
                                 value="{{ $value('title') }}"
                                 maxlength="255"
-                                placeholder="Example: About SSB Travelz"
+                                placeholder="Example: About travels"
                                 required
                                 autofocus
                             >
@@ -1396,7 +1396,7 @@
                                 name="meta_title"
                                 value="{{ $seoValue('meta_title') }}"
                                 maxlength="255"
-                                placeholder="About SSB Travelz | Travel Experiences & Tours"
+                                placeholder="About travels | Travel Experiences & Tours"
                             >
                         </div>
 

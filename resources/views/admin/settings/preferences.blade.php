@@ -2,6 +2,8 @@
 
 @section('title', 'Preferences')
 
+@section('description', 'Manage website-wide upload security and payment gateway configuration from one central place.')
+
 @section('content')
 <div class="admin-page preferences-page">
 
@@ -9,21 +11,6 @@
          PAGE HEADER
     ========================================================== --}}
     <div class="preferences-hero">
-
-        <div class="preferences-hero-copy">
-            <span class="admin-eyebrow">
-                SYSTEM SETTINGS
-            </span>
-
-            <h1>
-                Preferences
-            </h1>
-
-            <p>
-                Manage website-wide upload security and payment
-                gateway configuration from one central place.
-            </p>
-        </div>
 
         <div class="preferences-hero-status
             {{ $razorpay['enabled']

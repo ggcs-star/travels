@@ -113,7 +113,7 @@
                 </span>
 
                 <p class="traveller-story-text">
-                    "Amazing experience with SSB Travelz team –
+                    "Amazing experience with travels team –
                     excellent food, accommodation, hotels, flights
                     and tour guide. Highly recommended!"
                 </p>

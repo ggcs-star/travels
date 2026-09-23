@@ -415,7 +415,7 @@
     $siteName = trim(
         (string) (
             $settings['site.name']
-            ?? config('travels.brand.name', 'SSB Travelz')
+            ?? config('travels.brand.name', 'travels')
         )
     );
 

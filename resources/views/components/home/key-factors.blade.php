@@ -7,16 +7,16 @@
 
             <span class="key-factors-eyebrow">
                 <span class="key-factors-eyebrow-dot"></span>
-                WHAT MAKES US DIFFERENT
+                WHY TRAVEL WITH US
             </span>
 
             <h2 class="key-factors-title">
-                Our <span>Key Factors</span>
+                What Sets <span>Us Apart</span>
             </h2>
 
             <p class="key-factors-description">
-                Seven decades of crafting journeys – here's the promise
-                we make to every traveller.
+                A few honest reasons travellers keep coming back to us,
+                trip after trip.
             </p>
 
         </div>
@@ -34,14 +34,13 @@
                 </div>
 
                 <h3>
-                    High Quality Management
+                    Careful Planning, Every Time
                 </h3>
 
                 <p>
-                    From meticulous planning to personalised service,
-                    we ensure every detail of your journey is crafted
-                    to perfection. Elevate your travel expectations
-                    with us.
+                    From the first enquiry to the last day of your trip,
+                    our team stays on top of every detail so nothing
+                    catches you off guard along the way.
                 </p>
 
                 <span class="key-factor-line"></span>
@@ -57,14 +56,14 @@
                 </div>
 
                 <h3>
-                    Our Mission &amp; Vision
+                    Our Promise To You
                 </h3>
 
                 <p>
-                    To provide quality services that exceed the
-                    expectations of our esteemed customers – and to
-                    build long-term relationships through innovation
-                    and advanced technology.
+                    We aim to give every customer more than they
+                    expected, and to keep earning their trust year
+                    after year through better service, not just
+                    bigger promises.
                 </p>
 
                 <span class="key-factor-line"></span>
@@ -80,14 +79,13 @@
                 </div>
 
                 <h3>
-                    Our Core Values
+                    What We Stand For
                 </h3>
 
                 <p>
-                    We treat customers with respect and faith. We grow
-                    through creativity and innovation. We integrate
-                    honesty, integrity and ethics into every aspect
-                    of our business.
+                    Every traveller who books with us deserves honesty
+                    and respect. It's a simple rule, but it shapes how
+                    we run every part of this business.
                 </p>
 
                 <span class="key-factor-line"></span>
@@ -103,14 +101,14 @@
                 </div>
 
                 <h3>
-                    Most Popular Destinations
+                    Trending Getaways
                 </h3>
 
                 <p>
-                    Explore our most popular destinations and unlock
-                    unforgettable experiences – from breathtaking
-                    landscapes to vibrant cultures. Your dream
-                    getaway awaits.
+                    Our most-booked routes take you from quiet hill
+                    towns to lively coastal cities, so there's
+                    something on the list no matter what kind of
+                    trip you're after.
                 </p>
 
                 <span class="key-factor-line"></span>
@@ -126,14 +124,13 @@
                 </div>
 
                 <h3>
-                    Budget Friendly Packages
+                    Great Trips, Fair Prices
                 </h3>
 
                 <p>
-                    Discover wanderlust on a budget! Our affordable
-                    packages offer thrilling adventures without
-                    breaking the bank – making your travel dreams
-                    a reality.
+                    Good travel shouldn't only be for big budgets.
+                    We build packages that keep costs honest without
+                    cutting corners on the experience.
                 </p>
 
                 <span class="key-factor-line"></span>
@@ -149,14 +146,13 @@
                 </div>
 
                 <h3>
-                    Satisfaction Guaranteed
+                    We've Got You Covered
                 </h3>
 
                 <p>
-                    Travel with confidence – our Satisfaction
-                    Guaranteed promise ensures every journey exceeds
-                    expectations, delivering joy, comfort and
-                    unforgettable moments.
+                    If something about your trip doesn't feel right,
+                    tell us. We'd rather fix it than let you go home
+                    disappointed.
                 </p>
 
                 <span class="key-factor-line"></span>

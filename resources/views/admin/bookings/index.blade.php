@@ -117,7 +117,7 @@
 
                 <button
                     type="submit"
-                    class="admin-button admin-button--dark"
+                    class="admin-button admin-button--primary"
                 >
                     Filter
                 </button>

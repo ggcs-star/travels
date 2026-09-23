@@ -2,7 +2,7 @@
     $settingsService = app(\App\Services\SettingsService::class);
     $settings = $settingsService->all() ?: [];
 
-    $siteName = trim((string) ($settings['site.name'] ?? 'SSB Travelz'));
+    $siteName = trim((string) ($settings['site.name'] ?? 'travels'));
 
     $footerEnabled = true;
 
@@ -26,7 +26,7 @@
         ? (filter_var($footerLogo, FILTER_VALIDATE_URL)
             ? $footerLogo
             : asset('storage/' . ltrim($footerLogo, '/')))
-        : asset('images/logo.jpeg');
+        : asset('images/travel_logo.png');
 
     $footerLogoAlt = trim((string) (
         $settings['footer.logo_alt']
@@ -36,7 +36,7 @@
 
     $footerDescription = trim((string) (
         $settings['footer.description']
-        ?? 'Based in Hyderabad, SSB Travelz crafts personalised journeys across India and the world – spiritual pilgrimages, family holidays, school excursions and corporate trips, all with faith and care.'
+        ?? 'Based in Hyderabad, travels crafts personalised journeys across India and the world – spiritual pilgrimages, family holidays, school excursions and corporate trips, all with faith and care.'
     ));
 
     $footerCtaEnabled = array_key_exists('footer.cta_enabled', $settings)

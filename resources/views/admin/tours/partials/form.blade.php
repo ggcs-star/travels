@@ -1146,7 +1146,7 @@
 
 Example:
 Tours may be cancelled, postponed, or modified due to natural calamities, extreme weather, government restrictions, political disturbances, or other unforeseen circumstances.
-SSB Travelz will not be held responsible for delays, cancellations, or changes caused by airlines, helicopter, hotels, transport providers, or other third parties.
+travels will not be held responsible for delays, cancellations, or changes caused by airlines, helicopter, hotels, transport providers, or other third parties.
 Any additional expenses arising due to unforeseen circumstances must be borne by the traveler."
             >{{ $importantNotesForForm }}</textarea>
 

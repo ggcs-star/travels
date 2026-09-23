@@ -11,8 +11,8 @@
             <div class="about-travelz-image-wrap">
 
                 <img
-                    src="{{ asset('images/hero/about-travel.jpg') }}"
-                    alt="Beautiful travel destination"
+                    src="{{ asset('images/hero/about-us.png') }}"
+                    alt="Travellers taking in a mountain sunset together"
                     class="about-travelz-image"
                     loading="lazy"
                     decoding="async"
@@ -59,17 +59,17 @@
 
                 <span class="about-eyebrow-dot"></span>
 
-                ABOUT  TRAVELZ
+                OUR STORY
 
             </span>
 
 
             <h2 class="about-travelz-title">
 
-                Experience the World
+                Built On Trust,
 
                 <span>
-                    With Our Company
+                    Carried By Experience
                 </span>
 
             </h2>
@@ -77,34 +77,45 @@
 
             <p class="about-lead">
 
-                SSB Travelz is a well-established travel and tour
-                operator located in
+                {{ config('travels.brand.name') }} has been planning
+                journeys out of
                 <strong>Hyderabad, Vijayawada &amp; Visakhapatnam</strong>
-                — managing travel services for corporate clients and
-                individual travellers for over seven decades.
+                for more than seventy years, looking after everyone from
+                corporate travellers to families on their first big trip.
 
             </p>
 
 
             <p>
 
-                SSB Travelz is proud to be a 75-year Diamond Jubilee
-                Travel Management Company, founded in 1950 by the late
-                Veeramallu Venkaiah Garu. He undertook the divine mission
-                of enlightening people about the importance of pilgrimages,
-                persisting through many hardships with an unwavering belief
-                in quality service. That commitment built a word-of-mouth
-                reputation that has sustained us for over six decades.
+                It all started in 1950, when our founder,
+                the late Veeramallu Venkaiah Garu, set out with a simple
+                goal: make pilgrimage travel safe and dependable for
+                ordinary families. The path wasn't easy, but his
+                insistence on doing right by every traveller earned a
+                reputation that spread by word of mouth and still
+                carries our name today.
 
             </p>
 
 
             <p>
 
-                Keeping in tune with changing times, SSB Travelz evolved
-                seamlessly through the globalisation of the 1990s —
-                blending tradition with modernity to serve every
-                traveller's need.
+                As travel changed through the 1990s and beyond, we
+                changed with it — adding new destinations and modern
+                booking conveniences without losing the personal
+                attention that has always set us apart.
+
+            </p>
+
+
+            <p>
+
+                These days our itineraries cover everything from
+                temple pilgrimages and family holidays to school trips
+                and corporate offsites, plus a set of monthly fixed
+                departures for travellers who'd rather book a seat
+                than plan a route from scratch.
 
             </p>
 
@@ -117,22 +128,22 @@
 
                 <span class="about-feature">
                     <span>◉</span>
-                    3 Office Locations
+                    Offices in 3 Cities
                 </span>
 
                 <span class="about-feature">
                     <span>♟</span>
-                    Corporate &amp; Retail Travel
+                    Corporate &amp; Leisure Travel
                 </span>
 
                 <span class="about-feature">
                     <span>♜</span>
-                    Pilgrimage Specialists
+                    Pilgrimage Tour Experts
                 </span>
 
                 <span class="about-feature">
                     <span>✈</span>
-                    Domestic &amp; International
+                    India &amp; Worldwide
                 </span>
 
             </div>

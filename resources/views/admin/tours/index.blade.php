@@ -8,20 +8,6 @@
 
 <div class="admin-page">
 
-    {{-- Header --}}
-    <div class="admin-page__header">
-
-        <a
-            href="{{ route('admin.tours.create') }}"
-            class="admin-button admin-button--primary"
-        >
-            <span>+</span>
-            Add Tour Package
-        </a>
-
-    </div>
-
-
     {{-- Flash Message --}}
     @if(session('success'))
 
@@ -34,25 +20,6 @@
 
     {{-- Filters --}}
     <section class="admin-card">
-
-        <div class="admin-card__header">
-
-            <div>
-                <span class="admin-eyebrow">
-                    MANAGE
-                </span>
-
-                <h2>
-                    All Tour Packages
-                </h2>
-            </div>
-
-            <span>
-                {{ $tours->total() }} packages
-            </span>
-
-        </div>
-
 
         <form
             method="GET"
@@ -217,6 +184,29 @@
 
     {{-- Tour List --}}
     <section class="admin-card">
+
+        <div class="admin-card__header">
+
+            <div>
+                <span class="admin-eyebrow">
+                    MANAGE
+                </span>
+
+                <h2>
+                    All Tour Packages
+                </h2>
+            </div>
+
+            <a
+                href="{{ route('admin.tours.create') }}"
+                class="admin-button admin-button--primary"
+            >
+                <span>+</span>
+                Add Tour Package
+            </a>
+
+        </div>
+
 
         @if($tours->count())
 

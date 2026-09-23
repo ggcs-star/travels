@@ -2,6 +2,8 @@
 
 @section('title', 'SEO Tools')
 
+@section('description', 'Manage your website SEO settings and sitemap.')
+
 @section('content')
 
 <style>
@@ -301,11 +303,6 @@
 </style>
 
 <div class="seo-page">
-
-    <div class="seo-header">
-        <h1>SEO Tools</h1>
-        <p>Manage your website SEO settings and sitemap.</p>
-    </div>
 
     @if(session('success'))
         <div class="seo-alert seo-alert-success">

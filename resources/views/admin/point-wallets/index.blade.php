@@ -2,35 +2,11 @@
 
 @section('title', 'Points Wallets')
 
+@section('description', 'Manage user points balances, adjustments and transaction history.')
+
 @section('content')
 
 <div class="admin-wallet-index">
-
-    {{-- Header --}}
-    <div class="wallet-page-header">
-
-        <div>
-            <div class="wallet-eyebrow">
-                POINT MANAGEMENT
-            </div>
-
-            <h1>Points Wallets</h1>
-
-            <p>
-                Manage user points balances, adjustments and transaction history.
-            </p>
-        </div>
-
-        <a
-            href="{{ route('admin.point-settings.index') }}"
-            class="wallet-settings-btn"
-        >
-            <span>⚙</span>
-            Point Settings
-        </a>
-
-    </div>
-
 
     {{-- Success --}}
     @if(session('success'))
@@ -92,14 +68,20 @@
         <div class="wallet-table-header">
 
             <div>
-                <h2>User Points Wallets</h2>
+                <span class="admin-eyebrow">
+                    POINT MANAGEMENT
+                </span>
 
-                <p>
-                    {{ $users->total() }}
-                    {{ $users->total() === 1 ? 'user' : 'users' }}
-                    found
-                </p>
+                <h2>User Points Wallets</h2>
             </div>
+
+            <a
+                href="{{ route('admin.point-settings.index') }}"
+                class="wallet-settings-btn"
+            >
+                <span>⚙</span>
+                Point Settings
+            </a>
 
         </div>
 
@@ -225,10 +207,11 @@
 
                             <a
                                 href="{{ route('admin.point-wallets.show', $user) }}"
-                                class="wallet-view-btn"
+                                class="admin-icon-button"
+                                title="View"
                             >
-                                View
-                                <span>→</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <span class="admin-sr-only">View</span>
                             </a>
 
                         </td>
@@ -485,15 +468,15 @@
 
 .wallet-table-header h2 {
     margin: 0;
-    color: #202b3e;
-    font-size: 14px;
-    font-weight: 720;
+    color: var(--admin-text, #17263d);
+    font-size: 16px;
+    font-weight: 800;
 }
 
 .wallet-table-header p {
     margin: 4px 0 0;
     color: #929aa7;
-    font-size: 10px;
+    font-size: 12px;
 }
 
 
@@ -512,15 +495,15 @@
 }
 
 .wallet-table th {
-    padding: 13px 15px;
+    padding: 18px 15px;
     border-bottom: 1px solid #e8ebef;
-    background: #fafbfc;
-    color: #737d8d;
+    background: var(--admin-sidebar, #f5faf6);
+    color: var(--admin-sidebar-dark, #14532d);
     text-align: left;
-    font-size: 11px;
-    font-weight: 750;
+    font-size: 13px;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: .45px;
+    letter-spacing: .06em;
 }
 
 .wallet-table td {
@@ -572,7 +555,7 @@
     display: block;
     overflow: hidden;
     color: #344054;
-    font-size: 11px;
+    font-size: 13.5px;
     font-weight: 680;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -583,7 +566,7 @@
     margin-top: 3px;
     overflow: hidden;
     color: #8c95a2;
-    font-size: 9px;
+    font-size: 11.5px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -592,7 +575,7 @@
     display: block;
     margin-top: 2px;
     color: #a1a8b3;
-    font-size: 8px;
+    font-size: 11px;
 }
 
 
@@ -608,18 +591,18 @@
 
 .wallet-balance strong {
     color: #202b3e;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 750;
 }
 
 .wallet-balance span {
     color: #929aa7;
-    font-size: 8px;
+    font-size: 11px;
 }
 
 .wallet-number {
     color: #4c5768;
-    font-size: 10px;
+    font-size: 13px;
     font-weight: 600;
 }
 

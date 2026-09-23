@@ -85,7 +85,7 @@ $headerLogo = $settings->get(
         /*
          * Existing public file
          * Example:
-         * images/logo.jpeg
+         * images/travel_logo.png
          */
         } else {
 
@@ -99,7 +99,7 @@ $headerLogo = $settings->get(
         /*
          * Default existing logo
          */
-        $headerLogoUrl = asset('images/logo.jpeg');
+        $headerLogoUrl = asset('images/travel_logo_white.png');
     }
 
 

@@ -8,24 +8,6 @@
 
 <div class="admin-page">
 
-    {{-- Page Header --}}
-    <div class="admin-page__header">
-
-        <div class="admin-page__actions">
-
-            <a
-                href="{{ route('admin.tour-categories.create') }}"
-                class="admin-button admin-button--primary"
-            >
-                <span>+</span>
-                Create Category
-            </a>
-
-        </div>
-
-    </div>
-
-
     {{-- Flash Messages --}}
     @if(session('success'))
 
@@ -69,8 +51,8 @@
 
             <div class="admin-stat__top">
 
-                <div class="admin-stat__icon">
-                    #
+                <div class="admin-stat__icon admin-stat__icon--green">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="8" height="8" rx="2" fill="currentColor"/><rect x="13" y="3" width="8" height="8" rx="2" fill="currentColor"/><rect x="3" y="13" width="8" height="8" rx="2" fill="currentColor"/><rect x="13" y="13" width="8" height="8" rx="2" fill="currentColor"/></svg>
                 </div>
 
                 <span class="admin-badge">
@@ -159,8 +141,8 @@
 
             <div class="admin-stat__top">
 
-                <div class="admin-stat__icon">
-                    ◈
+                <div class="admin-stat__icon admin-stat__icon--teal">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5Z" fill="currentColor"/></svg>
                 </div>
 
                 <span class="admin-badge">
@@ -202,6 +184,14 @@
                 </h2>
 
             </div>
+
+            <a
+                href="{{ route('admin.tour-categories.create') }}"
+                class="admin-button admin-button--primary"
+            >
+                <span>+</span>
+                Create Category
+            </a>
 
         </div>
 

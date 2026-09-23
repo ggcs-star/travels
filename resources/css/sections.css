@@ -1336,7 +1336,7 @@
 .journey-section-title {
     margin: 20px 0 13px;
 
-    color: #111827;
+    color: #14532d;
 
     font-size: clamp(38px, 4vw, 52px);
 
@@ -1349,7 +1349,8 @@
 
 
 .journey-section-title span {
-    color: #ed244c;
+    color: #d97706;
+    font-style: italic;
 }
 
 
@@ -1509,19 +1510,17 @@
     align-items: center;
     justify-content: center;
 
-    border: 1px solid rgba(255,191,44,.65);
+    border: 2px solid rgba(255,255,255,.85);
 
-    border-radius: 10px;
+    border-radius: 50%;
 
-    background: rgba(164,94,0,.78);
+    background: #14532d;
 
-    color: #ffb414;
+    color: #ffffff;
 
     font-size: 19px;
 
     font-weight: 800;
-
-    backdrop-filter: blur(4px);
 
     transition:
         transform .35s ease,
@@ -1529,10 +1528,13 @@
 }
 
 
+.journey-card:nth-child(even) .journey-card-icon {
+    background: #d97706;
+}
+
+
 .journey-card:hover .journey-card-icon {
     transform: translateY(-3px) rotate(-4deg);
-
-    background: rgba(217,119,6,.95);
 }
 
 
@@ -1803,7 +1805,7 @@
 .monthly-tours-title {
     margin: 18px 0 14px;
 
-    color: #111827;
+    color: #14532d;
 
     font-size: clamp(40px, 4vw, 52px);
 
@@ -1816,7 +1818,8 @@
 
 
 .monthly-tours-title span {
-    color: #ed244c;
+    color: #d97706;
+    font-style: italic;
 }
 
 
@@ -2263,7 +2266,7 @@
 .handpicked-title {
     margin: 15px 0 0;
 
-    color: #111827;
+    color: #14532d;
 
     font-size: 38px;
 
@@ -2276,7 +2279,8 @@
 
 
 .handpicked-title span {
-    color: #ec244c;
+    color: #d97706;
+    font-style: italic;
 }
 
 
@@ -2739,9 +2743,9 @@
 
     border-radius: 999px;
 
-    background: #ffad0a;
+    background: #14532d;
 
-    color: #111111;
+    color: #ffffff;
 
     font-size: 11px;
 
@@ -2750,7 +2754,7 @@
     text-decoration: none;
 
     box-shadow:
-        0 7px 18px rgba(255,173,10,.20);
+        0 7px 18px rgba(20,83,45,.24);
 
     transition:
         transform .3s ease,
@@ -2759,7 +2763,8 @@
 
 
 .handpicked-view-all a:hover {
-    background: #ff9700;
+    background: #0f3f22;
+    color: #ffffff;
 
     transform: translateY(-2px);
 }
@@ -2831,7 +2836,7 @@
 
 
 /* =========================================================
-   ABOUT SSB TRAVELZ
+   ABOUT travels
    ========================================================= */
 
 .about-travelz-section {
@@ -3054,7 +3059,7 @@
 .about-travelz-title {
     margin: 18px 0 18px;
 
-    color: #111827;
+    color: #14532d;
 
     font-size: clamp(32px, 3vw, 42px);
 
@@ -3069,7 +3074,8 @@
 .about-travelz-title span {
     display: block;
 
-    color: #ed2948;
+    color: #d97706;
+    font-style: italic;
 }
 
 
@@ -3171,7 +3177,7 @@
 
     border-radius: 999px;
 
-    background: #f9a51a;
+    background: #14532d;
 
     color: #ffffff;
 
@@ -3182,7 +3188,7 @@
     text-decoration: none;
 
     box-shadow:
-        0 8px 20px rgba(249, 165, 26, 0.18);
+        0 8px 20px rgba(20, 83, 45, 0.22);
 
     transition:
         transform .25s ease,
@@ -3192,14 +3198,14 @@
 
 
 .about-read-button:hover {
-    background: #ed9207;
+    background: #0f3f22;
 
     color: #ffffff;
 
     transform: translateY(-2px);
 
     box-shadow:
-        0 12px 25px rgba(249, 165, 26, 0.28);
+        0 12px 25px rgba(20, 83, 45, 0.30);
 }
 
 
@@ -3389,7 +3395,7 @@
 .key-factors-title {
     margin: 13px 0 13px;
 
-    color: #111827;
+    color: #14532d;
 
     font-size: clamp(34px, 4vw, 43px);
 
@@ -3402,7 +3408,8 @@
 
 
 .key-factors-title span {
-    color: #ed2948;
+    color: #d97706;
+    font-style: italic;
 }
 
 
@@ -3488,27 +3495,27 @@
    ========================================================= */
 
 .key-factor-orange {
-    --factor-color: #ff9d12;
+    --factor-color: #d97706;
 }
 
 .key-factor-red {
-    --factor-color: #ed1745;
+    --factor-color: #14532d;
 }
 
 .key-factor-blue {
-    --factor-color: #3478ef;
+    --factor-color: #d97706;
 }
 
 .key-factor-green {
-    --factor-color: #16bd5a;
+    --factor-color: #1f9d55;
 }
 
 .key-factor-orange-dark {
-    --factor-color: #ff690d;
+    --factor-color: #b45309;
 }
 
 .key-factor-purple {
-    --factor-color: #9347f3;
+    --factor-color: #14532d;
 }
 
 
@@ -3764,19 +3771,17 @@
    ========================================================= */
 
 .journey-cta-logo {
-    width: 62px;
-    height: 62px;
+    width: 220px;
+    height: 100px;
 
     margin: 0 auto 18px;
 
-    background: #ffffff;
+    background: transparent;
 
     display: flex;
 
     align-items: center;
     justify-content: center;
-
-    padding: 5px;
 }
 
 
@@ -3871,12 +3876,12 @@
    ========================================================= */
 
 .journey-cta-plan {
-    background: #ff9f13;
+    background: #14532d;
 
     color: #ffffff;
 
     box-shadow:
-        0 10px 25px rgba(255,159,19,.18);
+        0 10px 25px rgba(20,83,45,.22);
 }
 
 
@@ -4795,7 +4800,7 @@
 
 .footer-plan-button {
     background: #ffffff;
-    color: #ef4c26;
+    color: #14532d;
 
     box-shadow:
         0 8px 20px rgba(0,0,0,.12);
@@ -4804,7 +4809,7 @@
 .footer-plan-button:hover {
     transform: translateY(-2px);
 
-    color: #ef4c26;
+    color: #14532d;
 }
 
 
@@ -4856,8 +4861,8 @@
 .footer-logo {
     display: inline-flex;
 
-    width: 68px;
-    height: 68px;
+    width: 200px;
+    height: 90px;
 
     margin-bottom: 12px;
 }

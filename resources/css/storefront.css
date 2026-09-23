@@ -58,13 +58,18 @@
     box-shadow: none !important;
 }
 .kanila-site-header .site-logo {
-    width: 145px !important;
-    flex: 0 0 145px !important;
+    width: 230px !important;
+    flex: 0 0 230px !important;
 }
 
 .kanila-site-header .site-logo-image {
-    width: 118px !important;
-    height: 64px !important;
+    width: 220px !important;
+    height: 80px !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
 }
 
 .kanila-site-header .site-logo-image img {
@@ -796,8 +801,14 @@
     }
 
     .kanila-site-header .site-logo {
-        width: 125px !important;
-        flex-basis: 125px !important;
+        width: 175px !important;
+        flex-basis: 175px !important;
+    }
+
+    .kanila-site-header .site-logo-image {
+        width: 165px !important;
+        height: 68px !important;
+        padding: 6px 12px !important;
     }
 
     .kanila-site-header .nav-link,
@@ -869,8 +880,14 @@
     }
 
     .kanila-site-header .site-logo-image {
-        width: 105px !important;
+        width: 140px !important;
         height: 58px !important;
+        padding: 5px 10px !important;
+    }
+
+    .kanila-site-header .site-logo {
+        width: 150px !important;
+        flex-basis: 150px !important;
     }
 
     .tour-gallery-hero__grid {
