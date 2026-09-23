@@ -89,7 +89,7 @@ body a {
         border-color 0.2s ease;
 }
 
-body a:hover {
+body a:hover:not([class*="button"]):not([class*="btn"]):not(.kanila-book-now) {
     color: var(--site-accent);
 }
 

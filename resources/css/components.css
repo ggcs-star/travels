@@ -409,7 +409,7 @@
     gap: 13px;
     padding: 0 28px;
     border-radius: 999px;
-    background: #ff7914;
+    background: #ff790f;
     color: #ffffff;
     font-size: 17px;
     font-weight: 600;
@@ -419,10 +419,10 @@
 }
 
 .kanila-get-touch:hover {
-    background: #ff8a2d;
+    background: #ff8c25;
     color: #ffffff;
     transform: translateY(-2px);
-    box-shadow: 0 14px 35px rgba(255, 121, 20, 0.30);
+    box-shadow: 0 22px 45px rgba(255, 100, 0, 0.45);
 }
 
 .kanila-get-touch-icon {

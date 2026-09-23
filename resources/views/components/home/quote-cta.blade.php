@@ -33,7 +33,7 @@
         <div class="journey-cta-logo">
 
             <img
-                src="{{ asset('images/travel_logo.png') }}"
+                src="{{ asset('images/travel_logo_white.png') }}"
                 alt="{{ config('travels.brand.name') }}"
                 loading="lazy"
             >
