@@ -2,6 +2,8 @@
 
 @section('title', 'Pages')
 
+@section('description', 'Manage website pages and their SEO settings.')
+
 @section('content')
 
 <style>
@@ -88,6 +90,12 @@
     overflow-x: auto;
 }
 
+.pages-table-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid #edf0f3;
+    margin-bottom: 0;
+}
+
 .pages-table {
     width: 100%;
     border-collapse: collapse;
@@ -102,11 +110,11 @@
 }
 
 .pages-table th {
-    background: #f8fafc;
-    color: #475569;
-    font-size: 11px;
+    background: var(--admin-sidebar, #f5faf6);
+    color: var(--admin-sidebar-dark, #14532d);
+    font-size: 13px;
     font-weight: 800;
-    letter-spacing: .05em;
+    letter-spacing: .06em;
     text-transform: uppercase;
 }
 
@@ -209,30 +217,6 @@
 
 
 <div class="pages-wrapper">
-
-    <div class="pages-header">
-
-        <div>
-
-            <h1>
-                Pages
-            </h1>
-
-            <p>
-                Manage website pages and their SEO settings.
-            </p>
-
-        </div>
-
-        <a
-            href="{{ route('admin.pages.create') }}"
-            class="pages-add-button"
-        >
-            + Add Page
-        </a>
-
-    </div>
-
 
     @if(session('success'))
 
@@ -344,6 +328,27 @@
     {{-- TABLE --}}
 
     <div class="pages-table-card">
+
+        <div class="admin-card__header pages-table-header">
+
+            <div>
+                <span class="admin-eyebrow">
+                    MANAGE
+                </span>
+
+                <h2>
+                    All Pages
+                </h2>
+            </div>
+
+            <a
+                href="{{ route('admin.pages.create') }}"
+                class="pages-add-button"
+            >
+                + Add Page
+            </a>
+
+        </div>
 
         <table class="pages-table">
 
@@ -464,28 +469,32 @@
 
                             <div class="pages-actions">
 
-                                <a
-                                    href="{{ route(
-                                        'admin.pages.edit',
-                                        $page
-                                    ) }}"
-                                    class="pages-action pages-edit"
-                                >
-                                    Edit
-                                </a>
-
-
                                 @if($page->isPublished())
 
                                     <a
                                         href="{{ $page->url }}"
                                         target="_blank"
-                                        class="pages-action pages-view"
+                                        class="admin-icon-button"
+                                        title="View"
                                     >
-                                        View
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                        <span class="admin-sr-only">View</span>
                                     </a>
 
                                 @endif
+
+
+                                <a
+                                    href="{{ route(
+                                        'admin.pages.edit',
+                                        $page
+                                    ) }}"
+                                    class="admin-icon-button"
+                                    title="Edit"
+                                >
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                                    <span class="admin-sr-only">Edit</span>
+                                </a>
 
 
                                 <form
@@ -500,12 +509,11 @@
 
                                     <button
                                         type="submit"
-                                        class="pages-action pages-status"
+                                        class="admin-icon-button"
+                                        title="{{ $page->isPublished() ? 'Move to Draft' : 'Publish' }}"
                                     >
-                                        {{ $page->isPublished()
-                                            ? 'Draft'
-                                            : 'Publish'
-                                        }}
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></svg>
+                                        <span class="admin-sr-only">{{ $page->isPublished() ? 'Move to Draft' : 'Publish' }}</span>
                                     </button>
 
                                 </form>
@@ -525,9 +533,11 @@
 
                                     <button
                                         type="submit"
-                                        class="pages-action pages-delete"
+                                        class="admin-icon-button admin-icon-button--danger"
+                                        title="Delete"
                                     >
-                                        Delete
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                        <span class="admin-sr-only">Delete</span>
                                     </button>
 
                                 </form>

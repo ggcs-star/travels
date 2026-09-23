@@ -70,7 +70,7 @@
 
             <aside
                 class="auth-hero"
-                style="background-image: url('{{ asset('images/login.png') }}'), linear-gradient(180deg, #bfe3f7 0%, #eaf4fb 30%, #fbe7c8 65%, #f3c98a 100%)"
+                style="background-image: url('{{ asset('images/login.jpeg') }}'), linear-gradient(180deg, #bfe3f7 0%, #eaf4fb 30%, #fbe7c8 65%, #f3c98a 100%)"
             >
 
                 <div class="auth-hero-content">
@@ -91,11 +91,11 @@
                         <div class="auth-hero-feature">
 
                             <span class="auth-hero-feature-icon">
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 13.5L21 3.5L18.5 21L13 15.5L9.5 18L9 13.5L2 13.5Z" fill="currentColor" transform="rotate(35 12 12)"/></svg>
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5Z" fill="currentColor"/></svg>
                             </span>
 
                             <strong>Best Deals</strong>
-                            <small>on Flights &amp; Hotels</small>
+                            <small>on Flights</small>
 
                         </div>
 
@@ -124,16 +124,6 @@
                         </div>
 
                     </div>
-
-                </div>
-
-
-                <div class="auth-hero-tagline">
-
-                    <span class="auth-hero-tagline-text">
-                        <span>Your Journey</span>
-                        <span>Our Priority</span>
-                    </span>
 
                 </div>
 
@@ -187,7 +177,7 @@
                     $loginLogoUrl .= (str_contains($loginLogoUrl, '?') ? '&' : '?')
                         . 'v=' . rawurlencode($loginLogo);
                 } else {
-                    $loginLogoUrl = asset('images/logo.jpeg');
+                    $loginLogoUrl = asset('images/travel_logo.png');
                 }
             @endphp
 
@@ -197,8 +187,8 @@
                     <img
                         src="{{ $loginLogoUrl }}"
                         alt="{{ config('travels.brand.name', 'Travels') }}"
-                        width="100"
-                        height="100"
+                        width="230"
+                        height="104"
                     >
                 @endif
 
@@ -446,6 +436,15 @@
 
                 </div>
 
+
+                <div class="auth-footer">
+
+                    <a href="{{ route('home') }}">
+                        ← Back to Website
+                    </a>
+
+                </div>
+
             </div>
 
 
@@ -542,47 +541,6 @@
                         @if (old('_form') === 'register')
 
                             @error('name')
-
-                                <small class="auth-field-error">
-                                    {{ $message }}
-                                </small>
-
-                            @enderror
-
-                        @endif
-
-                    </div>
-
-
-                    {{-- Username --}}
-
-                    <div class="auth-field">
-
-                        <label for="register_username">
-                            Username
-                        </label>
-
-                        <div class="auth-input-wrapper">
-
-                            <span class="auth-input-icon">
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.6"/><path d="M5 19c1.2-3.4 4-5 7-5s5.8 1.6 7 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                            </span>
-
-                            <input
-                                id="register_username"
-                                type="text"
-                                name="username"
-                                value="{{ old('_form') === 'register' ? old('username') : '' }}"
-                                placeholder="Enter your username"
-                                autocomplete="username"
-                                required
-                            >
-
-                        </div>
-
-                        @if (old('_form') === 'register')
-
-                            @error('username')
 
                                 <small class="auth-field-error">
                                     {{ $message }}

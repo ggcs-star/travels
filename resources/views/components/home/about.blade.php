@@ -77,7 +77,7 @@
 
             <p class="about-lead">
 
-                SSB Travelz is a well-established travel and tour
+                travels is a well-established travel and tour
                 operator located in
                 <strong>Hyderabad, Vijayawada &amp; Visakhapatnam</strong>
                 — managing travel services for corporate clients and
@@ -88,7 +88,7 @@
 
             <p>
 
-                SSB Travelz is proud to be a 75-year Diamond Jubilee
+                travels is proud to be a 75-year Diamond Jubilee
                 Travel Management Company, founded in 1950 by the late
                 Veeramallu Venkaiah Garu. He undertook the divine mission
                 of enlightening people about the importance of pilgrimages,
@@ -101,7 +101,7 @@
 
             <p>
 
-                Keeping in tune with changing times, SSB Travelz evolved
+                Keeping in tune with changing times, travels evolved
                 seamlessly through the globalisation of the 1990s —
                 blending tradition with modernity to serve every
                 traveller's need.

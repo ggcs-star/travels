@@ -2,6 +2,8 @@
 
 @section('title', 'Website Settings')
 
+@section('description', 'Manage your complete website configuration from one place.')
+
 @section('content')
 
 @php
@@ -60,17 +62,6 @@
 @endphp
 
 <div class="website-settings">
-
-    {{-- Header --}}
-    <div class="settings-heading">
-        <div>
-            <h1>Website Settings</h1>
-            <p>
-                Manage your complete website configuration from one place.
-            </p>
-        </div>
-    </div>
-
 
     {{-- Alerts --}}
     @if(session('success'))
@@ -139,7 +130,7 @@
                         type="text"
                         name="site_name"
                         value="{{ $value('site_name') }}"
-                        placeholder="SSB Travelz"
+                        placeholder="travels"
                     >
                 </div>
 
@@ -338,7 +329,7 @@
                         type="text"
                         name="header_logo_alt"
                         value="{{ $value('header_logo_alt') }}"
-                        placeholder="SSB Travelz"
+                        placeholder="travels"
                     >
                 </div>
 
@@ -480,7 +471,7 @@
                         type="text"
                         name="topbar_text"
                         value="{{ $value('topbar_text') }}"
-                        placeholder="Welcome to SSB Travelz"
+                        placeholder="Welcome to travels"
                     >
                 </div>
 
@@ -1724,7 +1715,7 @@
                         type="text"
                         name="seo_title"
                         value="{{ $value('seo_title') }}"
-                        placeholder="SSB Travelz | Tourism With Faith"
+                        placeholder="travels | Tourism With Faith"
                     >
                 </div>
 
@@ -1759,7 +1750,7 @@
                         type="text"
                         name="seo_author"
                         value="{{ $value('seo_author') }}"
-                        placeholder="SSB Travelz"
+                        placeholder="travels"
                     >
                 </div>
 
@@ -1795,7 +1786,7 @@
                         type="text"
                         name="seo_og_title"
                         value="{{ $value('seo_og_title') }}"
-                        placeholder="SSB Travelz"
+                        placeholder="travels"
                     >
                 </div>
 
@@ -1807,7 +1798,7 @@
                         type="text"
                         name="seo_twitter_title"
                         value="{{ $value('seo_twitter_title') }}"
-                        placeholder="SSB Travelz"
+                        placeholder="travels"
                     >
                 </div>
 

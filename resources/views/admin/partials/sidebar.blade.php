@@ -14,7 +14,7 @@
             <span class="admin-brand-logo">
 
                 <img
-                    src="{{ asset('images/logo.jpeg') }}"
+                    src="{{ asset('images/travel_logo_white.png') }}"
                     alt="{{ config('travels.brand.name', 'Travels') }}"
                 >
 
@@ -287,69 +287,23 @@
 
             </div>
 
-        </div>
 
-
-
-        <!-- {{-- =================================================
-             WEBSITE
-        ================================================== --}}
-
-        <div class="admin-nav-section">
-
-            <span class="admin-nav-label">
-                WEBSITE
-            </span>
-
-
-            {{-- VIEW WEBSITE --}}
+            {{-- PAGES --}}
 
             <a
-                href="{{ route('home') }}"
-                target="_blank"
-                rel="noopener"
-                class="admin-nav-link"
+                href="{{ route('admin.pages.index') }}"
+                class="admin-nav-link {{ request()->routeIs('admin.pages.*') ? 'active' : '' }}"
             >
 
                 <span class="admin-nav-icon">
-                    ↗
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 13 9 5 9-5"/></svg>
                 </span>
 
                 <span>
-                    View Website
+                    Pages
                 </span>
 
             </a>
-
-
-            {{-- WEBSITE CONTENT --}}
-
-            <a
-                href="#"
-                class="admin-nav-link"
-            >
-
-                <span class="admin-nav-icon">
-                    ◫
-                </span>
-
-                <span>
-                    Website Content
-                </span>
-
-            </a> -->
-<a
-    href="{{ route('admin.pages.index') }}"
-    class="admin-nav-link {{ request()->routeIs('admin.pages.*') ? 'active' : '' }}"
->
-    <span class="admin-nav-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 13 9 5 9-5"/></svg>
-    </span>
-
-    <span>
-        Pages
-    </span>
-</a>
 
 
             {{-- =================================================

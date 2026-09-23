@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Events\Registered;
 
@@ -178,15 +179,6 @@ class AuthController extends Controller
                 'max:150',
             ],
 
-            'username' => [
-                'required',
-                'string',
-                'min:4',
-                'max:100',
-                'regex:/^[A-Za-z0-9_.-]+$/',
-                'unique:users,username',
-            ],
-
             'email' => [
                 'required',
                 'string',
@@ -209,12 +201,14 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         | Create User
         |--------------------------------------------------------------------------
+        | Username is no longer collected on the registration form, so it's
+        | auto-generated from the name (the column is unique + required).
         */
 
         $user = User::create([
             'name' => $validated['name'],
 
-            'username' => $validated['username'],
+            'username' => $this->generateUniqueUsername($validated['name']),
 
             'email' => $validated['email'],
 
@@ -263,6 +257,37 @@ class AuthController extends Controller
                 'success',
                 'Registration successful. Please verify your email address.'
             );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Generate Unique Username
+    |--------------------------------------------------------------------------
+    |
+    | Registration no longer asks for a username, but the column is unique
+    | and required, so slugify the name and disambiguate on collision.
+    |
+    */
+
+    protected function generateUniqueUsername(string $name): string
+    {
+        $base = Str::slug($name, '_');
+
+        if ($base === '') {
+            $base = 'user';
+        }
+
+        $base = Str::substr($base, 0, 90);
+
+        $username = $base;
+        $suffix = 1;
+
+        while (User::where('username', $username)->exists()) {
+            $suffix++;
+            $username = $base . '_' . $suffix;
+        }
+
+        return $username;
     }
 
     /*

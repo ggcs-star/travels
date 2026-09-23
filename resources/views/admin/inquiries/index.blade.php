@@ -2,178 +2,243 @@
 
 @section('title', 'Inquiries')
 
+@section('description', 'Manage customer enquiries received from the website.')
+
 @section('content')
 
-<div class="container-fluid inquiries-page">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-1">Inquiries</h1>
-
-            <p class="text-muted mb-0">
-                Manage customer enquiries received from the website.
-            </p>
-        </div>
-    </div>
-
+<div class="admin-page">
 
     {{-- ALERT --}}
     @if(session('success'))
-        <div class="alert alert-success">
+        <div class="admin-alert admin-alert--success">
             {{ session('success') }}
         </div>
     @endif
 
 
     {{-- STATS --}}
-    <div class="row g-3 mb-4">
+    <div class="admin-stats">
 
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <small class="text-muted">Total</small>
+        <div class="admin-stat">
 
-                    <h3 class="mb-0">
-                        {{ $counts['all'] }}
-                    </h3>
+            <div class="admin-stat__top">
+
+                <div class="admin-stat__icon admin-stat__icon--green">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="8" height="8" rx="2" fill="currentColor"/><rect x="13" y="3" width="8" height="8" rx="2" fill="currentColor"/><rect x="3" y="13" width="8" height="8" rx="2" fill="currentColor"/><rect x="13" y="13" width="8" height="8" rx="2" fill="currentColor"/></svg>
                 </div>
+
+                <span class="admin-badge">
+                    TOTAL
+                </span>
+
             </div>
+
+            <strong class="admin-stat__value">
+                {{ number_format($counts['all']) }}
+            </strong>
+
+            <span class="admin-stat__label">
+                Total Inquiries
+            </span>
+
         </div>
 
 
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <small class="text-muted">New</small>
+        <div class="admin-stat">
 
-                    <h3 class="mb-0">
-                        {{ $counts['new'] }}
-                    </h3>
+            <div class="admin-stat__top">
+
+                <div class="admin-stat__icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </div>
+
+                <span class="admin-badge admin-badge--danger">
+                    NEW
+                </span>
+
             </div>
+
+            <strong class="admin-stat__value">
+                {{ number_format($counts['new']) }}
+            </strong>
+
+            <span class="admin-stat__label">
+                New Inquiries
+            </span>
+
         </div>
 
 
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <small class="text-muted">Read</small>
+        <div class="admin-stat">
 
-                    <h3 class="mb-0">
-                        {{ $counts['read'] }}
-                    </h3>
+            <div class="admin-stat__top">
+
+                <div class="admin-stat__icon admin-stat__icon--teal">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/></svg>
                 </div>
+
+                <span class="admin-badge admin-badge--warning">
+                    READ
+                </span>
+
             </div>
+
+            <strong class="admin-stat__value">
+                {{ number_format($counts['read']) }}
+            </strong>
+
+            <span class="admin-stat__label">
+                Read Inquiries
+            </span>
+
         </div>
 
 
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <small class="text-muted">Replied</small>
+        <div class="admin-stat">
 
-                    <h3 class="mb-0">
-                        {{ $counts['replied'] }}
-                    </h3>
+            <div class="admin-stat__top">
+
+                <div class="admin-stat__icon">
+                    ✓
                 </div>
+
+                <span class="admin-badge admin-badge--success">
+                    REPLIED
+                </span>
+
             </div>
+
+            <strong class="admin-stat__value">
+                {{ number_format($counts['replied']) }}
+            </strong>
+
+            <span class="admin-stat__label">
+                Replied Inquiries
+            </span>
+
         </div>
 
     </div>
 
 
     {{-- FILTER --}}
-    <div class="card border-0 shadow-sm mb-4">
+    <section class="admin-card">
 
-        <div class="card-body">
+        <form
+            method="GET"
+            action="{{ route('admin.inquiries.index') }}"
+            class="admin-filter-form"
+        >
 
-            <form method="GET"
-                  action="{{ route('admin.inquiries.index') }}">
+            <div class="admin-filter-form__group">
 
-                <div class="row g-3">
+                <label for="search">
+                    Search
+                </label>
 
-                    <div class="col-md-6">
+                <input
+                    type="text"
+                    id="search"
+                    name="search"
+                    value="{{ request('search') }}"
+                    placeholder="Search name, email, phone..."
+                >
 
-                        <input
-                            type="text"
-                            name="search"
-                            class="form-control"
-                            value="{{ request('search') }}"
-                            placeholder="Search name, email, phone..."
-                        >
-
-                    </div>
-
-
-                    <div class="col-md-3">
-
-                        <select
-                            name="status"
-                            class="form-select"
-                        >
-
-                            <option value="">
-                                All Status
-                            </option>
-
-                            <option
-                                value="new"
-                                @selected(request('status') === 'new')
-                            >
-                                New
-                            </option>
-
-                            <option
-                                value="read"
-                                @selected(request('status') === 'read')
-                            >
-                                Read
-                            </option>
-
-                            <option
-                                value="replied"
-                                @selected(request('status') === 'replied')
-                            >
-                                Replied
-                            </option>
-
-                        </select>
-
-                    </div>
+            </div>
 
 
-                    <div class="col-md-3">
+            <div class="admin-filter-form__group">
 
-                        <button
-                            type="submit"
-                            class="btn btn-primary w-100"
-                        >
-                            Filter
-                        </button>
+                <label for="status">
+                    Status
+                </label>
 
-                    </div>
+                <select
+                    id="status"
+                    name="status"
+                >
 
-                </div>
+                    <option value="">
+                        All Status
+                    </option>
 
-            </form>
+                    <option
+                        value="new"
+                        @selected(request('status') === 'new')
+                    >
+                        New
+                    </option>
 
-        </div>
+                    <option
+                        value="read"
+                        @selected(request('status') === 'read')
+                    >
+                        Read
+                    </option>
 
-    </div>
+                    <option
+                        value="replied"
+                        @selected(request('status') === 'replied')
+                    >
+                        Replied
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="admin-filter-form__actions">
+
+                <button
+                    type="submit"
+                    class="admin-button admin-button--primary"
+                >
+                    Filter
+                </button>
+
+                <a
+                    href="{{ route('admin.inquiries.index') }}"
+                    class="admin-button"
+                >
+                    Reset
+                </a>
+
+            </div>
+
+        </form>
+
+    </section>
 
 
     {{-- TABLE --}}
-    <div class="card border-0 shadow-sm">
+    <section class="admin-card">
 
-        <div class="card-body p-0">
+        <div class="admin-card__header">
 
-            <div class="table-responsive">
+            <div>
+                <span class="admin-eyebrow">
+                    MANAGE
+                </span>
 
-                <table class="table table-hover align-middle mb-0">
+                <h2>
+                    All Inquiries
+                </h2>
+            </div>
+
+        </div>
+
+
+        @if($inquiries->isNotEmpty())
+
+            <div class="admin-table-wrapper">
+
+                <table class="admin-table">
 
                     <thead>
                         <tr>
 
-                            <th class="px-4">
+                            <th>
                                 Name
                             </th>
 
@@ -193,7 +258,7 @@
                                 Date
                             </th>
 
-                            <th class="text-end px-4">
+                            <th>
                                 Action
                             </th>
 
@@ -203,16 +268,14 @@
 
                     <tbody>
 
-                        @forelse($inquiries as $inquiry)
+                        @foreach($inquiries as $inquiry)
 
                             <tr>
 
-                                <td class="px-4">
-
+                                <td>
                                     <strong>
                                         {{ $inquiry->name }}
                                     </strong>
-
                                 </td>
 
 
@@ -223,7 +286,7 @@
                                     </div>
 
                                     @if($inquiry->phone)
-                                        <small class="text-muted">
+                                        <small>
                                             {{ $inquiry->phone }}
                                         </small>
                                     @endif
@@ -240,19 +303,19 @@
 
                                     @if($inquiry->status === 'new')
 
-                                        <span class="badge bg-danger">
+                                        <span class="admin-badge admin-badge--danger">
                                             New
                                         </span>
 
                                     @elseif($inquiry->status === 'read')
 
-                                        <span class="badge bg-warning text-dark">
+                                        <span class="admin-badge admin-badge--warning">
                                             Read
                                         </span>
 
                                     @else
 
-                                        <span class="badge bg-success">
+                                        <span class="admin-badge admin-badge--success">
                                             Replied
                                         </span>
 
@@ -266,39 +329,26 @@
                                 </td>
 
 
-                                <td class="text-end px-4">
+                                <td>
 
-                                    <a
-                                        href="{{ route('admin.inquiries.show', $inquiry) }}"
-                                        class="btn btn-sm btn-outline-primary"
-                                        title="View"
-                                    >
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
-                                        <span class="visually-hidden">View</span>
-                                    </a>
+                                    <div class="admin-table__actions">
 
-                                </td>
+                                        <a
+                                            href="{{ route('admin.inquiries.show', $inquiry) }}"
+                                            class="admin-icon-button"
+                                            title="View"
+                                        >
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                            <span class="admin-sr-only">View</span>
+                                        </a>
 
-                            </tr>
-
-                        @empty
-
-                            <tr>
-
-                                <td
-                                    colspan="6"
-                                    class="text-center py-5"
-                                >
-
-                                    <div class="text-muted">
-                                        No inquiries found.
                                     </div>
 
                                 </td>
 
                             </tr>
 
-                        @endforelse
+                        @endforeach
 
                     </tbody>
 
@@ -306,14 +356,36 @@
 
             </div>
 
-        </div>
 
+            @if($inquiries->hasPages())
 
-        <div class="card-footer bg-white">
-            {{ $inquiries->links() }}
-        </div>
+                <div class="admin-pagination">
+                    {{ $inquiries->links() }}
+                </div>
 
-    </div>
+            @endif
+
+        @else
+
+            <div class="admin-empty">
+
+                <div class="admin-empty__icon">
+                    #
+                </div>
+
+                <h3>
+                    No inquiries found
+                </h3>
+
+                <p>
+                    Customer enquiries submitted from the website will show up here.
+                </p>
+
+            </div>
+
+        @endif
+
+    </section>
 
 </div>
 

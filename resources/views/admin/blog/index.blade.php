@@ -2,29 +2,11 @@
 
 @section('title', 'Blog Posts')
 
+@section('description', 'Manage your travel articles, guides and stories.')
+
 @section('content')
 
 <div class="admin-page blog-admin-page">
-
-    {{-- Header --}}
-    <div class="admin-page__header blog-page-header">
-        <div>
-            <span class="admin-eyebrow">CONTENT / BLOG</span>
-
-            <h1 class="admin-page__title">Blog Posts</h1>
-
-            <p class="admin-page__description">
-                Manage your travel articles, guides and stories.
-            </p>
-        </div>
-
-        <a
-            href="{{ route('admin.blog.create') }}"
-            class="admin-button admin-button--primary"
-        >
-            + Create Blog Post
-        </a>
-    </div>
 
     {{-- Flash messages --}}
     @if(session('success'))
@@ -41,18 +23,6 @@
 
     {{-- Filters --}}
     <div class="admin-card blog-filter-card">
-
-        <div class="blog-filter-header">
-            <div>
-                <h2>Find blog posts</h2>
-                <p>Search and filter your content.</p>
-            </div>
-
-            <span class="blog-total-count">
-                {{ number_format($blogs->total()) }}
-                {{ Str::plural('post', $blogs->total()) }}
-            </span>
-        </div>
 
         <form
             method="GET"
@@ -159,16 +129,17 @@
 
         <div class="admin-card__header blog-list-header">
             <div>
+                <span class="admin-eyebrow">CONTENT</span>
                 <h2>All Blog Posts</h2>
-                <p>Manage published and unpublished travel content.</p>
             </div>
 
-            @if($blogs->total() > 0)
-                <div class="blog-results-info">
-                    {{ $blogs->firstItem() }}–{{ $blogs->lastItem() }}
-                    of {{ $blogs->total() }}
-                </div>
-            @endif
+            <a
+                href="{{ route('admin.blog.create') }}"
+                class="admin-button admin-button--primary"
+            >
+                <span>+</span>
+                Create Blog Post
+            </a>
         </div>
 
         @if($blogs->isNotEmpty())
@@ -332,18 +303,20 @@
 
                                     <a
                                         href="{{ route('admin.blog.show', $blog) }}"
-                                        class="blog-action"
+                                        class="admin-icon-button"
                                         title="View"
                                     >
-                                        View
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                        <span class="admin-sr-only">View</span>
                                     </a>
 
                                     <a
                                         href="{{ route('admin.blog.edit', $blog) }}"
-                                        class="blog-action"
+                                        class="admin-icon-button"
                                         title="Edit"
                                     >
-                                        Edit
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                                        <span class="admin-sr-only">Edit</span>
                                     </a>
 
                                     <form
@@ -354,8 +327,9 @@
                                     >
                                         @csrf
 
-                                        <button type="submit" class="blog-action">
-                                            Duplicate
+                                        <button type="submit" class="admin-icon-button" title="Duplicate">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                            <span class="admin-sr-only">Duplicate</span>
                                         </button>
                                     </form>
 
@@ -375,9 +349,11 @@
 
                                         <button
                                             type="submit"
-                                            class="blog-action {{ $blog->featured ? 'blog-action--active' : '' }}"
+                                            class="admin-icon-button {{ $blog->featured ? 'admin-icon-button--active' : '' }}"
+                                            title="{{ $blog->featured ? 'Featured' : 'Feature' }}"
                                         >
-                                            {{ $blog->featured ? '★ Featured' : '☆ Feature' }}
+                                            <svg viewBox="0 0 24 24" fill="{{ $blog->featured ? 'currentColor' : 'none' }}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2Z"/></svg>
+                                            <span class="admin-sr-only">{{ $blog->featured ? 'Featured' : 'Feature' }}</span>
                                         </button>
                                     </form>
 
@@ -395,8 +371,13 @@
                                             value="{{ $blog->status === \App\Models\Blog::STATUS_PUBLISHED ? 'draft' : 'published' }}"
                                         >
 
-                                        <button type="submit" class="blog-action">
-                                            {{ $blog->status === \App\Models\Blog::STATUS_PUBLISHED ? 'Draft' : 'Publish' }}
+                                        <button
+                                            type="submit"
+                                            class="admin-icon-button"
+                                            title="{{ $blog->status === \App\Models\Blog::STATUS_PUBLISHED ? 'Move to Draft' : 'Publish' }}"
+                                        >
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></svg>
+                                            <span class="admin-sr-only">{{ $blog->status === \App\Models\Blog::STATUS_PUBLISHED ? 'Move to Draft' : 'Publish' }}</span>
                                         </button>
                                     </form>
 
@@ -411,9 +392,11 @@
 
                                         <button
                                             type="submit"
-                                            class="blog-action blog-action--danger"
+                                            class="admin-icon-button admin-icon-button--danger"
+                                            title="Delete"
                                         >
-                                            Delete
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                            <span class="admin-sr-only">Delete</span>
                                         </button>
                                     </form>
 

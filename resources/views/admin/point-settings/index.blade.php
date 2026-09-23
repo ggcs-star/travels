@@ -1,29 +1,11 @@
 @extends('admin.layouts.app')
 
+@section('title', 'Points Management')
+
+@section('description', 'Control how users earn, redeem and use reward points.')
+
 @section('content')
 <div class="points-settings-page">
-
-    {{-- Header --}}
-    <div class="points-page-header">
-        <div>
-            <div class="points-breadcrumb">
-                Admin <span>/</span> Points Management
-            </div>
-
-            <h1>Points Management</h1>
-
-            <p>
-                Control how users earn, redeem and use reward points.
-                All reward values are controlled from this panel.
-            </p>
-        </div>
-
-        <div class="points-header-badge">
-            <span class="points-status-dot"></span>
-            Admin Controlled
-        </div>
-    </div>
-
 
     {{-- Success Message --}}
     @if(session('success'))
@@ -1030,7 +1012,7 @@
     font-size: 13px;
 }
 
-.points-save-bar span {
+.points-save-bar > div > span {
     display: block;
     margin-top: 3px;
     color: #8b94a2;
@@ -1045,7 +1027,7 @@
     padding: 0 17px;
     border: 0;
     border-radius: 9px;
-    background: #202b3e;
+    background: var(--admin-primary, #d97706);
     color: #fff;
     cursor: pointer;
     font-size: 13px;
@@ -1053,8 +1035,12 @@
     transition: transform .18s ease, background .18s ease;
 }
 
+.points-save-btn span {
+    color: #fff;
+}
+
 .points-save-btn:hover {
-    background: #121a29;
+    background: var(--admin-primary-dark, #b45309);
     transform: translateY(-1px);
 }
 

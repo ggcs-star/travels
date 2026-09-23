@@ -2,6 +2,8 @@
 
 @section('title', 'Visual Settings')
 
+@section('description', 'Manage your website branding, colors, layout and appearance.')
+
 @section('content')
 
 @php
@@ -20,19 +22,6 @@
 @endphp
 
 <div class="website-settings visual-settings">
-
-    {{-- =========================================================
-         PAGE HEADER
-    ========================================================== --}}
-    <div class="settings-heading">
-        <div>
-            <h1>Visual Settings</h1>
-            <p>
-                Manage your website branding, colors, layout and appearance.
-            </p>
-        </div>
-    </div>
-
 
     {{-- =========================================================
          ALERTS

@@ -31,6 +31,7 @@
     align-items: center;
     gap: 12px;
     min-width: 210px;
+    margin-left: auto;
     padding: 13px 16px;
     border: 1px solid #fecaca;
     background: #fff7f7;

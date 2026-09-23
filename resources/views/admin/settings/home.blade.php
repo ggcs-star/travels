@@ -2,6 +2,8 @@
 
 @section('title', 'Home Page Settings')
 
+@section('description', 'Control homepage sections and manage the complete user-side footer from one place.')
+
 @section('content')
 @php
     $value = fn ($key, $default = '') => old($key, $settings[$key] ?? $default);
@@ -98,13 +100,6 @@
 @endphp
 
 <div class="website-settings home-settings">
-    <div class="settings-heading">
-        <div>
-            <div class="settings-breadcrumb">Settings / Home Page</div>
-            <h1>Home Page Settings</h1>
-            <p>Control homepage sections and manage the complete user-side footer from one place.</p>
-        </div>
-    </div>
 
     @if(session('success'))
         <div class="general-settings-alert general-settings-alert-success">{{ session('success') }}</div>
@@ -443,7 +438,7 @@
             <div class="general-settings-grid">
                 <div class="general-settings-field general-settings-field-full">
                     <label>Copyright Text</label>
-                    <input type="text" name="footer_copyright_text" value="{{ old('footer_copyright_text', $settings['footer.copyright_text'] ?? '© '.date('Y').' SSB Travelz · Tourism With Faith · All rights reserved.') }}">
+                    <input type="text" name="footer_copyright_text" value="{{ old('footer_copyright_text', $settings['footer.copyright_text'] ?? '© '.date('Y').' travels · Tourism With Faith · All rights reserved.') }}">
                 </div>
                 <div class="settings-toggle-field">
                     <div><strong>Show Crafted Text</strong><small>Show the small “Crafted with …” text.</small></div>
