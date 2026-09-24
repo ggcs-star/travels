@@ -131,12 +131,6 @@
                                         {{ $user->email }}
                                     </span>
 
-                                    @if($user->username)
-                                        <small>
-                                            @{{ $user->username }}
-                                        </small>
-                                    @endif
-
                                 </div>
 
                             </div>
