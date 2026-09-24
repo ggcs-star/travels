@@ -504,7 +504,7 @@
                     </span>
 
                     <h1>
-                        Welcome back,
+                        Welcome Back,
                         {{ auth()->user()->username }}
                     </h1>
 
