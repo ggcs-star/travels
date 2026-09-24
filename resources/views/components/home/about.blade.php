@@ -18,7 +18,7 @@
                     decoding="async"
                 >
 
-                {{-- Diamond Jubilee Badge --}}
+                {{-- Silver Jubilee Badge --}}
                 <div class="about-jubilee-badge">
 
                     <span class="about-jubilee-icon">
@@ -26,7 +26,7 @@
                     </span>
 
                     <span>
-                        Diamond Jubilee Company
+                        Silver Jubilee Company
                     </span>
 
                 </div>
@@ -34,10 +34,10 @@
             </div>
 
 
-            {{-- 75 Years Badge --}}
+            {{-- 25 Years Badge --}}
             <div class="about-years-badge">
 
-                <strong>75<sup>+</sup></strong>
+                <strong>25<sup>+</sup></strong>
 
                 <span>
                     YEARS OF<br>
@@ -77,45 +77,35 @@
 
             <p class="about-lead">
 
-                {{ config('travels.brand.name') }} has been planning
-                journeys out of
-                <strong>Hyderabad, Vijayawada &amp; Visakhapatnam</strong>
-                for more than seventy years, looking after everyone from
-                corporate travellers to families on their first big trip.
+                For over 25 years, {{ config('travels.brand.name') }}
+                has been helping travellers turn their vacation ideas
+                into memorable journeys. From peaceful pilgrimages and
+                family getaways to corporate trips and international
+                holidays, we make travel simple, comfortable, and
+                thoughtfully planned.
 
             </p>
 
 
             <p>
 
-                It all started in 1950, when our founder,
-                the late Veeramallu Venkaiah Garu, set out with a simple
-                goal: make pilgrimage travel safe and dependable for
-                ordinary families. The path wasn't easy, but his
-                insistence on doing right by every traveller earned a
-                reputation that spread by word of mouth and still
-                carries our name today.
+                What began as a small travel service has grown into a
+                complete travel partner for individuals, families,
+                schools, and businesses. Our focus has always remained
+                the same — reliable service, carefully planned
+                itineraries, and experiences worth remembering.
 
             </p>
 
 
             <p>
 
-                As travel changed through the 1990s and beyond, we
-                changed with it — adding new destinations and modern
-                booking conveniences without losing the personal
-                attention that has always set us apart.
-
-            </p>
-
-
-            <p>
-
-                These days our itineraries cover everything from
-                temple pilgrimages and family holidays to school trips
-                and corporate offsites, plus a set of monthly fixed
-                departures for travellers who'd rather book a seat
-                than plan a route from scratch.
+                Today, travellers can choose from a wide range of
+                destinations and travel experiences, with flexible
+                packages designed around different budgets, schedules,
+                and interests. Whether you're planning a weekend escape
+                or a once-in-a-lifetime international journey, our team
+                is here to take care of the details.
 
             </p>
 
@@ -128,22 +118,22 @@
 
                 <span class="about-feature">
                     <span>◉</span>
-                    Offices in 3 Cities
+                    25+ Years of Experience
                 </span>
 
                 <span class="about-feature">
                     <span>♟</span>
-                    Corporate &amp; Leisure Travel
+                    Customized Travel Experiences
                 </span>
 
                 <span class="about-feature">
                     <span>♜</span>
-                    Pilgrimage Tour Experts
+                    Pilgrimage &amp; Leisure Specialists
                 </span>
 
                 <span class="about-feature">
                     <span>✈</span>
-                    India &amp; Worldwide
+                    Domestic &amp; International Tours
                 </span>
 
             </div>

@@ -8,7 +8,7 @@
         <div class="journey-cta-pills">
 
             <span class="journey-cta-pill">
-                75+ Years of Trust
+                25+ Years of Trust
             </span>
 
             <span class="journey-cta-pill">
@@ -112,7 +112,7 @@
 
             <span>
                 <b>✉</b>
-                bookings@ssbtravelz.com
+                bookings@travels.com
             </span>
 
             <span>
@@ -122,7 +122,7 @@
 
             <span>
                 <b>●</b>
-                Hyderabad · Vijayawada · Visakhapatnam
+                India · Vijayawada · Visakhapatnam
             </span>
 
         </div>
@@ -130,6 +130,3 @@
     </div>
 
 </section>
-
-
-@include('components.home.stats')

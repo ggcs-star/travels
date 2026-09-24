@@ -431,7 +431,7 @@
     $siteEmail = trim(
         (string) (
             $settings['site.email']
-            ?? config('travels.contact.email', 'bookings@ssbtravelz.com')
+            ?? config('travels.contact.email', 'bookings@travels.com')
         )
     );
 
@@ -439,7 +439,7 @@
     $siteAddress = trim(
         (string) (
             $settings['site.address']
-            ?? config('travels.contact.address', 'Hyderabad, Telangana, India')
+            ?? config('travels.contact.address', 'India, Telangana, India')
         )
     );
 

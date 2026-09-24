@@ -26,7 +26,7 @@
         ? (filter_var($footerLogo, FILTER_VALIDATE_URL)
             ? $footerLogo
             : asset('storage/' . ltrim($footerLogo, '/')))
-        : asset('images/travel_logo.png');
+        : asset('images/travel_logo_white.png');
 
     $footerLogoAlt = trim((string) (
         $settings['footer.logo_alt']
@@ -36,7 +36,7 @@
 
     $footerDescription = trim((string) (
         $settings['footer.description']
-        ?? 'Based in Hyderabad, travels crafts personalised journeys across India and the world – spiritual pilgrimages, family holidays, school excursions and corporate trips, all with faith and care.'
+        ?? 'Based in India, travels crafts personalised journeys across India and the world – spiritual pilgrimages, family holidays, school excursions and corporate trips, all with faith and care.'
     ));
 
     $footerCtaEnabled = array_key_exists('footer.cta_enabled', $settings)
@@ -109,12 +109,12 @@
     ));
 
     $footerContacts = !empty($settings['footer.contacts']) ? $settings['footer.contacts'] : [
-        ['label' => 'PHONE / WHATSAPP', 'value' => '+91-9182498843, +91-9014534878', 'url' => 'tel:+919182498843', 'icon' => 'fa-solid fa-phone', 'enabled' => true],
-        ['label' => 'EMAIL US', 'value' => 'bookings@ssbtravelz.com', 'url' => 'mailto:bookings@ssbtravelz.com', 'icon' => 'fa-solid fa-envelope', 'enabled' => true],
-        ['label' => 'OUR OFFICE', 'value' => 'Hyderabad, Telangana, India', 'url' => '', 'icon' => 'fa-solid fa-location-dot', 'enabled' => true],
-        ['label' => 'REGISTERED ADDRESS', 'value' => '32-83/2, SN 14 Sainik Nagar, Ramanakrishna Puram, Hyderabad - 500056', 'url' => '', 'icon' => 'fa-solid fa-building', 'enabled' => true],
-        ['label' => 'BRANCH OFFICE', 'value' => 'Near Kamineni Hospital Bypass Rd, beside HP petrol bunk, Sivaganga Colony, LB Nagar to Nagol Rd, Hyderabad, Telangana, 500074 India', 'url' => '', 'icon' => 'fa-solid fa-location-dot', 'enabled' => true],
-        ['label' => 'WORKING HOURS', 'value' => 'Mon–Sat · 9am–7pm', 'url' => '', 'icon' => 'fa-solid fa-clock', 'enabled' => true],
+        ['label' => 'PHONE / WHATSAPP', 'value' => '+91-8990498843, +91-7894534878', 'url' => 'tel:+918978498843', 'icon' => '☎', 'enabled' => true],
+        ['label' => 'EMAIL US', 'value' => 'bookings@travels.com', 'url' => 'mailto:bookings@travels.com', 'icon' => '✉', 'enabled' => true],
+        ['label' => 'OUR OFFICE', 'value' => 'India', 'url' => '', 'icon' => '●', 'enabled' => true],
+        ['label' => 'REGISTERED ADDRESS', 'value' => '101, Sunrise Business Hub, C.G. Road, Ahmedabad, Gujarat - 380009', 'url' => '', 'icon' => '▣', 'enabled' => true],
+        ['label' => 'BRANCH OFFICE', 'value' => '204, Gateway Plaza, Airport Road, Ahmedabad, Gujarat - 380015', 'url' => '', 'icon' => '●', 'enabled' => true],
+        ['label' => 'WORKING HOURS', 'value' => 'Mon–Sat · 9am–7pm', 'url' => '', 'icon' => '◷', 'enabled' => true],
     ];
 
     $trustBadges = !empty($settings['footer.trust_badges']) ? $settings['footer.trust_badges'] : [
@@ -157,7 +157,7 @@
 
     $craftedText = trim((string) ($settings['footer.crafted_text'] ?? ''));
     if ($craftedText === '') {
-        $craftedText = 'Crafted with ♥ in Hyderabad';
+        $craftedText = 'Crafted with ♥ in India';
     }
 
     $footerUrl = function ($url) {
@@ -216,51 +216,90 @@
 @if($footerEnabled)
 <footer class="site-footer" style="display:block !important; visibility:visible !important; opacity:1 !important; width:100% !important; position:relative !important; z-index:99999 !important;">
 
-    @if($footerCtaEnabled)
-        <section class="footer-cta-section">
-            <div class="container">
-                <div class="footer-cta">
-                    <div class="footer-cta-content">
-                        @if(!empty($ctaBadges))
-                            <div class="footer-cta-badges">
-                                @foreach($ctaBadges as $badge)
-                                    @if(!empty($badge['enabled']) && !empty($badge['text']))
-                                        <span>{{ $badge['icon'] ?? '✓' }} {{ $badge['text'] }}</span>
-                                    @endif
-                                @endforeach
-                            </div>
-                        @endif
+    <div class="footer-banner">
+        <img
+            src="{{ asset('images/footer.png') }}"
+            alt=""
+            decoding="async"
+        >
 
-                        @if($footerCtaTitle)
-                            <h2>{{ $footerCtaTitle }}</h2>
-                        @endif
+        <img
+            class="footer-banner-person"
+            src="{{ asset('images/girl.jpeg') }}"
+            alt=""
+            decoding="async"
+        >
 
-                        @if($footerCtaDescription)
-                            <p>{{ $footerCtaDescription }}</p>
-                        @endif
-                    </div>
-
-                    <div class="footer-cta-actions">
-                        @if($footerCtaButtonText)
-                            <a href="{{ $footerUrl($footerCtaButtonUrl) }}" class="footer-plan-button">
-                                {{ $footerCtaButtonText }}
-                            </a>
-                        @endif
-
-                        @foreach($footerContacts as $contact)
-                            @if(!empty($contact['enabled']) && !empty($contact['value']) && str_starts_with((string)($contact['url'] ?? ''), 'tel:'))
-                                <a href="{{ $footerUrl($contact['url']) }}" class="footer-call-button">
-                                    <span><i class="{{ $contact['icon'] ?? 'fa-solid fa-phone' }}"></i></span>
-                                    {{ $contact['value'] }}
-                                </a>
-                                @break
+        @if($footerCtaEnabled)
+            <section class="footer-cta-section">
+                <div class="container">
+                    <div class="footer-cta">
+                        <div class="footer-cta-content">
+                            @if(!empty($ctaBadges))
+                                <div class="footer-cta-badges">
+                                    @foreach($ctaBadges as $badge)
+                                        @if(!empty($badge['enabled']) && !empty($badge['text']))
+                                            <span>{{ $badge['icon'] ?? '✓' }} {{ $badge['text'] }}</span>
+                                        @endif
+                                    @endforeach
+                                </div>
                             @endif
-                        @endforeach
+
+                            @if($footerCtaTitle)
+                                <span class="footer-cta-eyebrow">
+                                    It's Time To
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                </span>
+
+                                @php
+                                    $footerCtaTitleWords = preg_split('/\s+/', $footerCtaTitle);
+
+                                    if (count($footerCtaTitleWords) > 2) {
+                                        $footerCtaTitleAccentWords = array_splice($footerCtaTitleWords, -2);
+                                        $footerCtaTitleMain = implode(' ', $footerCtaTitleWords);
+                                    } else {
+                                        $footerCtaTitleAccentWords = $footerCtaTitleWords;
+                                        $footerCtaTitleMain = '';
+                                    }
+                                @endphp
+
+                                <h2>
+                                    @if($footerCtaTitleMain)
+                                        <span class="footer-cta-title-main">{{ $footerCtaTitleMain }}</span>
+                                    @endif
+                                    <span class="footer-cta-title-accent">{{ implode(' ', $footerCtaTitleAccentWords) }}</span>
+                                </h2>
+                            @endif
+
+                            @if($footerCtaDescription)
+                                <p>{{ $footerCtaDescription }}</p>
+                            @endif
+                        </div>
+
+                        <div class="footer-cta-actions">
+                            @if($footerCtaButtonText)
+                                <a href="{{ $footerUrl($footerCtaButtonUrl) }}" class="footer-plan-button">
+                                    {{ $footerCtaButtonText }}
+                                </a>
+                            @endif
+
+                            @foreach($footerContacts as $contact)
+                                @if(!empty($contact['enabled']) && !empty($contact['value']) && str_starts_with((string)($contact['url'] ?? ''), 'tel:'))
+                                    <a href="{{ $footerUrl($contact['url']) }}" class="footer-call-button">
+                                        <span><i class="{{ $contact['icon'] ?? 'fa-solid fa-phone' }}"></i></span>
+                                        {{ $contact['value'] }}
+                                    </a>
+                                    @break
+                                @endif
+                            @endforeach
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    @endif
+            </section>
+        @endif
+    </div>
+
+    @include('components.home.stats')
 
     <section class="footer-main">
         <div class="container">
@@ -296,10 +335,13 @@
                             @foreach($trustBadges as $badge)
                                 @if(!empty($badge['enabled']) && !empty($badge['title']))
                                     <span>
-                                        <i class="{{ $badge['icon'] ?? 'fa-solid fa-circle-check' }}"></i>
+                                        <em>
+                                            <i class="{{ $badge['icon'] ?? 'fa-solid fa-circle-check' }}"></i>
+                                        </em>
+
                                         {{ $badge['title'] }}
                                         @if(!empty($badge['subtitle']))
-                                            · {{ $badge['subtitle'] }}
+                                            <small>{{ $badge['subtitle'] }}</small>
                                         @endif
                                     </span>
                                 @endif

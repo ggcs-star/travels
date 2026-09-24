@@ -153,7 +153,7 @@
                 name="meeting_point"
                 maxlength="255"
                 value="{{ old('meeting_point', $departure->meeting_point ?? '') }}"
-                placeholder="e.g. Hyderabad airport terminal 1"
+                placeholder="e.g. India airport terminal 1"
             >
 
             @error('meeting_point')

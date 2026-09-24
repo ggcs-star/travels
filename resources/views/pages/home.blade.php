@@ -10,11 +10,11 @@
         'featuredTours' => $featuredTours ?? collect(),
     ])
 
-    {{-- Journey Categories --}}
-    @include('components.home.journey-categories')
-
     {{-- Monthly Tours --}}
     @include('components.home.monthly-tours')
+
+    {{-- Journey Categories --}}
+    @include('components.home.journey-categories')
 
     {{-- Handpicked Tours --}}
     @include('components.home.handpicked-tours')
@@ -26,7 +26,7 @@
     @include('components.home.key-factors')
 
     {{-- Quote CTA --}}
-    @include('components.home.quote-cta')
+    <!-- @include('components.home.quote-cta') -->
 
     {{-- Testimonials --}}
     @include('components.home.testimonials')
