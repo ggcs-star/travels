@@ -8,7 +8,7 @@
 
 <div class="admin-page">
 
-    <div class="admin-page__header">
+    <!-- <div class="admin-page__header">
 
         <a
             href="{{ route('home') }}"
@@ -19,7 +19,7 @@
             <span>↗</span>
         </a>
 
-    </div>
+    </div> -->
 
 
     {{-- Stats --}}
