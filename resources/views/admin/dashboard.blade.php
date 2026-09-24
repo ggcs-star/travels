@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Welcome back, '.auth()->user()->username)
+@section('title', 'Welcome Back, '.auth()->user()->username)
 
 @section('description', 'Manage your travel website from one place.')
 

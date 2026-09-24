@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             // TravelCatalogSeeder::class,
             TourPackageDemoSeeder::class,
             PointSettingSeeder::class,
+            DemoUserSeeder::class,
         ]);
     }
 }
