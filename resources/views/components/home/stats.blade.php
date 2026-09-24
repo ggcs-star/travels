@@ -68,7 +68,7 @@
             </div>
 
             <strong>
-                75+
+                25+
             </strong>
 
             <span>

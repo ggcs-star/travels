@@ -8,7 +8,7 @@
         <div class="journey-cta-pills">
 
             <span class="journey-cta-pill">
-                75+ Years of Trust
+                25+ Years of Trust
             </span>
 
             <span class="journey-cta-pill">
@@ -130,6 +130,3 @@
     </div>
 
 </section>
-
-
-@include('components.home.stats')

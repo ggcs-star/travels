@@ -1,6 +1,19 @@
 <section class="traveller-stories-section">
 
-    <div class="traveller-stories-overlay"></div>
+    {{-- DECORATIVE BACKDROP --}}
+
+    <img
+        class="stories-decor stories-decor--bg"
+        src="{{ asset('images/review.jpeg') }}"
+        alt=""
+        decoding="async"
+    >
+
+    <span class="stories-decor stories-decor--tagline">
+        Explore <i>•</i> Experience <i>•</i> Create Memories
+        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5Z"/></svg>
+    </span>
+
 
     <div class="container traveller-stories-container">
 
@@ -8,14 +21,19 @@
         <div class="traveller-stories-header">
 
             <span class="traveller-stories-eyebrow">
-                <span>●</span>
-                ★
                 TRAVELLER STORIES
             </span>
 
             <h2>
-                What Our
-                <span>Travellers Say</span>
+                <span class="stories-title-script">
+                    What Our
+                    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5Z"/></svg>
+                </span>
+
+                <span class="stories-title-line">
+                    <span class="stories-title-green">Travellers</span>
+                    <span class="stories-title-orange">Say</span>
+                </span>
             </h2>
 
             <p>
@@ -29,25 +47,25 @@
         <div class="traveller-stories-stats">
 
             <div class="traveller-story-stat">
-                <span>★</span>
+                <span><i class="fa-solid fa-star"></i></span>
                 <strong>4.9 / 5</strong>
                 <small>Average Rating</small>
             </div>
 
             <div class="traveller-story-stat">
-                <span>♟</span>
+                <span><i class="fa-solid fa-users"></i></span>
                 <strong>10000+</strong>
                 <small>Happy Travellers</small>
             </div>
 
             <div class="traveller-story-stat">
-                <span>◈</span>
+                <span><i class="fa-solid fa-shield-halved"></i></span>
                 <strong>Verified</strong>
                 <small>Reviews</small>
             </div>
 
             <div class="traveller-story-stat">
-                <span>♥</span>
+                <span><i class="fa-solid fa-heart"></i></span>
                 <strong>99%</strong>
                 <small>Recommend Us</small>
             </div>
