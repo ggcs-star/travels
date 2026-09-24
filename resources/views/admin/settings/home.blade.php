@@ -50,11 +50,11 @@
     ];
 
     $defaultFooterContacts = [
-        ['label' => 'PHONE / WHATSAPP', 'value' => '+91-9182498843, +91-9014534878', 'url' => 'tel:+919182498843', 'icon' => '☎', 'enabled' => true],
-        ['label' => 'EMAIL US', 'value' => 'bookings@ssbtravelz.com', 'url' => 'mailto:bookings@ssbtravelz.com', 'icon' => '✉', 'enabled' => true],
-        ['label' => 'OUR OFFICE', 'value' => 'Hyderabad, Telangana, India', 'url' => '', 'icon' => '●', 'enabled' => true],
-        ['label' => 'REGISTERED ADDRESS', 'value' => '32-83/2, SN 14 Sainik Nagar, Ramanakrishna Puram, Hyderabad - 500056', 'url' => '', 'icon' => '▣', 'enabled' => true],
-        ['label' => 'BRANCH OFFICE', 'value' => 'Near Kamineni Hospital Bypass Rd, beside HP petrol bunk, Sivaganga Colony, LB Nagar to Nagol Rd, Hyderabad, Telangana, 500074 India', 'url' => '', 'icon' => '●', 'enabled' => true],
+        ['label' => 'PHONE / WHATSAPP', 'value' => '+91-8990498843, +91-7894534878', 'url' => 'tel:+918978498843', 'icon' => '☎', 'enabled' => true],
+        ['label' => 'EMAIL US', 'value' => 'bookings@travels.com', 'url' => 'mailto:bookings@travels.com', 'icon' => '✉', 'enabled' => true],
+        ['label' => 'OUR OFFICE', 'value' => 'India', 'url' => '', 'icon' => '●', 'enabled' => true],
+        ['label' => 'REGISTERED ADDRESS', 'value' => '101, Sunrise Business Hub, C.G. Road, Ahmedabad, Gujarat - 380009', 'url' => '', 'icon' => '▣', 'enabled' => true],
+        ['label' => 'BRANCH OFFICE', 'value' => '204, Gateway Plaza, Airport Road, Ahmedabad, Gujarat - 380015', 'url' => '', 'icon' => '●', 'enabled' => true],
         ['label' => 'WORKING HOURS', 'value' => 'Mon–Sat · 9am–7pm', 'url' => '', 'icon' => '◷', 'enabled' => true],
     ];
 
@@ -450,7 +450,7 @@
                 </div>
                 <div class="general-settings-field">
                     <label>Crafted Text</label>
-                    <input type="text" name="footer_crafted_text" value="{{ old('footer_crafted_text', $settings['footer.crafted_text'] ?? 'Crafted with ♥ in Hyderabad') }}">
+                    <input type="text" name="footer_crafted_text" value="{{ old('footer_crafted_text', $settings['footer.crafted_text'] ?? 'Crafted with ♥ in India') }}">
                 </div>
             </div>
 

@@ -1593,7 +1593,7 @@
                             type="text"
                             name="footer_crafted_text"
                             value="{{ $value('footer_crafted_text') }}"
-                            placeholder="Crafted with ♥ in Hyderabad"
+                            placeholder="Crafted with ♥ in India"
                         >
 
                     </div>

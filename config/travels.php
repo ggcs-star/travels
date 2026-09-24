@@ -8,7 +8,7 @@ return [
     ],
 
     'contact' => [
-        'location' => 'Hyderabad, Telangana, India',
+        'location' => 'India, Telangana, India',
         'email' => 'bookings@travels.com',
         'phone_primary' => '+91-0000000000',
         'phone_secondary' => '+91-0000000000',

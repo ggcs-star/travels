@@ -112,7 +112,7 @@
 
             <span>
                 <b>✉</b>
-                bookings@ssbtravelz.com
+                bookings@travels.com
             </span>
 
             <span>
@@ -122,7 +122,7 @@
 
             <span>
                 <b>●</b>
-                Hyderabad · Vijayawada · Visakhapatnam
+                India · Vijayawada · Visakhapatnam
             </span>
 
         </div>

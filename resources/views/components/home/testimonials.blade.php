@@ -106,7 +106,7 @@
                         </strong>
 
                         <small>
-                            ● Hyderabad
+                            ● India
                         </small>
                     </div>
 
@@ -148,7 +148,7 @@
                         </strong>
 
                         <small>
-                            ● Hyderabad
+                            ● India
                         </small>
                     </div>
 
@@ -190,7 +190,7 @@
                         </strong>
 
                         <small>
-                            ● Hyderabad
+                            ● India
                         </small>
                     </div>
 
@@ -232,7 +232,7 @@
                         </strong>
 
                         <small>
-                            ● Hyderabad
+                            ● India
                         </small>
                     </div>
 
@@ -274,7 +274,7 @@
                         </strong>
 
                         <small>
-                            ● Hyderabad
+                            ● India
                         </small>
                     </div>
 

@@ -26,7 +26,7 @@
     @include('components.home.key-factors')
 
     {{-- Quote CTA --}}
-    @include('components.home.quote-cta')
+    <!-- @include('components.home.quote-cta') -->
 
     {{-- Testimonials --}}
     @include('components.home.testimonials')
