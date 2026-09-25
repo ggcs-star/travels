@@ -313,25 +313,26 @@
 
                                 <td>
 
-                                    @if($tour->status === 'published')
+                                    <form
+                                        method="POST"
+                                        action="{{ route('admin.tours.status', $tour) }}"
+                                        class="admin-inline-status-form"
+                                    >
+                                        @csrf
+                                        @method('PATCH')
 
-                                        <span class="admin-badge admin-badge--success">
-                                            Published
-                                        </span>
-
-                                    @elseif($tour->status === 'inactive')
-
-                                        <span class="admin-badge admin-badge--danger">
-                                            Inactive
-                                        </span>
-
-                                    @else
-
-                                        <span class="admin-badge admin-badge--warning">
-                                            Draft
-                                        </span>
-
-                                    @endif
+                                        <select
+                                            name="status"
+                                            title="Change status"
+                                            data-status-select
+                                            class="admin-status-select admin-status-select--{{ $tour->status }}"
+                                            onchange="this.form.submit()"
+                                        >
+                                            <option value="draft" @selected($tour->status === 'draft')>Draft</option>
+                                            <option value="published" @selected($tour->status === 'published')>Published</option>
+                                            <option value="inactive" @selected($tour->status === 'inactive')>Inactive</option>
+                                        </select>
+                                    </form>
 
                                 </td>
 
@@ -376,6 +377,24 @@
                                             >
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                                                 <span class="admin-sr-only">Duplicate</span>
+                                            </button>
+                                        </form>
+
+                                        <form
+                                            method="POST"
+                                            action="{{ route('admin.tours.destroy', $tour) }}"
+                                            onsubmit="return confirm('Delete this tour package? It can be restored later if needed.')"
+                                        >
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button
+                                                type="submit"
+                                                class="admin-icon-button admin-icon-button--danger"
+                                                title="Delete"
+                                            >
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                                <span class="admin-sr-only">Delete</span>
                                             </button>
                                         </form>
 
@@ -432,5 +451,66 @@
     </section>
 
 </div>
+
+
+<style>
+
+.admin-inline-status-form {
+    display: inline-block;
+}
+
+.admin-status-select {
+    height: 30px;
+    border: 1px solid #dfe3e9;
+    border-radius: 6px;
+    background: #fff;
+    color: #4b5666;
+    font-size: 11px;
+    font-weight: 650;
+    padding: 0 8px;
+    cursor: pointer;
+}
+
+.admin-status-select:focus {
+    outline: none;
+    border-color: #8993a3;
+}
+
+.admin-status-select--published {
+    background: var(--admin-success-bg, #ecfdf3);
+    border-color: var(--admin-success-bg, #ecfdf3);
+    color: var(--admin-success, #15803d);
+}
+
+.admin-status-select--inactive {
+    background: var(--admin-danger-bg, #fff1f2);
+    border-color: var(--admin-danger-bg, #fff1f2);
+    color: var(--admin-danger, #b42318);
+}
+
+.admin-status-select--draft {
+    background: #fffbeb;
+    border-color: #fffbeb;
+    color: #b45309;
+}
+
+</style>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    document.querySelectorAll('[data-status-select]').forEach(function (select) {
+
+        select.addEventListener('change', function () {
+
+            select.className = 'admin-status-select admin-status-select--' + select.value;
+
+        });
+
+    });
+
+});
+</script>
 
 @endsection

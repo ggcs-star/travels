@@ -199,14 +199,40 @@
                         {{-- Action --}}
                         <td>
 
-                            <a
-                                href="{{ route('admin.point-wallets.show', $user) }}"
-                                class="admin-icon-button"
-                                title="View"
-                            >
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
-                                <span class="admin-sr-only">View</span>
-                            </a>
+                            <div class="wallet-row-actions">
+
+                                <a
+                                    href="{{ route('admin.point-wallets.show', $user) }}"
+                                    class="wallet-icon-button"
+                                    title="Add / deduct points"
+                                >
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+                                    <span class="admin-sr-only">Add points</span>
+                                </a>
+
+                                <a
+                                    href="{{ route('admin.point-wallets.transactions', $user) }}"
+                                    class="wallet-icon-button"
+                                    title="Transaction history"
+                                >
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+                                    <span class="admin-sr-only">Transaction history</span>
+                                </a>
+
+                                <form
+                                    method="POST"
+                                    action="{{ route('admin.users.destroy', $user) }}"
+                                    onsubmit="return confirm('Delete this user? This can be restored later if needed.');"
+                                >
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="wallet-icon-button wallet-icon-button--danger" title="Delete">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                                        <span class="admin-sr-only">Delete</span>
+                                    </button>
+                                </form>
+
+                            </div>
 
                         </td>
 
@@ -494,7 +520,7 @@
     background: var(--admin-sidebar, #f5faf6);
     color: var(--admin-sidebar-dark, #14532d);
     text-align: left;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: .06em;
@@ -504,7 +530,7 @@
     padding: 15px;
     border-bottom: 1px solid #edf0f3;
     vertical-align: middle;
-    font-size: 13px;
+    font-size: 14.5px;
 }
 
 .wallet-table tbody tr:last-child td {
@@ -549,7 +575,7 @@
     display: block;
     overflow: hidden;
     color: #344054;
-    font-size: 13.5px;
+    font-size: 15px;
     font-weight: 680;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -560,7 +586,7 @@
     margin-top: 3px;
     overflow: hidden;
     color: #8c95a2;
-    font-size: 11.5px;
+    font-size: 13px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -585,21 +611,69 @@
 
 .wallet-balance strong {
     color: #202b3e;
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 750;
 }
 
 .wallet-balance span {
     color: #929aa7;
-    font-size: 11px;
+    font-size: 12px;
 }
 
 .wallet-number {
     color: #4c5768;
-    font-size: 13px;
+    font-size: 14.5px;
     font-weight: 600;
 }
 
+
+/* -----------------------------------------
+   Row Actions
+----------------------------------------- */
+
+.wallet-row-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.wallet-icon-button {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--admin-primary, #d97706);
+    border-radius: 9px;
+
+    background: #fff;
+    color: var(--admin-primary, #d97706);
+
+    transition: background .15s ease, color .15s ease;
+}
+
+.wallet-icon-button svg {
+    width: 17px;
+    height: 17px;
+}
+
+.wallet-icon-button:hover {
+    background: var(--admin-primary, #d97706);
+    color: #fff;
+}
+
+.wallet-icon-button--danger {
+    border-color: var(--admin-danger, #b42318);
+    color: var(--admin-danger, #b42318);
+}
+
+.wallet-icon-button--danger:hover {
+    background: var(--admin-danger, #b42318);
+    color: #fff;
+}
 
 /* -----------------------------------------
    View

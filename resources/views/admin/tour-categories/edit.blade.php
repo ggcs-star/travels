@@ -192,7 +192,7 @@
                     >
 
                         <option value="">
-                            Root Category
+                            Category
                         </option>
 
                         @foreach($parentCategories as $parent)
@@ -214,7 +214,7 @@
                     </select>
 
                     <small>
-                        Keep "Root Category" if this category has no parent.
+                        Keep "Category" if this category has no parent.
                     </small>
 
                     @error('parent_id')

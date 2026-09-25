@@ -325,7 +325,7 @@
                                     @else
 
                                         <span style="color:var(--admin-text-light);">
-                                            Root Category
+                                            Category
                                         </span>
 
                                     @endif
@@ -366,19 +366,25 @@
                                 {{-- Status --}}
                                 <td>
 
-                                    @if($category->status)
+                                    <form
+                                        method="POST"
+                                        action="{{ route('admin.tour-categories.status', $category) }}"
+                                        class="admin-inline-status-form"
+                                    >
+                                        @csrf
+                                        @method('PATCH')
 
-                                        <span class="admin-badge admin-badge--success">
-                                            Active
-                                        </span>
-
-                                    @else
-
-                                        <span class="admin-badge admin-badge--danger">
-                                            Inactive
-                                        </span>
-
-                                    @endif
+                                        <select
+                                            name="status"
+                                            title="Change status"
+                                            data-status-select
+                                            class="admin-status-select admin-status-select--{{ $category->status ? 'active' : 'inactive' }}"
+                                            onchange="this.form.submit()"
+                                        >
+                                            <option value="1" @selected($category->status)>Active</option>
+                                            <option value="0" @selected(!$category->status)>Inactive</option>
+                                        </select>
+                                    </form>
 
                                 </td>
 
@@ -452,34 +458,6 @@
                                             >
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                                                 <span class="admin-sr-only">Duplicate</span>
-                                            </button>
-
-                                        </form>
-
-
-                                        {{-- Status --}}
-                                        <form
-                                            method="POST"
-                                            action="{{ route('admin.tour-categories.status', $category) }}"
-                                            style="display:inline;"
-                                        >
-
-                                            @csrf
-                                            @method('PATCH')
-
-                                            <input
-                                                type="hidden"
-                                                name="status"
-                                                value="{{ $category->status ? 0 : 1 }}"
-                                            >
-
-                                            <button
-                                                type="submit"
-                                                class="admin-icon-button"
-                                                title="{{ $category->status ? 'Deactivate' : 'Activate' }}"
-                                            >
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></svg>
-                                                <span class="admin-sr-only">{{ $category->status ? 'Deactivate' : 'Activate' }}</span>
                                             </button>
 
                                         </form>
@@ -564,5 +542,61 @@
     </div>
 
 </div>
+
+
+<style>
+
+.admin-inline-status-form {
+    display: inline-block;
+}
+
+.admin-status-select {
+    height: 30px;
+    border: 1px solid #dfe3e9;
+    border-radius: 6px;
+    background: #fff;
+    color: #4b5666;
+    font-size: 11px;
+    font-weight: 650;
+    padding: 0 8px;
+    cursor: pointer;
+}
+
+.admin-status-select:focus {
+    outline: none;
+    border-color: #8993a3;
+}
+
+.admin-status-select--active {
+    background: var(--admin-success-bg, #ecfdf3);
+    border-color: var(--admin-success-bg, #ecfdf3);
+    color: var(--admin-success, #15803d);
+}
+
+.admin-status-select--inactive {
+    background: var(--admin-danger-bg, #fff1f2);
+    border-color: var(--admin-danger-bg, #fff1f2);
+    color: var(--admin-danger, #b42318);
+}
+
+</style>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    document.querySelectorAll('[data-status-select]').forEach(function (select) {
+
+        select.addEventListener('change', function () {
+
+            select.className = 'admin-status-select admin-status-select--'
+                + (select.value === '1' ? 'active' : 'inactive');
+
+        });
+
+    });
+
+});
+</script>
 
 @endsection

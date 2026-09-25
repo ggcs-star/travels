@@ -2118,7 +2118,7 @@
 .admin-pagination-nav {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     flex-wrap: wrap;
 
     gap: 14px;

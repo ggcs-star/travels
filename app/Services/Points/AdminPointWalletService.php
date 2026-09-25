@@ -22,6 +22,7 @@ class AdminPointWalletService
         int $perPage = 10
     ): LengthAwarePaginator {
         return User::query()
+            ->where('role', 'user')
             ->with('pointWallet')
             ->when(
                 filled($search),

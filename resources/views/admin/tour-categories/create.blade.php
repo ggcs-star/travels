@@ -171,7 +171,7 @@
                     >
 
                         <option value="">
-                            Root Category
+                            Category
                         </option>
 
                         @foreach($parentCategories as $parent)

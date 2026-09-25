@@ -1,19 +1,33 @@
 @extends('admin.layouts.app')
+
+@section('title', 'Add / Deduct Points')
+
+@section('description', 'Add or deduct points from this user\'s wallet.')
+
 @section('content')
 
 <div class="admin-wallet-detail">
 
+    {{-- Breadcrumb --}}
+    <div class="wallet-breadcrumb">
+        <a href="{{ route('admin.dashboard') }}">Home</a>
+        <span>›</span>
+        <a href="{{ route('admin.point-wallets.index') }}">Points Wallets</a>
+        <span>›</span>
+        <strong>Details</strong>
+    </div>
+
+
     {{-- Header --}}
     <div class="wallet-detail-header">
 
-        <div>
+        <svg class="wallet-detail-header__art" viewBox="0 0 200 90" fill="none">
+            <path d="M0 90 30 55 55 78 90 40 130 78 160 50 200 90Z" fill="currentColor" opacity=".5"/>
+            <circle cx="168" cy="26" r="16" fill="currentColor" opacity=".35"/>
+            <path d="M120 30 178 10 172 20 190 24 178 28 182 40Z" fill="currentColor" opacity=".55"/>
+        </svg>
 
-            <a
-                href="{{ route('admin.point-wallets.index') }}"
-                class="wallet-back"
-            >
-                ← Back to Wallets
-            </a>
+        <div>
 
             <div class="wallet-profile-heading">
 
@@ -30,11 +44,10 @@
                     <p>
 
                         {{ $user->email }}
-
-                        @if($user->username)
-                            <span>•</span>
-                            @{{ $user->username }}
-                        @endif
+                        <span>·</span>
+                        <a href="{{ route('admin.point-wallets.transactions', $user) }}">
+                            View transaction history →
+                        </a>
 
                     </p>
 
@@ -101,6 +114,10 @@
 
         <div class="wallet-stat main">
 
+            <span class="wallet-stat__icon wallet-stat__icon--onmain">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 6V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v1"/><circle cx="16" cy="13" r="1.3" fill="currentColor" stroke="none"/></svg>
+            </span>
+
             <span>Current Balance</span>
 
             <strong>
@@ -115,6 +132,10 @@
 
 
         <div class="wallet-stat">
+
+            <span class="wallet-stat__icon wallet-stat__icon--green">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5a2.5 2.5 0 0 1 2.5-1.5h1a2.5 2.5 0 0 1 0 5h-1a2.5 2.5 0 0 0 0 5h1a2.5 2.5 0 0 0 2.5-1.5"/></svg>
+            </span>
 
             <span>Total Earned</span>
 
@@ -131,6 +152,10 @@
 
         <div class="wallet-stat">
 
+            <span class="wallet-stat__icon wallet-stat__icon--orange">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>
+            </span>
+
             <span>Total Redeemed</span>
 
             <strong>
@@ -146,6 +171,10 @@
 
         <div class="wallet-stat">
 
+            <span class="wallet-stat__icon wallet-stat__icon--orange">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12M6 22h12M6 2c0 6 12 6 12 10s-12 4-12 10M18 2c0 6-12 6-12 10s12 4 12 10"/></svg>
+            </span>
+
             <span>Total Expired</span>
 
             <strong>
@@ -160,6 +189,10 @@
 
 
         <div class="wallet-stat">
+
+            <span class="wallet-stat__icon wallet-stat__icon--orange">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>
+            </span>
 
             <span>Total Adjusted</span>
 
@@ -181,9 +214,13 @@
 
 
         {{-- Adjustment --}}
-        <div class="wallet-adjust-card">
+        <div class="wallet-adjust-card" id="adjust-points">
 
             <div class="wallet-card-heading">
+
+                <div class="adjust-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>
+                </div>
 
                 <div>
 
@@ -197,16 +234,12 @@
 
                 </div>
 
-                <div class="adjust-icon">
-                    ±
-                </div>
-
             </div>
 
 
             <div class="adjust-warning">
 
-                <span>!</span>
+                <span>ℹ</span>
 
                 <div>
 
@@ -245,7 +278,9 @@
                             {{ old('action', 'add') === 'add' ? 'checked' : '' }}
                         >
 
-                        <span class="adjust-radio"></span>
+                        <span class="adjust-option__icon adjust-option__icon--add">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                        </span>
 
                         <div>
 
@@ -271,7 +306,9 @@
                             {{ old('action') === 'deduct' ? 'checked' : '' }}
                         >
 
-                        <span class="adjust-radio"></span>
+                        <span class="adjust-option__icon adjust-option__icon--deduct">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg>
+                        </span>
 
                         <div>
 
@@ -297,16 +334,22 @@
                         Points
                     </label>
 
-                    <input
-                        id="points"
-                        type="number"
-                        name="points"
-                        min="1"
-                        max="1000000000"
-                        value="{{ old('points') }}"
-                        placeholder="Enter points"
-                        required
-                    >
+                    <div class="form-field__input-wrap">
+
+                        <input
+                            id="points"
+                            type="number"
+                            name="points"
+                            min="1"
+                            max="1000000000"
+                            value="{{ old('points') }}"
+                            placeholder="Enter points"
+                            required
+                        >
+
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18M7 6h1v4M16.71 13.88l.7.71-2.82 2.82"/></svg>
+
+                    </div>
 
                 </div>
 
@@ -318,14 +361,20 @@
                         Reason
                     </label>
 
-                    <textarea
-                        id="reason"
-                        name="reason"
-                        rows="4"
-                        maxlength="500"
-                        placeholder="Enter the reason for this adjustment..."
-                        required
-                    >{{ old('reason') }}</textarea>
+                    <div class="form-field__input-wrap form-field__input-wrap--textarea">
+
+                        <textarea
+                            id="reason"
+                            name="reason"
+                            rows="4"
+                            maxlength="500"
+                            placeholder="Enter the reason for this adjustment..."
+                            required
+                        >{{ old('reason') }}</textarea>
+
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+
+                    </div>
 
                     <small>
                         Required for audit history.
@@ -339,7 +388,8 @@
                     class="adjust-submit"
                     id="adjustSubmit"
                 >
-                    Add Points
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 5v14M5 12h14"/></svg>
+                    <span id="adjustSubmitText">Add Points</span>
                 </button>
 
             </form>
@@ -351,6 +401,10 @@
         <div class="wallet-summary-card">
 
             <div class="wallet-card-heading">
+
+                <div class="adjust-icon adjust-icon--mint">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 6V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v1"/><circle cx="16" cy="13" r="1.3" fill="currentColor" stroke="none"/></svg>
+                </div>
 
                 <div>
 
@@ -369,7 +423,11 @@
 
             <div class="summary-row">
 
-                <span>
+                <span class="summary-row__icon summary-row__icon--gold">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M9 10a2 2 0 0 1 2-1h1.5a2 2 0 0 1 0 4H11a2 2 0 0 0 0 4h1.5a2 2 0 0 0 2-1"/></svg>
+                </span>
+
+                <span class="summary-row__label">
                     Current Balance
                 </span>
 
@@ -382,7 +440,11 @@
 
             <div class="summary-row">
 
-                <span>
+                <span class="summary-row__icon summary-row__icon--green">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                </span>
+
+                <span class="summary-row__label">
                     Total Earned
                 </span>
 
@@ -395,7 +457,11 @@
 
             <div class="summary-row">
 
-                <span>
+                <span class="summary-row__icon summary-row__icon--orange">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg>
+                </span>
+
+                <span class="summary-row__label">
                     Total Redeemed
                 </span>
 
@@ -408,7 +474,11 @@
 
             <div class="summary-row">
 
-                <span>
+                <span class="summary-row__icon summary-row__icon--orange">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+                </span>
+
+                <span class="summary-row__label">
                     Total Expired
                 </span>
 
@@ -421,7 +491,11 @@
 
             <div class="summary-row">
 
-                <span>
+                <span class="summary-row__icon summary-row__icon--orange">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>
+                </span>
+
+                <span class="summary-row__label">
                     Admin Adjustments
                 </span>
 
@@ -431,213 +505,22 @@
 
             </div>
 
-        </div>
 
-    </div>
+            <div class="wallet-info-box">
 
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
 
-    {{-- Transactions --}}
-    <div class="wallet-transactions-card">
-
-        <div class="wallet-card-heading">
-
-            <div>
-
-                <h2>
-                    Transaction History
-                </h2>
-
-                <p>
-                    Complete points ledger for this user.
-                </p>
+                <div>
+                    <strong>Points Information</strong>
+                    <p>Points are used for special rewards and discounts on your bookings.</p>
+                </div>
 
             </div>
 
         </div>
 
-
-        <div class="transaction-table-wrap">
-
-            <table class="transaction-table">
-
-                <thead>
-
-                    <tr>
-
-                        <th>
-                            Date
-                        </th>
-
-                        <th>
-                            Type
-                        </th>
-
-                        <th>
-                            Direction
-                        </th>
-
-                        <th>
-                            Points
-                        </th>
-
-                        <th>
-                            Balance
-                        </th>
-
-                        <th>
-                            Source
-                        </th>
-
-                        <th>
-                            Description
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody>
-
-                @forelse($transactions as $transaction)
-
-                    <tr>
-
-                        <td>
-
-                            <div class="transaction-date">
-
-                                <strong>
-                                    {{ $transaction->created_at->format('d M Y') }}
-                                </strong>
-
-                                <span>
-                                    {{ $transaction->created_at->format('h:i A') }}
-                                </span>
-
-                            </div>
-
-                        </td>
-
-
-                        <td>
-
-                            <span class="transaction-type">
-
-                                {{ ucfirst($transaction->type) }}
-
-                            </span>
-
-                        </td>
-
-
-                        <td>
-
-                            @if($transaction->direction === 'credit')
-
-                                <span class="transaction-direction credit">
-                                    + Credit
-                                </span>
-
-                            @else
-
-                                <span class="transaction-direction debit">
-                                    − Debit
-                                </span>
-
-                            @endif
-
-                        </td>
-
-
-                        <td>
-
-                            <strong class="transaction-points">
-
-                                {{ number_format($transaction->points) }}
-
-                            </strong>
-
-                        </td>
-
-
-                        <td>
-
-                            <strong>
-
-                                {{ number_format($transaction->balance_after) }}
-
-                            </strong>
-
-                        </td>
-
-
-                        <td>
-
-                            <span class="transaction-source">
-
-                                {{ str_replace('_', ' ', ucfirst($transaction->source)) }}
-
-                            </span>
-
-                        </td>
-
-
-                        <td>
-
-                            <div class="transaction-description">
-
-                                {{ $transaction->description ?: '—' }}
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-                @empty
-
-                    <tr>
-
-                        <td colspan="7">
-
-                            <div class="transaction-empty">
-
-                                <div>
-                                    ◎
-                                </div>
-
-                                <h3>
-                                    No transactions yet
-                                </h3>
-
-                                <p>
-                                    This user's points wallet has no
-                                    transaction history.
-                                </p>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-                @endforelse
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-
-        <div class="transaction-pagination">
-
-            {{ $transactions->withQueryString()->links() }}
-
-        </div>
-
     </div>
+
 
 </div>
 
@@ -650,27 +533,65 @@
     padding: 28px 28px 70px;
 }
 
+#adjust-points {
+    scroll-margin-top: 90px;
+}
+
+
+/* Breadcrumb */
+
+.wallet-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    color: #9aa2ae;
+    font-size: 13px;
+}
+
+.wallet-breadcrumb a {
+    color: #7d8796;
+    text-decoration: none;
+}
+
+.wallet-breadcrumb a:hover {
+    color: var(--admin-primary, #d97706);
+}
+
+.wallet-breadcrumb strong {
+    color: #344054;
+}
+
 
 /* Header */
 
 .wallet-detail-header {
+    position: relative;
+    overflow: hidden;
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
     gap: 20px;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
+    padding: 22px 24px;
+    border: 1px solid #e5e8ed;
+    border-radius: 13px;
+    background: #fff;
 }
 
-.wallet-back {
-    display: inline-block;
-    margin-bottom: 14px;
-    color: #7d8796;
-    font-size: 12px;
-    text-decoration: none;
+.wallet-detail-header__art {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 45%;
+    height: 100%;
+    color: var(--admin-sidebar, #f5faf6);
+    pointer-events: none;
 }
 
-.wallet-back:hover {
-    color: #202b3e;
+.wallet-detail-header > div,
+.wallet-user-status {
+    position: relative;
 }
 
 .wallet-profile-heading {
@@ -686,8 +607,8 @@
     align-items: center;
     justify-content: center;
     border-radius: 13px;
-    background: #eef1f5;
-    color: #344054;
+    background: var(--admin-sidebar, #f5faf6);
+    color: var(--admin-sidebar-dark, #14532d);
     font-size: 16px;
     font-weight: 750;
 }
@@ -708,6 +629,16 @@
 .wallet-profile-heading p span {
     margin: 0 5px;
     color: #c3c8d0;
+}
+
+.wallet-profile-heading p a {
+    color: var(--admin-primary, #d97706);
+    font-weight: 650;
+    text-decoration: none;
+}
+
+.wallet-profile-heading p a:hover {
+    text-decoration: underline;
 }
 
 .wallet-user-status {
@@ -765,27 +696,49 @@
 }
 
 .wallet-stat {
+    position: relative;
     min-width: 0;
     padding: 18px;
-    border: 1px solid #e5e8ed;
+    border: 1px solid #e0e6de;
     border-radius: 13px;
-    background: #fff;
+    background: var(--admin-sidebar, #f5faf6);
 }
 
-.wallet-stat.main {
-    background: #202b3e;
-    border-color: #202b3e;
+.wallet-stat__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    margin-bottom: 10px;
+    border-radius: 9px;
 }
 
-.wallet-stat span {
+.wallet-stat__icon svg {
+    width: 17px;
+    height: 17px;
+}
+
+.wallet-stat__icon--onmain {
+    background: var(--admin-success-bg, #ecfdf3);
+    color: var(--admin-success, #15803d);
+}
+
+.wallet-stat__icon--green {
+    background: var(--admin-success-bg, #ecfdf3);
+    color: var(--admin-success, #15803d);
+}
+
+.wallet-stat__icon--orange {
+    background: var(--admin-primary-soft, #fff7ed);
+    color: var(--admin-primary, #d97706);
+}
+
+.wallet-stat > span:not(.wallet-stat__icon) {
     display: block;
-    color: #8992a0;
-    font-size: 10px;
-    font-weight: 650;
-}
-
-.wallet-stat.main span {
-    color: #b8c0cd;
+    color: var(--admin-sidebar-dark, #14532d);
+    font-size: 13px;
+    font-weight: 700;
 }
 
 .wallet-stat strong {
@@ -796,19 +749,11 @@
     font-weight: 750;
 }
 
-.wallet-stat.main strong {
-    color: #fff;
-}
-
 .wallet-stat small {
     display: block;
     margin-top: 4px;
-    color: #9ba3af;
-    font-size: 10px;
-}
-
-.wallet-stat.main small {
-    color: #aab4c2;
+    color: #6b7d6c;
+    font-size: 12px;
 }
 
 
@@ -822,8 +767,7 @@
 }
 
 .wallet-adjust-card,
-.wallet-summary-card,
-.wallet-transactions-card {
+.wallet-summary-card {
     border: 1px solid #e5e8ed;
     border-radius: 13px;
     background: #fff;
@@ -837,35 +781,43 @@
 .wallet-card-heading {
     display: flex;
     align-items: flex-start;
-    justify-content: space-between;
-    gap: 15px;
+    gap: 12px;
     margin-bottom: 18px;
 }
 
 .wallet-card-heading h2 {
     margin: 0;
     color: #202b3e;
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 750;
 }
 
 .wallet-card-heading p {
     margin: 4px 0 0;
     color: #929aa7;
-    font-size: 10px;
+    font-size: 13px;
 }
 
 .adjust-icon {
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 9px;
-    background: #f2f4f7;
-    color: #344054;
-    font-size: 19px;
-    font-weight: 650;
+    border-radius: 10px;
+    background: var(--admin-primary-soft, #fff7ed);
+    color: var(--admin-primary, #d97706);
+}
+
+.adjust-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.adjust-icon--mint {
+    background: var(--admin-sidebar, #f5faf6);
+    color: var(--admin-sidebar-dark, #14532d);
 }
 
 
@@ -898,13 +850,13 @@
 .adjust-warning strong {
     display: block;
     color: #3b4657;
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .adjust-warning p {
     margin: 3px 0 0;
     color: #8d96a3;
-    font-size: 9px;
+    font-size: 12px;
     line-height: 1.5;
 }
 
@@ -922,11 +874,12 @@
     position: relative;
     display: flex;
     align-items: center;
-    gap: 9px;
-    padding: 12px;
+    gap: 10px;
+    padding: 13px;
     border: 1px solid #e1e5ea;
-    border-radius: 9px;
+    border-radius: 10px;
     cursor: pointer;
+    transition: background .15s ease, border-color .15s ease;
 }
 
 .adjust-option input {
@@ -935,46 +888,59 @@
     pointer-events: none;
 }
 
-.adjust-option:has(input:checked) {
-    border-color: #202b3e;
-    background: #fafbfc;
+.adjust-option__icon {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f1f3f5;
+    color: #98a1ae;
 }
 
-.adjust-radio {
+.adjust-option__icon svg {
     width: 15px;
     height: 15px;
-    flex: 0 0 15px;
-    border: 1px solid #b9c0c9;
-    border-radius: 50%;
-    position: relative;
 }
 
-.adjust-option input:checked + .adjust-radio {
-    border-color: #202b3e;
+.adjust-option:has(input:checked).add-option {
+    border-color: var(--admin-primary, #d97706);
+    background: var(--admin-primary, #d97706);
 }
 
-.adjust-option input:checked + .adjust-radio::after {
-    content: '';
-    position: absolute;
-    width: 7px;
-    height: 7px;
-    top: 3px;
-    left: 3px;
-    border-radius: 50%;
-    background: #202b3e;
+.adjust-option:has(input:checked).add-option strong,
+.adjust-option:has(input:checked).add-option small {
+    color: #fff;
+}
+
+.adjust-option:has(input:checked).add-option .adjust-option__icon {
+    background: rgba(255, 255, 255, .22);
+    color: #fff;
+}
+
+.adjust-option:has(input:checked).deduct-option {
+    border-color: var(--admin-primary, #d97706);
+    background: var(--admin-primary-soft, #fff7ed);
+}
+
+.adjust-option:has(input:checked).deduct-option .adjust-option__icon {
+    background: #fff;
+    color: var(--admin-primary, #d97706);
 }
 
 .adjust-option strong {
     display: block;
     color: #344054;
-    font-size: 10px;
+    font-size: 12.5px;
 }
 
 .adjust-option small {
     display: block;
     margin-top: 2px;
     color: #939ba7;
-    font-size: 8px;
+    font-size: 11px;
 }
 
 
@@ -988,8 +954,27 @@
     display: block;
     margin-bottom: 6px;
     color: #4b5666;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
+}
+
+.form-field__input-wrap {
+    position: relative;
+}
+
+.form-field__input-wrap svg {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 16px;
+    height: 16px;
+    color: #b7bec8;
+    pointer-events: none;
+}
+
+.form-field__input-wrap--textarea svg {
+    top: auto;
+    bottom: 12px;
 }
 
 .form-field input,
@@ -1002,48 +987,57 @@
     background: #fff;
     color: #344054;
     font-family: inherit;
-    font-size: 11px;
+    font-size: 13px;
 }
 
 .form-field input {
-    height: 40px;
-    padding: 0 11px;
+    height: 42px;
+    padding: 0 36px 0 12px;
 }
 
 .form-field textarea {
     min-height: 95px;
-    padding: 10px 11px;
+    padding: 10px 36px 10px 12px;
     resize: vertical;
 }
 
 .form-field input:focus,
 .form-field textarea:focus {
-    border-color: #9aa3b0;
-    box-shadow: 0 0 0 3px rgba(32, 43, 62, .04);
+    border-color: var(--admin-primary, #d97706);
+    box-shadow: 0 0 0 3px rgba(217, 119, 6, .08);
 }
 
 .form-field > small {
     display: block;
     margin-top: 5px;
     color: #9aa2ae;
-    font-size: 8px;
+    font-size: 12px;
 }
 
 .adjust-submit {
     width: 100%;
-    height: 40px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
     border: 0;
     border-radius: 8px;
-    background: #202b3e;
+    background: var(--admin-primary, #d97706);
     color: #fff;
     cursor: pointer;
     font-family: inherit;
-    font-size: 10px;
+    font-size: 13px;
     font-weight: 700;
 }
 
+.adjust-submit svg {
+    width: 17px;
+    height: 17px;
+}
+
 .adjust-submit:hover {
-    background: #121b2a;
+    background: var(--admin-primary-dark, #b45309);
 }
 
 
@@ -1052,166 +1046,85 @@
 .summary-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 15px;
+    gap: 11px;
     padding: 13px 0;
     border-bottom: 1px solid #edf0f3;
 }
 
-.summary-row:last-child {
+.summary-row:last-of-type {
     border-bottom: 0;
 }
 
-.summary-row span {
+.summary-row__icon {
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.summary-row__icon svg {
+    width: 13px;
+    height: 13px;
+}
+
+.summary-row__icon--gold {
+    background: #fff8e1;
+    color: #b7871a;
+}
+
+.summary-row__icon--green {
+    background: var(--admin-success-bg, #ecfdf3);
+    color: var(--admin-success, #15803d);
+}
+
+.summary-row__icon--orange {
+    background: var(--admin-primary-soft, #fff7ed);
+    color: var(--admin-primary, #d97706);
+}
+
+.summary-row__label {
+    flex: 1;
     color: #808a98;
-    font-size: 10px;
+    font-size: 13px;
 }
 
 .summary-row strong {
     color: #344054;
-    font-size: 11px;
+    font-size: 14.5px;
     font-weight: 700;
 }
 
-
-/* Transactions */
-
-.wallet-transactions-card {
-    overflow: hidden;
-}
-
-.wallet-transactions-card .wallet-card-heading {
-    padding: 18px 20px;
-    margin: 0;
-    border-bottom: 1px solid #edf0f3;
-}
-
-.transaction-table-wrap {
-    overflow-x: auto;
-}
-
-.transaction-table {
-    width: 100%;
-    min-width: 950px;
-    border-collapse: collapse;
-}
-
-.transaction-table th {
-    padding: 11px 14px;
-    background: #fafbfc;
-    border-bottom: 1px solid #e7ebef;
-    color: #737d8d;
-    text-align: left;
-    font-size: 8px;
-    font-weight: 750;
-    text-transform: uppercase;
-    letter-spacing: .4px;
-}
-
-.transaction-table td {
-    padding: 13px 14px;
-    border-bottom: 1px solid #edf0f3;
-    vertical-align: middle;
-}
-
-.transaction-table tbody tr:last-child td {
-    border-bottom: 0;
-}
-
-.transaction-table tbody tr:hover {
-    background: #fcfcfd;
-}
-
-.transaction-date strong {
-    display: block;
-    color: #465163;
-    font-size: 9px;
-}
-
-.transaction-date span {
-    display: block;
-    margin-top: 3px;
-    color: #9aa2ae;
-    font-size: 8px;
-}
-
-.transaction-type {
-    color: #586273;
-    font-size: 9px;
-    font-weight: 650;
-}
-
-.transaction-direction {
-    display: inline-flex;
-    padding: 4px 7px;
-    border-radius: 5px;
-    font-size: 8px;
-    font-weight: 700;
-}
-
-.transaction-direction.credit {
-    background: #eefaf4;
-    color: #19734c;
-}
-
-.transaction-direction.debit {
-    background: #fff2f2;
-    color: #a13939;
-}
-
-.transaction-points {
-    color: #344054;
-    font-size: 10px;
-}
-
-.transaction-source {
-    color: #7d8795;
-    font-size: 8px;
-}
-
-.transaction-description {
-    max-width: 260px;
-    color: #697384;
-    font-size: 9px;
-    line-height: 1.45;
-}
-
-.transaction-empty {
-    padding: 55px 20px;
-    text-align: center;
-}
-
-.transaction-empty > div {
-    width: 43px;
-    height: 43px;
-    margin: 0 auto 10px;
+.wallet-info-box {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 11px;
-    background: #f4f5f7;
-    color: #697386;
-    font-size: 19px;
+    gap: 10px;
+    margin-top: 16px;
+    padding: 14px;
+    border-radius: 10px;
+    background: var(--admin-success-bg, #ecfdf3);
 }
 
-.transaction-empty h3 {
-    margin: 0;
-    color: #344054;
-    font-size: 12px;
+.wallet-info-box svg {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+    margin-top: 2px;
+    color: var(--admin-success, #15803d);
 }
 
-.transaction-empty p {
-    margin: 5px 0 0;
-    color: #929aa7;
-    font-size: 9px;
+.wallet-info-box strong {
+    display: block;
+    color: var(--admin-success, #15803d);
+    font-size: 12.5px;
 }
 
-
-/* Pagination */
-
-.transaction-pagination {
-    padding: 13px 17px;
-    border-top: 1px solid #edf0f3;
+.wallet-info-box p {
+    margin: 3px 0 0;
+    color: #2f7a53;
+    font-size: 11.5px;
+    line-height: 1.5;
 }
 
 
@@ -1267,7 +1180,7 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     const submitButton =
-        document.getElementById('adjustSubmit');
+        document.getElementById('adjustSubmitText');
 
     const radios =
         document.querySelectorAll('input[name="action"]');

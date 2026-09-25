@@ -36,17 +36,31 @@ class AdminPointWalletController extends Controller
     }
 
     /**
-     * Display a user's wallet and transaction history.
+     * Display a user's wallet balance and the add/deduct points form.
      */
- public function show(User $user): View
-{
-    $data = $this->walletService->walletDetails(
-        user: $user,
-        perPage: 10
-    );
+    public function show(User $user): View
+    {
+        $wallet = $this->walletService->walletFor($user);
 
-    return view('admin.point-wallets.show', $data);
-}
+        return view(
+            'admin.point-wallets.show',
+            compact('user', 'wallet')
+        );
+    }
+
+    /**
+     * Display a user's full points transaction history.
+     */
+    public function transactions(User $user): View
+    {
+        $data = $this->walletService->walletDetails(
+            user: $user,
+            perPage: 15
+        );
+
+        return view('admin.point-wallets.transactions', $data);
+    }
+
     /**
      * Add or deduct points from a user's wallet.
      */
