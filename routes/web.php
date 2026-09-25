@@ -31,6 +31,7 @@ use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\Admin\TourCategoryController;
 use App\Http\Controllers\Admin\PointSettingController as AdminPointSettingController;
 use App\Http\Controllers\Admin\AdminPointWalletController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\PageController;
@@ -535,6 +536,44 @@ Route::patch(
     [\App\Http\Controllers\Admin\PageController::class, 'status']
 )
     ->name('pages.status');
+
+        /*
+        |--------------------------------------------------------------------------
+        | USERS
+        |--------------------------------------------------------------------------
+        */
+
+        Route::prefix('users')
+            ->name('users.')
+            ->group(function () {
+
+                Route::get('/', [
+                    AdminUserController::class,
+                    'index',
+                ])->name('index');
+
+                Route::get('/{user}', [
+                    AdminUserController::class,
+                    'show',
+                ])->name('show');
+
+                Route::get('/{user}/edit', [
+                    AdminUserController::class,
+                    'edit',
+                ])->name('edit');
+
+                Route::put('/{user}', [
+                    AdminUserController::class,
+                    'update',
+                ])->name('update');
+
+                Route::delete('/{user}', [
+                    AdminUserController::class,
+                    'destroy',
+                ])->name('destroy');
+            });
+
+
         /*
         |--------------------------------------------------------------------------
         | POINT WALLETS
@@ -554,6 +593,11 @@ Route::patch(
                     AdminPointWalletController::class,
                     'show',
                 ])->name('show');
+
+                Route::get('/{user}/transactions', [
+                    AdminPointWalletController::class,
+                    'transactions',
+                ])->name('transactions');
 
                 Route::post('/{user}/adjust', [
                     AdminPointWalletController::class,
@@ -864,6 +908,64 @@ Route::patch(
             AdminBookingController::class,
             'index',
         ])->name('bookings.index');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CREATE BOOKING (ON BEHALF OF A CUSTOMER)
+        |--------------------------------------------------------------------------
+        |
+        | These literal routes must be registered before the
+        | /bookings/{booking} wildcard below, otherwise "create"
+        | would be captured as a booking ID.
+        */
+
+        Route::get('/bookings/create', [
+            AdminBookingController::class,
+            'create',
+        ])->name('bookings.create');
+
+        Route::post('/bookings', [
+            AdminBookingController::class,
+            'store',
+        ])->name('bookings.store');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | BOOKING PAYMENT / POINTS CHECKOUT
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get('/bookings/{booking}/checkout', [
+            AdminBookingController::class,
+            'checkout',
+        ])->name('bookings.checkout');
+
+        Route::post('/bookings/{booking}/checkout/points/apply', [
+            AdminBookingController::class,
+            'applyPoints',
+        ])->name('bookings.checkout.points.apply');
+
+        Route::delete('/bookings/{booking}/checkout/points', [
+            AdminBookingController::class,
+            'removePoints',
+        ])->name('bookings.checkout.points.remove');
+
+        Route::post('/bookings/{booking}/confirm', [
+            AdminBookingController::class,
+            'confirm',
+        ])->name('bookings.confirm');
+
+        Route::patch('/bookings/{booking}/payment-status', [
+            AdminBookingController::class,
+            'updatePaymentStatus',
+        ])->name('bookings.payment-status.update');
+
+        Route::delete('/bookings/{booking}', [
+            AdminBookingController::class,
+            'destroy',
+        ])->name('bookings.destroy');
 
 
         /*

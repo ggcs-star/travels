@@ -9,12 +9,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\UserPointWallet;
 use App\Models\UserProfile;
 
 class User extends Authenticatable implements MustVerifyEmail, CanResetPasswordContract
 {
-    use HasFactory, Notifiable, CanResetPassword;
+    use HasFactory, Notifiable, CanResetPassword, SoftDeletes;
 
     protected $fillable = [
         'name',

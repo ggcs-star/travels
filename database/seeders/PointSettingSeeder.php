@@ -18,6 +18,12 @@ class PointSettingSeeder extends Seeder
                 'points' => 10,
                 'minimum_amount' => 100,
                 'amount_unit' => 100,
+
+                // Redemption: 1 point = ₹1, up to 50% of the booking, capped at 1000 points per booking.
+                'redemption_enabled' => true,
+                'point_value' => 1.00,
+                'max_redemption_percent' => 50,
+                'max_points_per_booking' => 1000,
             ]
         );
 

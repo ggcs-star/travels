@@ -136,8 +136,12 @@
             {{-- BOOKINGS --}}
 
             <a
-                href="{{ route('admin.bookings.index') }}"
+                href="#"
+                id="adminBookingsToggle"
                 class="admin-nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}"
+                aria-expanded="{{ request()->routeIs('admin.bookings.*') ? 'true' : 'false' }}"
+                aria-controls="adminBookingsSubmenu"
+                onclick="toggleAdminBookings(event)"
             >
 
                 <span class="admin-nav-icon">
@@ -146,6 +150,75 @@
 
                 <span>
                     Bookings
+                </span>
+
+                <span
+                    class="admin-nav-arrow"
+                    id="adminBookingsArrow"
+                >
+                    {{ request()->routeIs('admin.bookings.*') ? '⌃' : '⌄' }}
+                </span>
+
+            </a>
+
+
+            <div
+                id="adminBookingsSubmenu"
+                class="admin-nav-submenu"
+                style="{{ request()->routeIs('admin.bookings.*') ? 'display: block;' : 'display: none;' }}"
+            >
+
+                {{-- ALL BOOKINGS --}}
+
+                <a
+                    href="{{ route('admin.bookings.index') }}"
+                    class="admin-nav-sublink {{ request()->routeIs('admin.bookings.index', 'admin.bookings.show') ? 'active' : '' }}"
+                >
+
+                    <span class="admin-nav-subicon">
+                        •
+                    </span>
+
+                    <span>
+                        All Bookings
+                    </span>
+
+                </a>
+
+
+                {{-- CREATE BOOKING --}}
+
+                <a
+                    href="{{ route('admin.bookings.create') }}"
+                    class="admin-nav-sublink {{ request()->routeIs('admin.bookings.create', 'admin.bookings.checkout') ? 'active' : '' }}"
+                >
+
+                    <span class="admin-nav-subicon">
+                        +
+                    </span>
+
+                    <span>
+                        Create Booking
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            {{-- USERS --}}
+
+            <a
+                href="{{ route('admin.users.index') }}"
+                class="admin-nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
+            >
+
+                <span class="admin-nav-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </span>
+
+                <span>
+                    Users
                 </span>
 
             </a>
@@ -606,6 +679,37 @@
         const submenu = document.getElementById('adminSettingsSubmenu');
         const arrow = document.getElementById('adminSettingsArrow');
         const toggle = document.getElementById('adminSettingsToggle');
+
+        if (!submenu || !arrow || !toggle) {
+            return;
+        }
+
+        const isOpen = submenu.style.display === 'block';
+
+        if (isOpen) {
+
+            submenu.style.display = 'none';
+            arrow.textContent = '⌄';
+            toggle.setAttribute('aria-expanded', 'false');
+
+        } else {
+
+            submenu.style.display = 'block';
+            arrow.textContent = '⌃';
+            toggle.setAttribute('aria-expanded', 'true');
+
+        }
+
+    }
+
+
+    function toggleAdminBookings(event) {
+
+        event.preventDefault();
+
+        const submenu = document.getElementById('adminBookingsSubmenu');
+        const arrow = document.getElementById('adminBookingsArrow');
+        const toggle = document.getElementById('adminBookingsToggle');
 
         if (!submenu || !arrow || !toggle) {
             return;

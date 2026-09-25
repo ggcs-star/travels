@@ -221,23 +221,27 @@
 
                             {{-- Status --}}
                             <td>
-                                @if($blog->status === \App\Models\Blog::STATUS_PUBLISHED)
-                                    <span class="blog-status blog-status--published">
-                                        <span></span> Published
-                                    </span>
-                                @elseif($blog->status === \App\Models\Blog::STATUS_SCHEDULED)
-                                    <span class="blog-status blog-status--scheduled">
-                                        <span></span> Scheduled
-                                    </span>
-                                @elseif($blog->status === \App\Models\Blog::STATUS_INACTIVE)
-                                    <span class="blog-status blog-status--inactive">
-                                        <span></span> Inactive
-                                    </span>
-                                @else
-                                    <span class="blog-status blog-status--draft">
-                                        <span></span> Draft
-                                    </span>
-                                @endif
+                                <form
+                                    method="POST"
+                                    action="{{ route('admin.blog.status', $blog) }}"
+                                    class="admin-inline-status-form"
+                                >
+                                    @csrf
+                                    @method('PATCH')
+
+                                    <select
+                                        name="status"
+                                        title="Change status"
+                                        data-status-select
+                                        class="admin-status-select admin-status-select--{{ $blog->status }}"
+                                        onchange="this.form.submit()"
+                                    >
+                                        <option value="draft" @selected($blog->status === \App\Models\Blog::STATUS_DRAFT)>Draft</option>
+                                        <option value="published" @selected($blog->status === \App\Models\Blog::STATUS_PUBLISHED)>Published</option>
+                                        <option value="scheduled" @selected($blog->status === \App\Models\Blog::STATUS_SCHEDULED)>Scheduled</option>
+                                        <option value="inactive" @selected($blog->status === \App\Models\Blog::STATUS_INACTIVE)>Inactive</option>
+                                    </select>
+                                </form>
                             </td>
 
                             {{-- Author --}}
@@ -354,30 +358,6 @@
                                         >
                                             <svg viewBox="0 0 24 24" fill="{{ $blog->featured ? 'currentColor' : 'none' }}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2Z"/></svg>
                                             <span class="admin-sr-only">{{ $blog->featured ? 'Featured' : 'Feature' }}</span>
-                                        </button>
-                                    </form>
-
-                                    <form
-                                        method="POST"
-                                        action="{{ route('admin.blog.status', $blog) }}"
-                                        class="blog-inline-form"
-                                    >
-                                        @csrf
-                                        @method('PATCH')
-
-                                        <input
-                                            type="hidden"
-                                            name="status"
-                                            value="{{ $blog->status === \App\Models\Blog::STATUS_PUBLISHED ? 'draft' : 'published' }}"
-                                        >
-
-                                        <button
-                                            type="submit"
-                                            class="admin-icon-button"
-                                            title="{{ $blog->status === \App\Models\Blog::STATUS_PUBLISHED ? 'Move to Draft' : 'Publish' }}"
-                                        >
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></svg>
-                                            <span class="admin-sr-only">{{ $blog->status === \App\Models\Blog::STATUS_PUBLISHED ? 'Move to Draft' : 'Publish' }}</span>
                                         </button>
                                     </form>
 
@@ -597,5 +577,72 @@
     </div>
 
 </div>
+
+
+<style>
+
+.admin-inline-status-form {
+    display: inline-block;
+}
+
+.admin-status-select {
+    height: 30px;
+    border: 1px solid #dfe3e9;
+    border-radius: 6px;
+    background: #fff;
+    color: #4b5666;
+    font-size: 11px;
+    font-weight: 650;
+    padding: 0 8px;
+    cursor: pointer;
+}
+
+.admin-status-select:focus {
+    outline: none;
+    border-color: #8993a3;
+}
+
+.admin-status-select--published {
+    background: var(--admin-success-bg, #ecfdf3);
+    border-color: var(--admin-success-bg, #ecfdf3);
+    color: var(--admin-success, #15803d);
+}
+
+.admin-status-select--draft {
+    background: #fffbeb;
+    border-color: #fffbeb;
+    color: #b45309;
+}
+
+.admin-status-select--scheduled {
+    background: #e8f1ff;
+    border-color: #e8f1ff;
+    color: #2563eb;
+}
+
+.admin-status-select--inactive {
+    background: var(--admin-danger-bg, #fff1f2);
+    border-color: var(--admin-danger-bg, #fff1f2);
+    color: var(--admin-danger, #b42318);
+}
+
+</style>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    document.querySelectorAll('[data-status-select]').forEach(function (select) {
+
+        select.addEventListener('change', function () {
+
+            select.className = 'admin-status-select admin-status-select--' + select.value;
+
+        });
+
+    });
+
+});
+</script>
 
 @endsection

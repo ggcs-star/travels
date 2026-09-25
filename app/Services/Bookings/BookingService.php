@@ -736,6 +736,119 @@ class BookingService
     }
 
     /**
+     * Confirm an admin-created booking as paid without an online
+     * payment gateway (e.g. cash, bank transfer, or another offline
+     * method collected by the admin on behalf of the customer).
+     *
+     * Mirrors confirmPayment() but records an offline Payment
+     * instead of verifying a Razorpay signature.
+     */
+    public function confirmOfflinePayment(
+        Booking $booking,
+        string $paymentMethod = 'admin_offline',
+        array $metadata = []
+    ): Booking {
+        return DB::transaction(function () use (
+            $booking,
+            $paymentMethod,
+            $metadata
+        ) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | Lock Booking
+            |--------------------------------------------------------------------------
+            */
+
+            $booking = Booking::query()
+                ->lockForUpdate()
+                ->findOrFail($booking->id);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Verify Booking Is Still Payable
+            |--------------------------------------------------------------------------
+            */
+
+            if (! $booking->isPayable()) {
+                throw ValidationException::withMessages([
+                    'payment' =>
+                        'This booking can no longer be confirmed.',
+                ]);
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Record Offline Payment
+            |--------------------------------------------------------------------------
+            */
+
+            $payableAmount = $booking->payableAmount();
+
+            $payment = $booking->payments()->create([
+                'provider' => $paymentMethod,
+
+                'provider_payment_id' =>
+                    'ADMIN-' . $booking->booking_number,
+
+                'amount' => $payableAmount,
+
+                'currency' => $booking->currency,
+
+                'status' => Payment::STATUS_PAID,
+
+                'metadata' => $metadata,
+
+                'paid_at' => now(),
+            ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Confirm Booking
+            |--------------------------------------------------------------------------
+            */
+
+            $booking->update([
+                'status' =>
+                    Booking::STATUS_CONFIRMED,
+
+                'payment_status' =>
+                    Booking::PAYMENT_PAID,
+
+                'paid_at' =>
+                    now(),
+
+                'expires_at' =>
+                    null,
+            ]);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Finalize Redeemed Points & Award Booking Reward
+            |--------------------------------------------------------------------------
+            */
+
+            $this->redeemBookingPoints(
+                booking: $booking,
+                payment: $payment
+            );
+
+            $this->awardBookingPoints(
+                booking: $booking,
+                payment: $payment
+            );
+
+            return $booking->fresh([
+                'tourPackage',
+                'departure',
+                'travellers',
+                'payments',
+                'user',
+            ]);
+        });
+    }
+
+    /**
      * Deduct points used by a successfully paid booking.
      *
      * The unique booking reference prevents duplicate deductions
