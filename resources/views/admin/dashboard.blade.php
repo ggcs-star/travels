@@ -273,7 +273,7 @@
 
                                 <td>{{ $booking->user->name ?? $booking->contact_name }}</td>
 
-                                <td>{{ $booking->tourPackage->name ?? '—' }}</td>
+                                <td>{{ $booking->tripName() ?? '—' }}</td>
 
                                 <td>{{ $booking->currency }} {{ number_format((float) $booking->payableAmount(), 2) }}</td>
 

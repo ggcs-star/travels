@@ -49,7 +49,7 @@
                     type="search"
                     name="search"
                     value="{{ request('search') }}"
-                    placeholder="Booking number or customer"
+                    placeholder="Booking number, customer, or tour"
                 >
 
             </div>
@@ -238,7 +238,7 @@
                                 {{-- Tour --}}
                                 <td>
 
-                                    {{ $booking->tourPackage?->name ?? '—' }}
+                                    {{ $booking->tripName() ?? '—' }}
 
                                 </td>
 
@@ -246,15 +246,7 @@
                                 {{-- Departure --}}
                                 <td>
 
-                                    @if($booking->departure)
-
-                                        {{ $booking->departure->departure_date?->format('d M Y') ?? '—' }}
-
-                                    @else
-
-                                        —
-
-                                    @endif
+                                    {{ $booking->tripDepartureDate()?->format('d M Y') ?? '—' }}
 
                                 </td>
 
@@ -270,8 +262,7 @@
 
                                         <small class="admin-table-discount">
                                             <s>₹{{ number_format((float) $booking->total_amount, 2) }}</s>
-                                            ·
-                                            −{{ number_format((int) $booking->points_redeemed) }} pts
+                                            −{{ number_format((int) $booking->points_redeemed) }}
                                         </small>
 
                                     @endif
@@ -294,8 +285,8 @@
                                             name="payment_status"
                                             title="Change payment status"
                                             data-status-select
+                                            data-confirm-url="{{ route('admin.bookings.confirm', $booking) }}"
                                             class="admin-status-select admin-status-select--{{ $booking->payment_status }}"
-                                            onchange="this.form.submit()"
                                         >
                                             @foreach(['unpaid', 'paid', 'failed', 'refunded'] as $status)
                                                 <option
@@ -403,6 +394,43 @@
 </div>
 
 
+{{-- =====================================================
+     MARK AS PAID MODAL
+     Opens when a booking's payment status is switched to
+     "Paid" from the table, so the admin records how the
+     customer actually paid before the status changes.
+====================================================== --}}
+
+<dialog id="mark-paid-modal" class="mark-paid-modal">
+
+    <form method="POST" id="mark-paid-form">
+        @csrf
+
+        <div class="admin-card__header">
+            <div>
+                <span class="admin-eyebrow">PAYMENT</span>
+                <h2>How did the customer pay?</h2>
+                <p>Select the payment method to mark this booking as paid.</p>
+            </div>
+        </div>
+
+        @include('admin.bookings.partials.payment-method-fields')
+
+        <div class="payment-method-actions">
+            <button type="button" class="admin-button" data-mark-paid-cancel>
+                Cancel
+            </button>
+
+            <button type="submit" class="admin-button admin-button--primary">
+                Confirm &amp; mark as paid
+            </button>
+        </div>
+
+    </form>
+
+</dialog>
+
+
 <style>
 
 /* Match the table font-size baseline used across Points Wallets */
@@ -474,20 +502,102 @@
     color: #4b5666;
 }
 
+.mark-paid-modal {
+    /*
+     * Tailwind's preflight resets `margin` to 0 on every element
+     * (including dialog), which breaks the browser's native
+     * `margin: auto` centering for <dialog>. Center it explicitly
+     * instead of relying on that default.
+     */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+
+    max-height: 90vh;
+    width: min(640px, 92vw);
+    padding: 24px;
+
+    border: none;
+    border-radius: var(--admin-radius-lg);
+
+    box-shadow: var(--admin-shadow-md);
+
+    overflow-y: auto;
+}
+
+.mark-paid-modal::backdrop {
+    background: rgba(15, 23, 42, .5);
+}
+
+.mark-paid-modal .admin-card__header {
+    margin-bottom: 18px;
+}
+
+.mark-paid-modal .payment-method-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
+    const modal = document.getElementById('mark-paid-modal');
+    const form = document.getElementById('mark-paid-form');
+    const cancelButton = document.querySelector('[data-mark-paid-cancel]');
+
+    let activeSelect = null;
+
     document.querySelectorAll('[data-status-select]').forEach(function (select) {
+
+        select.dataset.previousValue = select.value;
 
         select.addEventListener('change', function () {
 
+            if (select.value === 'paid') {
+
+                if (modal && form) {
+                    activeSelect = select;
+                    form.action = select.dataset.confirmUrl;
+                    modal.showModal();
+                }
+
+                return;
+            }
+
             select.className = 'admin-status-select admin-status-select--' + select.value;
+            select.dataset.previousValue = select.value;
+            select.closest('form').submit();
 
         });
 
     });
+
+    if (modal && cancelButton) {
+
+        function revertAndClose() {
+            if (activeSelect) {
+                activeSelect.value = activeSelect.dataset.previousValue;
+                activeSelect = null;
+            }
+            modal.close();
+        }
+
+        cancelButton.addEventListener('click', revertAndClose);
+
+        modal.addEventListener('cancel', function (event) {
+            event.preventDefault();
+            revertAndClose();
+        });
+
+    }
 
 });
 </script>

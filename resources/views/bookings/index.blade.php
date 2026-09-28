@@ -46,6 +46,121 @@
 
         <div class="container">
 
+            {{-- SEARCH & FILTER --}}
+            <form
+                method="GET"
+                action="{{ route('bookings.index') }}"
+                class="tour-search-card"
+            >
+
+                <div class="tour-search-field">
+
+                    <label for="search">
+                        Search
+                    </label>
+
+                    <input
+                        id="search"
+                        type="search"
+                        name="search"
+                        value="{{ request('search') }}"
+                        placeholder="Booking number or tour name"
+                    >
+
+                </div>
+
+
+                <div class="tour-search-field">
+
+                    <label for="status">
+                        Booking status
+                    </label>
+
+                    <select
+                        id="status"
+                        name="status"
+                    >
+
+                        <option value="">
+                            All
+                        </option>
+
+                        @foreach([
+                            'pending_payment',
+                            'confirmed',
+                            'cancelled',
+                            'expired',
+                        ] as $status)
+
+                            <option
+                                value="{{ $status }}"
+                                @selected(request('status') === $status)
+                            >
+                                {{ Str::headline($status) }}
+                            </option>
+
+                        @endforeach
+
+                    </select>
+
+                </div>
+
+
+                <div class="tour-search-field">
+
+                    <label for="payment_status">
+                        Payment status
+                    </label>
+
+                    <select
+                        id="payment_status"
+                        name="payment_status"
+                    >
+
+                        <option value="">
+                            All
+                        </option>
+
+                        @foreach([
+                            'unpaid',
+                            'paid',
+                            'failed',
+                            'refunded',
+                        ] as $status)
+
+                            <option
+                                value="{{ $status }}"
+                                @selected(request('payment_status') === $status)
+                            >
+                                {{ Str::headline($status) }}
+                            </option>
+
+                        @endforeach
+
+                    </select>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="storefront-button"
+                >
+                    Filter
+                </button>
+
+                @if(request()->hasAny(['search', 'status', 'payment_status']))
+                    <a
+                        href="{{ route('bookings.index') }}"
+                        class="my-bookings-explore-btn"
+                    >
+                        Reset
+                    </a>
+                @endif
+
+            </form>
+
+
             @if(session('success'))
 
                 <div class="my-bookings-alert">
@@ -69,11 +184,11 @@
                                 class="my-booking-card__image"
                             >
 
-                                @if($booking->tourPackage?->cover_image)
+                                @if($booking->tripCoverImageUrl())
 
                                     <img
-                                        src="{{ $booking->tourPackage->cover_image_url }}"
-                                        alt="{{ $booking->tourPackage->name }}"
+                                        src="{{ $booking->tripCoverImageUrl() }}"
+                                        alt="{{ $booking->tripName() }}"
                                         loading="lazy"
                                     >
 
@@ -96,7 +211,7 @@
                                 </span>
 
                                 <h2>
-                                    {{ $booking->tourPackage->name }}
+                                    {{ $booking->tripName() }}
                                 </h2>
 
                                 <div class="my-booking-card__meta">
@@ -106,7 +221,7 @@
                                             <path d="M7 2v3M17 2v3M3 9h18M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"/>
                                         </svg>
 
-                                        {{ $booking->departure->departure_date->format('d M Y') }}
+                                        {{ $booking->tripDepartureDate()->format('d M Y') }}
                                     </span>
 
                                     <span>
@@ -173,22 +288,44 @@
                         ✈
                     </div>
 
-                    <h2>
-                        No bookings yet
-                    </h2>
+                    @if(request()->hasAny(['search', 'status', 'payment_status']))
 
-                    <p>
-                        Your upcoming journeys will appear here after
-                        you reserve a departure.
-                    </p>
+                        <h2>
+                            No bookings matched
+                        </h2>
 
-                    <a
-                        href="{{ route('tours.index') }}"
-                        class="my-bookings-explore-btn"
-                    >
-                        Explore Tours
-                        <span>→</span>
-                    </a>
+                        <p>
+                            Try a different search term, or reset the
+                            filters to see all your bookings.
+                        </p>
+
+                        <a
+                            href="{{ route('bookings.index') }}"
+                            class="my-bookings-explore-btn"
+                        >
+                            Reset filters
+                        </a>
+
+                    @else
+
+                        <h2>
+                            No bookings yet
+                        </h2>
+
+                        <p>
+                            Your upcoming journeys will appear here after
+                            you reserve a departure.
+                        </p>
+
+                        <a
+                            href="{{ route('tours.index') }}"
+                            class="my-bookings-explore-btn"
+                        >
+                            Explore Tours
+                            <span>→</span>
+                        </a>
+
+                    @endif
 
                 </div>
 

@@ -31,7 +31,7 @@
             <h1>Confirm your booking</h1>
 
             <p>
-                {{ $booking->tourPackage->name }}
+                {{ $booking->tripName() }}
                 ·
                 {{ $booking->traveller_count }}
                 {{ Str::plural('traveller', $booking->traveller_count) }}

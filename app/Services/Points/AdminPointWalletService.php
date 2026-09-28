@@ -131,8 +131,7 @@ class AdminPointWalletService
                 'balance_before' => $balanceBefore,
                 'balance_after' => $balanceAfter,
                 'source' => 'admin_adjustment',
-                'reference_type' => null,
-                'reference_id' => null,
+                'booking_id' => null,
                 'reference' => $reference
                     ?? $this->generateReference('ADMIN-ADD'),
                 'description' => $reason,
@@ -199,8 +198,7 @@ class AdminPointWalletService
                 'balance_before' => $balanceBefore,
                 'balance_after' => $balanceAfter,
                 'source' => 'admin_adjustment',
-                'reference_type' => null,
-                'reference_id' => null,
+                'booking_id' => null,
                 'reference' => $reference
                     ?? $this->generateReference('ADMIN-REMOVE'),
                 'description' => $reason,
