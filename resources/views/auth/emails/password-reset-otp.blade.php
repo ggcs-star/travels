@@ -1,0 +1,1 @@
+<!DOCTYPE html><html><body><h2>Reset your password</h2>@if($userName)<p>Hello {{ $userName }},</p>@endif<p>Your password reset OTP is:</p><h1 style="letter-spacing:10px;text-align:center">{{ $otp }}</h1><p>This OTP is valid for <strong>{{ $expiresInMinutes }} minutes</strong>.</p><p>Do not share this code with anyone.</p></body></html>

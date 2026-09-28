@@ -129,14 +129,61 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])
         ->name('register.submit');
 
-    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])
-        ->name('password.email');
+    /*
+    |--------------------------------------------------------------------------
+    | FORGOT PASSWORD - EMAIL OTP
+    |--------------------------------------------------------------------------
+    | Complete OTP flow is handled inside the existing AuthController.
+    |
+    | 1. Enter email
+    | 2. Receive 6-digit OTP
+    | 3. Verify OTP
+    | 4. Create new password
+    */
 
-    Route::get('/reset-password/{token}', [AuthController::class, 'showResetPassword'])
-        ->name('password.reset');
+    Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])
+        ->name('password.request');
+
+    Route::post('/forgot-password/send-otp', [AuthController::class, 'sendPasswordResetOtp'])
+        ->name('password.otp.send');
+
+    Route::get('/forgot-password/verify-otp', [AuthController::class, 'showPasswordOtp'])
+        ->name('password.otp.form');
+
+    Route::post('/forgot-password/verify-otp', [AuthController::class, 'verifyPasswordResetOtp'])
+        ->name('password.otp.verify');
+
+    Route::post('/forgot-password/resend-otp', [AuthController::class, 'resendPasswordResetOtp'])
+        ->name('password.otp.resend');
+
+    Route::get('/reset-password', [AuthController::class, 'showResetPassword'])
+        ->name('password.reset.form');
 
     Route::post('/reset-password', [AuthController::class, 'resetPassword'])
-        ->name('password.store');
+        ->name('password.reset.update');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| EMAIL VERIFICATION
+|--------------------------------------------------------------------------
+|
+| Verification is for logged-in users, so these routes use auth middleware.
+|
+*/
+
+Route::middleware('auth')->group(function () {
+    Route::get('/email/verify', [AuthController::class, 'verificationNotice'])
+        ->name('verification.notice');
+
+    Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
+        ->middleware('signed')
+        ->name('verification.verify');
+
+    Route::post('/email/verification-notification', [AuthController::class, 'resendVerification'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
 });
 
 
@@ -253,24 +300,6 @@ Route::get(
 
     /*
     |--------------------------------------------------------------------------
-    | Email Verification
-    |--------------------------------------------------------------------------
-    */
-
-    Route::get('/email/verify', [AuthController::class, 'verificationNotice'])
-        ->name('verification.notice');
-
-    Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
-        ->middleware('signed')
-        ->name('verification.verify');
-
-    Route::post('/email/verification-notification', [AuthController::class, 'resendVerification'])
-        ->middleware('throttle:6,1')
-        ->name('verification.send');
-
-
-    /*
-    |--------------------------------------------------------------------------
     | Change Password
     |--------------------------------------------------------------------------
     */
@@ -350,25 +379,6 @@ Route::prefix('admin')
         Route::get('/dashboard', [AdminController::class, 'dashboard'])
             ->name('dashboard');
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | ADMIN PROFILE
-        |--------------------------------------------------------------------------
-        |
-        | Admin profile is handled by AdminProfileController.
-        |
-        */
-
-Route::get('/profile', [
-    AdminProfileController::class,
-    'index',
-])->name('profile');
-
-Route::put('/profile', [
-    AdminProfileController::class,
-    'update',
-])->name('profile.update');
 
         Route::get('/inquiries', [
             ContactInquiryController::class,

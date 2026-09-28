@@ -721,7 +721,7 @@
 
 
             {{-- =====================================================
-                 FORGOT PASSWORD
+                 FORGOT PASSWORD - EMAIL OTP
             ====================================================== --}}
 
             <div
@@ -741,8 +741,8 @@
                     </h1>
 
                     <p>
-                        Enter your email address and we'll send you
-                        a password reset link.
+                        Enter your email address and we'll send you a
+                        6-digit verification code.
                     </p>
 
                 </div>
@@ -753,7 +753,7 @@
                     <div class="auth-error">
 
                         <strong>
-                            Unable to send reset link
+                            Unable to send OTP
                         </strong>
 
                         <span>
@@ -767,7 +767,7 @@
 
                 <form
                     method="POST"
-                    action="{{ route('password.email') }}"
+                    action="{{ route('password.otp.send') }}"
                     class="auth-form"
                 >
 
@@ -789,7 +789,7 @@
                         <div class="auth-input-wrapper">
 
                             <span class="auth-input-icon">
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16v12H4V6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16v12H4V6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
                             </span>
 
                             <input
@@ -797,7 +797,7 @@
                                 type="email"
                                 name="email"
                                 value="{{ old('_form') === 'forgot' ? old('email') : '' }}"
-                                placeholder="Enter your email"
+                                placeholder="Enter your registered email"
                                 autocomplete="email"
                                 required
                             >
@@ -825,7 +825,7 @@
                     >
 
                         <span>
-                            Send Reset Link
+                            Send OTP
                         </span>
 
                         <span aria-hidden="true">
