@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AdminStoreBookingRequest;
+use App\Http\Requests\Admin\ConfirmBookingPaymentRequest;
 use App\Models\Booking;
 use App\Models\BookingTraveller;
+use App\Models\Payment;
 use App\Models\TourDeparture;
 use App\Models\TourPackage;
 use App\Models\User;
@@ -80,6 +82,12 @@ class BookingController extends Controller
      * Seats are reserved immediately, exactly like a customer-created
      * booking. The admin then confirms payment on the next screen,
      * where points can also be applied on the customer's behalf.
+     *
+     * Real-life scenario: the customer sometimes pays the admin
+     * (cash, UPI, bank transfer, Razorpay) before this booking is
+     * even entered into the system. In that case the admin ticks
+     * "payment already collected" and the booking is created
+     * already confirmed & paid, skipping the checkout screen.
      */
     public function store(
         AdminStoreBookingRequest $request
@@ -98,8 +106,32 @@ class BookingController extends Controller
             $booking = $this->bookingService->create(
                 $tour,
                 $customer,
-                $data
+                $data,
+                bookedByAdmin: true
             );
+
+            if (! empty($data['payment_collected'])) {
+                $details = $this->offlinePaymentDetails(
+                    $data,
+                    $request->user()
+                );
+
+                $this->bookingService->confirmOfflinePayment(
+                    booking: $booking,
+                    paymentMethod: $data['payment_method'],
+                    metadata: $details['metadata'],
+                    providerPaymentId: $details['provider_payment_id'],
+                );
+
+                return redirect()
+                    ->route('admin.bookings.show', $booking)
+                    ->with(
+                        'success',
+                        'Booking created and payment confirmed via '
+                            . Str::headline($data['payment_method'])
+                            . '.'
+                    );
+            }
         } catch (ValidationException $exception) {
             return back()
                 ->withErrors($exception->errors())
@@ -210,24 +242,48 @@ class BookingController extends Controller
     }
 
     /**
-     * Confirm the booking as paid without an online payment gateway.
+     * Confirm the booking as paid, or explicitly leave it unpaid.
      *
-     * This finalizes any applied points discount (debiting the
-     * customer's wallet) and awards the booking's reward points.
+     * The admin records exactly how the customer paid (cash, UPI,
+     * bank transfer, or Razorpay collected outside the automated
+     * checkout) so the payment record carries the real method and
+     * reference, not a generic placeholder.
+     *
+     * If no payment method was submitted (the "payment collected"
+     * checkbox was left unticked on the checkout screen), the
+     * booking is simply saved as-is — still pending_payment/unpaid.
+     * Nothing needs updating for that case; the booking already
+     * defaults to that state.
+     *
+     * Confirming finalizes any applied points discount (debiting
+     * the customer's wallet) and awards the booking's reward points.
      */
     public function confirm(
         Booking $booking,
-        Request $request
+        ConfirmBookingPaymentRequest $request
     ): RedirectResponse {
+        $data = $request->validated();
+
+        if (empty($data['payment_method'])) {
+            return redirect()
+                ->route('admin.bookings.show', $booking)
+                ->with(
+                    'success',
+                    'Booking saved. Payment is still pending.'
+                );
+        }
+
+        $details = $this->offlinePaymentDetails(
+            $data,
+            $request->user()
+        );
+
         try {
             $this->bookingService->confirmOfflinePayment(
                 booking: $booking,
-                paymentMethod: 'admin_offline',
-                metadata: [
-                    'admin_user_id' => $request->user()->id,
-                    'admin_user_name' => $request->user()->name,
-                    'note' => 'Booked by admin on behalf of the customer.',
-                ],
+                paymentMethod: $data['payment_method'],
+                metadata: $details['metadata'],
+                providerPaymentId: $details['provider_payment_id'],
             );
         } catch (ValidationException $exception) {
             return redirect()
@@ -243,8 +299,54 @@ class BookingController extends Controller
             ->route('admin.bookings.show', $booking)
             ->with(
                 'success',
-                'Booking confirmed and marked as paid.'
+                'Booking confirmed and marked as paid via '
+                    . Str::headline($data['payment_method'])
+                    . '.'
             );
+    }
+
+    /**
+     * Build the Payment metadata + provider reference for an
+     * offline (admin-recorded) payment, based on the selected
+     * method.
+     *
+     * @return array{metadata: array<string, mixed>, provider_payment_id: ?string}
+     */
+    private function offlinePaymentDetails(
+        array $data,
+        User $admin
+    ): array {
+        $metadata = [
+            'admin_user_id' => $admin->id,
+            'admin_user_name' => $admin->name,
+        ];
+
+        $providerPaymentId = null;
+
+        match ($data['payment_method']) {
+            Payment::METHOD_UPI => $metadata['upi_id'] =
+                $data['upi_id'],
+
+            Payment::METHOD_BANK_TRANSFER => $metadata = $metadata + [
+                'bank_name' => $data['bank_name'],
+                'account_number' => $data['account_number'],
+                'ifsc_code' => $data['ifsc_code'],
+            ],
+
+            Payment::METHOD_RAZORPAY => $providerPaymentId =
+                $data['razorpay_payment_id'],
+
+            default => null,
+        };
+
+        if (! empty($data['payment_note'])) {
+            $metadata['note'] = $data['payment_note'];
+        }
+
+        return [
+            'metadata' => $metadata,
+            'provider_payment_id' => $providerPaymentId,
+        ];
     }
 
     /**
@@ -342,6 +444,19 @@ class BookingController extends Controller
                                 'contact_phone',
                                 'like',
                                 "%{$search}%"
+                            )
+                            ->orWhere(
+                                'trip_snapshot->tour_name',
+                                'like',
+                                "%{$search}%"
+                            )
+                            ->orWhereHas(
+                                'tourPackage',
+                                fn ($query) => $query->where(
+                                    'name',
+                                    'like',
+                                    "%{$search}%"
+                                )
                             );
 
                     });
@@ -361,14 +476,6 @@ class BookingController extends Controller
                 fn ($query) => $query->where(
                     'payment_status',
                     $request->input('payment_status')
-                )
-            )
-
-            ->when(
-                $request->filled('tour_package_id'),
-                fn ($query) => $query->where(
-                    'tour_package_id',
-                    $request->integer('tour_package_id')
                 )
             )
 

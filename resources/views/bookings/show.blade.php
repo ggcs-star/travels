@@ -8,7 +8,7 @@
     $tour = $booking->tourPackage;
     $departure = $booking->departure;
 
-    $tourImage = $tour?->cover_image_url
+    $tourImage = $booking->tripCoverImageUrl()
         ?: asset('images/hero/tour-bg.jpg');
 
     $currency = $departure?->currency ?: 'INR';
@@ -78,16 +78,16 @@
                 </span>
 
                 <h1>
-                    {{ $tour?->name ?: 'Tour Booking' }}
+                    {{ $booking->tripName() ?: 'Tour Booking' }}
                 </h1>
 
-                @if($departure)
+                @if($booking->tripDepartureDate())
                     <p class="booking-details-subtitle">
-                        {{ $departure->departure_date?->format('D, d M Y') }}
+                        {{ $booking->tripDepartureDate()->format('D, d M Y') }}
 
-                        @if($departure->return_date)
+                        @if($booking->tripReturnDate())
                             <span>—</span>
-                            {{ $departure->return_date->format('D, d M Y') }}
+                            {{ $booking->tripReturnDate()->format('D, d M Y') }}
                         @endif
                     </p>
                 @endif
@@ -125,7 +125,7 @@
 
                         <img
                             src="{{ $tourImage }}"
-                            alt="{{ $tour?->name ?: 'Tour' }}"
+                            alt="{{ $booking->tripName() ?: 'Tour' }}"
                         >
 
                     </div>
@@ -137,7 +137,7 @@
                         </span>
 
                         <h2>
-                            {{ $tour?->name ?: 'Tour Package' }}
+                            {{ $booking->tripName() ?: 'Tour Package' }}
                         </h2>
 
                         @if($tour?->short_description)
@@ -157,33 +157,33 @@
                                 </div>
                             @endif
 
-                            @if($tour?->destination)
+                            @if($booking->tripDestination())
                                 <div class="booking-meta-item">
                                     <span>Destination</span>
                                     <strong>
-                                        {{ $tour->destination }}
+                                        {{ $booking->tripDestination() }}
                                     </strong>
                                 </div>
                             @endif
 
-                            @if($tour?->starting_city || $tour?->ending_city)
+                            @if($booking->tripStartingCity() || $booking->tripEndingCity())
                                 <div class="booking-meta-item">
                                     <span>Route</span>
                                     <strong>
-                                        {{ $tour?->starting_city ?: '—' }}
+                                        {{ $booking->tripStartingCity() ?: '—' }}
                                         →
-                                        {{ $tour?->ending_city ?: '—' }}
+                                        {{ $booking->tripEndingCity() ?: '—' }}
                                     </strong>
                                 </div>
                             @endif
 
-                            @if($tour?->duration_days)
+                            @if($booking->tripDurationDays())
                                 <div class="booking-meta-item">
                                     <span>Duration</span>
                                     <strong>
-                                        {{ $tour->duration_days }} days
-                                        @if($tour->duration_nights !== null)
-                                            / {{ $tour->duration_nights }} nights
+                                        {{ $booking->tripDurationDays() }} days
+                                        @if($booking->tripDurationNights() !== null)
+                                            / {{ $booking->tripDurationNights() }} nights
                                         @endif
                                     </strong>
                                 </div>
@@ -219,7 +219,7 @@
                             <span>Departure</span>
 
                             <strong>
-                                {{ $departure?->departure_date?->format('D, d M Y') ?: '—' }}
+                                {{ $booking->tripDepartureDate()?->format('D, d M Y') ?: '—' }}
                             </strong>
                         </div>
 
@@ -227,7 +227,7 @@
                             <span>Return</span>
 
                             <strong>
-                                {{ $departure?->return_date?->format('D, d M Y') ?: '—' }}
+                                {{ $booking->tripReturnDate()?->format('D, d M Y') ?: '—' }}
                             </strong>
                         </div>
 
@@ -239,12 +239,12 @@
                             </strong>
                         </div>
 
-                        @if($departure?->meeting_point)
+                        @if($booking->tripMeetingPoint())
                             <div class="booking-detail-item">
                                 <span>Meeting point</span>
 
                                 <strong>
-                                    {{ $departure->meeting_point }}
+                                    {{ $booking->tripMeetingPoint() }}
                                 </strong>
                             </div>
                         @endif
@@ -529,14 +529,15 @@
                             </strong>
                         </div>
 
-                        @if((float) $booking->discount_amount > 0)
+                        @if((float) $booking->points_discount > 0)
                             <div class="summary-row summary-row--discount">
                                 <span>
                                     Discount
+                                    ({{ number_format((int) $booking->points_redeemed) }} pts)
                                 </span>
 
                                 <strong>
-                                    -{{ $currencySymbol }}{{ number_format((float) $booking->discount_amount, 2) }}
+                                    -{{ $currencySymbol }}{{ number_format((float) $booking->points_discount, 2) }}
                                 </strong>
                             </div>
                         @endif
@@ -564,7 +565,7 @@
                         </span>
 
                         <strong>
-                            {{ $currencySymbol }}{{ number_format((float) $booking->total_amount, 2) }}
+                            {{ $currencySymbol }}{{ number_format((float) $booking->payableAmount(), 2) }}
                         </strong>
 
                     </div>

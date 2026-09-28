@@ -147,16 +147,36 @@
 
                 <div class="admin-form-group admin-form-group--full">
 
-                    <label for="departure_id">
+                    <label for="departure_search">
                         Departure
                         <span>*</span>
                     </label>
+
+                    <div class="admin-combo" data-departure-combo>
+
+                        <input
+                            type="text"
+                            id="departure_search"
+                            class="admin-combo__input"
+                            data-combo-input
+                            placeholder="Search a tour package…"
+                            autocomplete="off"
+                        >
+
+                        <div class="admin-combo__panel" data-combo-panel hidden></div>
+
+                        <small class="admin-form-error" data-combo-required-error hidden>
+                            Please select a departure.
+                        </small>
+
+                    </div>
 
                     <select
                         id="departure_id"
                         name="departure_id"
                         data-departure-select
-                        required
+                        class="admin-combo__native-select"
+                        hidden
                     >
                         <option value="">Select a departure</option>
 
@@ -167,6 +187,7 @@
                                         value="{{ $departure->id }}"
                                         data-price="{{ $departure->effective_price }}"
                                         data-available-seats="{{ $departure->available_seats }}"
+                                        data-departure-label="{{ $departure->departure_date->format('D, d M Y') }} – {{ $departure->return_date->format('D, d M Y') }} · ₹{{ number_format((float) $departure->effective_price, 0) }} · {{ $departure->available_seats }} {{ Str::plural('seat', $departure->available_seats) }} left"
                                         @selected((string) old('departure_id') === (string) $departure->id)
                                     >
                                         {{ $tour->name }}
@@ -366,6 +387,42 @@
 
 
         {{-- =================================================
+             PAYMENT ALREADY COLLECTED?
+        ================================================== --}}
+
+        <div class="admin-card">
+
+            <div class="admin-card__header">
+                <div>
+                    <span class="admin-eyebrow">PAYMENT</span>
+                    <h2>Was payment already collected?</h2>
+                </div>
+            </div>
+
+            <div class="admin-form-grid">
+
+                <div class="admin-form-group admin-form-group--full">
+                    @include('admin.bookings.partials.payment-collected-toggle', [
+                        'toggleId' => 'payment_collected',
+                        'toggleTitle' => 'Payment already collected from the customer',
+                        'toggleHint' => 'Tick this if the customer already paid you directly (cash, UPI, bank transfer, or Razorpay) before this booking was entered into the system. The booking will be created already confirmed & paid, instead of landing on the checkout screen.',
+                    ])
+                </div>
+
+                <div
+                    class="admin-form-group admin-form-group--full"
+                    data-payment-collected-section
+                    hidden
+                >
+                    @include('admin.bookings.partials.payment-method-fields')
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {{-- =================================================
              SUBMIT
         ================================================== --}}
 
@@ -511,6 +568,81 @@
     gap: 8px;
 }
 
+.admin-combo {
+    position: relative;
+}
+
+.admin-combo__input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.admin-combo__input.admin-combo__input--error {
+    border-color: #c0392b;
+}
+
+.admin-combo__panel {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    max-height: 320px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid var(--admin-border, #e5e8ed);
+    border-radius: 10px;
+    box-shadow: 0 10px 28px rgba(20, 30, 50, 0.12);
+}
+
+.admin-combo__tour-item,
+.admin-combo__departure-item {
+    padding: 10px 14px;
+    font-size: 13.5px;
+    color: #344054;
+    cursor: pointer;
+}
+
+.admin-combo__tour-item:hover,
+.admin-combo__departure-item:hover,
+.admin-combo__tour-item--active,
+.admin-combo__departure-item--active {
+    background: #f3f5f8;
+}
+
+.admin-combo__group-label {
+    padding: 10px 14px;
+    font-weight: 750;
+    font-size: 13px;
+    color: #202b3e;
+    background: #fafbfc;
+    border-bottom: 1px solid var(--admin-border, #e5e8ed);
+}
+
+.admin-combo__back {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 9px 14px;
+    border: 0;
+    border-bottom: 1px solid var(--admin-border, #e5e8ed);
+    background: #fafbfc;
+    color: #4b5666;
+    font-size: 12.5px;
+    font-weight: 650;
+    cursor: pointer;
+}
+
+.admin-combo__back:hover {
+    background: #f0f2f5;
+}
+
+.admin-combo__empty {
+    padding: 12px 14px;
+    color: #9aa2ae;
+    font-size: 13px;
+}
+
 </style>
 
 
@@ -521,10 +653,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const pointsHint = document.querySelector('[data-customer-points-hint]');
     const nameInput = document.getElementById('contact_name');
     const emailInput = document.getElementById('contact_email');
-
-    if (!customerSelect) {
-        return;
-    }
 
     function applyCustomer() {
 
@@ -554,10 +682,256 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    customerSelect.addEventListener('change', applyCustomer);
-    applyCustomer();
+    if (customerSelect) {
+        customerSelect.addEventListener('change', applyCustomer);
+        applyCustomer();
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Searchable Departure Combobox
+    |--------------------------------------------------------------------------
+    |
+    | The real <select data-departure-select> stays in the DOM (hidden) as
+    | the source of truth for form submission and for the existing booking
+    | totals/availability script. This widget only reads its optgroups and
+    | writes its value back, then dispatches a "change" event.
+    |
+    */
+
+    const combo = document.querySelector('[data-departure-combo]');
+    const comboInput = document.querySelector('[data-combo-input]');
+    const comboPanel = document.querySelector('[data-combo-panel]');
+    const comboRequiredError = document.querySelector('[data-combo-required-error]');
+    const departureSelect = document.querySelector('[data-departure-select]');
+    const bookingForm = document.querySelector('[data-booking-form]');
+
+    if (combo && comboInput && comboPanel && departureSelect) {
+
+        const tourGroups = Array.from(departureSelect.querySelectorAll('optgroup'));
+        let lastConfirmedText = '';
+
+        function closePanel() {
+            comboPanel.hidden = true;
+            comboPanel.innerHTML = '';
+        }
+
+        function openPanel() {
+            comboPanel.hidden = false;
+        }
+
+        function clearRequiredError() {
+            comboInput.classList.remove('admin-combo__input--error');
+            if (comboRequiredError) {
+                comboRequiredError.hidden = true;
+            }
+        }
+
+        function renderTourList(filterText) {
+
+            const needle = filterText.trim().toLowerCase();
+
+            const matches = tourGroups.filter((group) => {
+                return !needle || group.label.toLowerCase().includes(needle);
+            });
+
+            comboPanel.innerHTML = '';
+
+            if (matches.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'admin-combo__empty';
+                empty.textContent = 'No tour packages match your search.';
+                comboPanel.appendChild(empty);
+                openPanel();
+                return;
+            }
+
+            matches.forEach((group) => {
+                const item = document.createElement('div');
+                item.className = 'admin-combo__tour-item';
+                item.textContent = group.label;
+                item.tabIndex = 0;
+                item.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    comboInput.value = '';
+                    renderDepartureList(group);
+                });
+                item.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        comboInput.value = '';
+                        renderDepartureList(group);
+                    }
+                });
+                comboPanel.appendChild(item);
+            });
+
+            openPanel();
+        }
+
+        function renderDepartureList(group, filterText = '') {
+
+            const needle = filterText.trim().toLowerCase();
+            const options = Array.from(group.querySelectorAll('option'));
+
+            const matches = options.filter((option) => {
+                const label = option.dataset.departureLabel ?? option.textContent;
+                return !needle || label.toLowerCase().includes(needle);
+            });
+
+            comboPanel.innerHTML = '';
+
+            const back = document.createElement('button');
+            back.type = 'button';
+            back.className = 'admin-combo__back';
+            back.textContent = '← Back to tour packages';
+            back.addEventListener('click', (event) => {
+                event.stopPropagation();
+                comboInput.value = '';
+                comboInput.focus();
+                renderTourList('');
+            });
+            comboPanel.appendChild(back);
+
+            const groupLabel = document.createElement('div');
+            groupLabel.className = 'admin-combo__group-label';
+            groupLabel.textContent = group.label;
+            comboPanel.appendChild(groupLabel);
+
+            if (matches.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'admin-combo__empty';
+                empty.textContent = 'No departures match your search.';
+                comboPanel.appendChild(empty);
+            } else {
+                matches.forEach((option) => {
+                    const item = document.createElement('div');
+                    item.className = 'admin-combo__departure-item';
+                    item.textContent = option.dataset.departureLabel ?? option.textContent.trim();
+                    item.tabIndex = 0;
+                    item.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        selectDeparture(option, group.label);
+                    });
+                    item.addEventListener('keydown', (event) => {
+                        if (event.key === 'Enter') {
+                            event.preventDefault();
+                            selectDeparture(option, group.label);
+                        }
+                    });
+                    comboPanel.appendChild(item);
+                });
+            }
+
+            openPanel();
+
+            comboInput.dataset.comboActiveGroup = group.label;
+        }
+
+        function selectDeparture(option, tourName) {
+
+            departureSelect.value = option.value;
+            departureSelect.dispatchEvent(new Event('change', { bubbles: true }));
+
+            const label = option.dataset.departureLabel ?? option.textContent.trim();
+            lastConfirmedText = `${tourName} · ${label}`;
+            comboInput.value = lastConfirmedText;
+
+            clearRequiredError();
+            closePanel();
+            delete comboInput.dataset.comboActiveGroup;
+        }
+
+        comboInput.addEventListener('focus', () => {
+            renderTourList('');
+        });
+
+        comboInput.addEventListener('input', () => {
+
+            clearRequiredError();
+
+            const activeGroupLabel = comboInput.dataset.comboActiveGroup;
+            const activeGroup = activeGroupLabel
+                ? tourGroups.find((group) => group.label === activeGroupLabel)
+                : null;
+
+            if (activeGroup) {
+                renderDepartureList(activeGroup, comboInput.value);
+            } else {
+                renderTourList(comboInput.value);
+            }
+        });
+
+        comboInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closePanel();
+                comboInput.value = lastConfirmedText;
+                comboInput.blur();
+            }
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!combo.contains(event.target)) {
+
+                if (!comboPanel.hidden) {
+                    closePanel();
+                    comboInput.value = lastConfirmedText;
+                    delete comboInput.dataset.comboActiveGroup;
+                }
+            }
+        });
+
+        if (bookingForm) {
+            bookingForm.addEventListener('submit', (event) => {
+                if (!departureSelect.value) {
+                    event.preventDefault();
+                    comboInput.classList.add('admin-combo__input--error');
+                    if (comboRequiredError) {
+                        comboRequiredError.hidden = false;
+                    }
+                    comboInput.focus();
+                }
+            });
+        }
+
+        // Pre-fill from an already-selected option (e.g. validation round-trip).
+        const preselected = departureSelect.selectedOptions?.[0];
+        if (preselected && preselected.value) {
+            const parentGroup = preselected.closest('optgroup');
+            const label = preselected.dataset.departureLabel ?? preselected.textContent.trim();
+            lastConfirmedText = parentGroup
+                ? `${parentGroup.label} · ${label}`
+                : label;
+            comboInput.value = lastConfirmedText;
+        }
+    }
 
 });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const paymentCollectedCheckbox = document.getElementById('payment_collected');
+        const paymentCollectedSection = document.querySelector('[data-payment-collected-section]');
+
+        if (!paymentCollectedCheckbox || !paymentCollectedSection) {
+            return;
+        }
+
+        function updateSectionVisibility() {
+            const collected = paymentCollectedCheckbox.checked;
+            paymentCollectedSection.hidden = !collected;
+
+            paymentCollectedSection.querySelectorAll('[data-payment-method-radio]').forEach((radio) => {
+                radio.disabled = !collected;
+            });
+        }
+
+        paymentCollectedCheckbox.addEventListener('change', updateSectionVisibility);
+
+        updateSectionVisibility();
+    });
 </script>
 
 @endsection

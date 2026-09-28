@@ -33,9 +33,9 @@
             </h1>
 
             <p class="admin-page__description">
-                {{ $booking->tourPackage->name }}
+                {{ $booking->tripName() }}
                 ·
-                {{ $booking->departure->departure_date->format('d M Y') }}
+                {{ $booking->tripDepartureDate()->format('d M Y') }}
                 for
                 {{ $booking->user->name ?? $booking->contact_name }}
             </p>
@@ -237,25 +237,105 @@
 
         <div class="admin-card__header">
             <div>
-                <span class="admin-eyebrow">FINALIZE</span>
-                <h2>Confirm booking</h2>
-                <p>
-                    Mark this booking as paid once payment has been
-                    collected from the customer (cash, bank transfer,
-                    or another offline method).
-                </p>
+                <span class="admin-eyebrow">PAYMENT</span>
+                <h2>Has payment been collected?</h2>
             </div>
         </div>
 
-        <form method="POST" action="{{ route('admin.bookings.confirm', $booking) }}">
+        <form
+            method="POST"
+            action="{{ route('admin.bookings.confirm', $booking) }}"
+            id="checkout-confirm-form"
+        >
             @csrf
-            <button type="submit" class="admin-button admin-button--dark">
-                Confirm &amp; mark as paid — {{ $booking->currency }} {{ number_format($payableAmount, 2) }}
-            </button>
+
+            <div class="admin-form-grid">
+
+                <div class="admin-form-group admin-form-group--full">
+                    @include('admin.bookings.partials.payment-collected-toggle', [
+                        'toggleId' => 'payment_collected',
+                        'toggleTitle' => 'Payment already collected from the customer',
+                        'toggleHint' => 'Tick this once the customer has paid, then select how below. Leave it unticked to save this booking as unpaid for now — you can confirm payment later from the bookings list.',
+                    ])
+                </div>
+
+                <div
+                    class="admin-form-group admin-form-group--full"
+                    data-payment-collected-section
+                    hidden
+                >
+                    @include('admin.bookings.partials.payment-method-fields')
+                </div>
+
+            </div>
+
+            <div class="payment-method-actions">
+                <a href="{{ route('admin.bookings.show', $booking) }}" class="admin-button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="admin-button admin-button--dark"
+                    data-checkout-submit
+                    data-label-unpaid="Save as unpaid"
+                    data-label-paid="Confirm &amp; mark as paid — {{ $booking->currency }} {{ number_format($payableAmount, 2) }}"
+                >
+                    Save as unpaid
+                </button>
+            </div>
+
         </form>
 
     </section>
 
 </div>
+
+<style>
+    .payment-method-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        margin-top: 20px;
+    }
+
+    #checkout-confirm-form [data-checkout-submit].admin-button--primary {
+        background: var(--admin-primary);
+        box-shadow: 0 6px 16px rgba(217, 119, 6, .22);
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkbox = document.getElementById('payment_collected');
+        const section = document.querySelector('[data-payment-collected-section]');
+        const submitButton = document.querySelector('[data-checkout-submit]');
+
+        if (!checkbox || !section || !submitButton) {
+            return;
+        }
+
+        function updateVisibility() {
+            const collected = checkbox.checked;
+            section.hidden = !collected;
+
+            section.querySelectorAll('[data-payment-method-radio]').forEach((radio) => {
+                radio.disabled = !collected;
+            });
+
+            submitButton.classList.toggle('admin-button--dark', !collected);
+            submitButton.classList.toggle('admin-button--primary', collected);
+            submitButton.innerHTML = collected
+                ? submitButton.dataset.labelPaid
+                : submitButton.dataset.labelUnpaid;
+        }
+
+        checkbox.addEventListener('change', updateVisibility);
+
+        updateVisibility();
+    });
+</script>
 
 @endsection

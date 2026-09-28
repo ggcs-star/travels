@@ -2,11 +2,11 @@
 
 namespace App\Services\Points;
 
+use App\Models\Booking;
 use App\Models\PointTransaction;
 use App\Models\User;
 use App\Models\UserPointWallet;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use RuntimeException;
@@ -38,7 +38,7 @@ class PointWalletService
         int $points,
         string $source,
         ?string $description = null,
-        ?Model $referenceModel = null,
+        ?Booking $booking = null,
         ?string $reference = null,
         array $metadata = []
     ): PointTransaction {
@@ -49,7 +49,7 @@ class PointWalletService
             $points,
             $source,
             $description,
-            $referenceModel,
+            $booking,
             $reference,
             $metadata
         ) {
@@ -107,7 +107,7 @@ class PointWalletService
                 balanceAfter: $balanceAfter,
                 source: $source,
                 description: $description,
-                referenceModel: $referenceModel,
+                booking: $booking,
                 reference: $reference,
                 metadata: $metadata,
             );
@@ -126,7 +126,7 @@ class PointWalletService
         string $source,
         string $reference,
         ?string $description = null,
-        ?Model $referenceModel = null,
+        ?Booking $booking = null,
         array $metadata = []
     ): ?PointTransaction {
         $this->validatePoints($points);
@@ -137,7 +137,7 @@ class PointWalletService
             $source,
             $reference,
             $description,
-            $referenceModel,
+            $booking,
             $metadata
         ) {
             $existingTransaction = PointTransaction::query()
@@ -197,7 +197,7 @@ class PointWalletService
                 balanceAfter: $balanceAfter,
                 source: $source,
                 description: $description,
-                referenceModel: $referenceModel,
+                booking: $booking,
                 reference: $reference,
                 metadata: $metadata,
             );
@@ -212,7 +212,7 @@ class PointWalletService
         int $points,
         string $source,
         ?string $description = null,
-        ?Model $referenceModel = null,
+        ?Booking $booking = null,
         ?string $reference = null,
         array $metadata = []
     ): PointTransaction {
@@ -223,7 +223,7 @@ class PointWalletService
             $points,
             $source,
             $description,
-            $referenceModel,
+            $booking,
             $reference,
             $metadata
         ) {
@@ -263,7 +263,7 @@ class PointWalletService
                 balanceAfter: $balanceAfter,
                 source: $source,
                 description: $description,
-                referenceModel: $referenceModel,
+                booking: $booking,
                 reference: $reference,
                 metadata: $metadata,
             );
@@ -312,7 +312,7 @@ class PointWalletService
         int $balanceAfter,
         string $source,
         ?string $description,
-        ?Model $referenceModel,
+        ?Booking $booking,
         ?string $reference,
         array $metadata
     ): PointTransaction {
@@ -326,8 +326,7 @@ class PointWalletService
             'balance_after' => $balanceAfter,
             'source' => $source,
 
-            'reference_type' => $referenceModel?->getMorphClass(),
-            'reference_id' => $referenceModel?->getKey(),
+            'booking_id' => $booking?->id,
 
             'reference' => $reference ?? $this->generateReference(),
 

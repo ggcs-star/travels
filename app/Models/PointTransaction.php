@@ -33,8 +33,7 @@ class PointTransaction extends Model
         'balance_before',
         'balance_after',
         'source',
-        'reference_type',
-        'reference_id',
+        'booking_id',
         'reference',
         'description',
         'status',
@@ -49,7 +48,7 @@ class PointTransaction extends Model
             'points' => 'integer',
             'balance_before' => 'integer',
             'balance_after' => 'integer',
-            'reference_id' => 'integer',
+            'booking_id' => 'integer',
             'metadata' => 'array',
         ];
     }
@@ -67,12 +66,8 @@ class PointTransaction extends Model
         );
     }
 
-    public function referenceModel()
+    public function booking(): BelongsTo
     {
-        return $this->morphTo(
-            'reference',
-            'reference_type',
-            'reference_id'
-        );
+        return $this->belongsTo(Booking::class);
     }
 }

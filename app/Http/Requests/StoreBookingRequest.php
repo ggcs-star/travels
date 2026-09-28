@@ -47,7 +47,7 @@ class StoreBookingRequest extends FormRequest
 
             'contact_email' => [
                 'required',
-                'email:rfc,dns',
+                'email:rfc',
                 'max:255',
             ],
 
