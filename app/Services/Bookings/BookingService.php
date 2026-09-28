@@ -28,9 +28,10 @@ class BookingService
     public function create(
         TourPackage $tour,
         User $user,
-        array $data
+        array $data,
+        bool $bookedByAdmin = false
     ): Booking {
-        return DB::transaction(function () use ($tour, $user, $data) {
+        return DB::transaction(function () use ($tour, $user, $data, $bookedByAdmin) {
 
             /*
             |--------------------------------------------------------------------------
@@ -167,11 +168,17 @@ class BookingService
                 'user_id' =>
                     $user->id,
 
+                'booked_by_admin' =>
+                    $bookedByAdmin,
+
                 'tour_package_id' =>
                     $tour->id,
 
                 'tour_departure_id' =>
                     $departure->id,
+
+                'trip_snapshot' =>
+                    Booking::snapshotTrip($tour, $departure),
 
                 'contact_name' =>
                     $data['contact_name'],
@@ -746,12 +753,14 @@ class BookingService
     public function confirmOfflinePayment(
         Booking $booking,
         string $paymentMethod = 'admin_offline',
-        array $metadata = []
+        array $metadata = [],
+        ?string $providerPaymentId = null
     ): Booking {
         return DB::transaction(function () use (
             $booking,
             $paymentMethod,
-            $metadata
+            $metadata,
+            $providerPaymentId
         ) {
 
             /*
@@ -789,7 +798,8 @@ class BookingService
                 'provider' => $paymentMethod,
 
                 'provider_payment_id' =>
-                    'ADMIN-' . $booking->booking_number,
+                    $providerPaymentId
+                        ?: 'ADMIN-' . $booking->booking_number,
 
                 'amount' => $payableAmount,
 
@@ -895,7 +905,7 @@ class BookingService
             points: $points,
             source: 'booking_redemption',
             description: "Points redeemed for booking {$booking->booking_number}.",
-            referenceModel: $booking,
+            booking: $booking,
             reference: $reference,
             metadata: [
                 'booking_id' => $booking->id,
@@ -943,7 +953,7 @@ class BookingService
             source: 'booking_payment',
             reference: $reference,
             description: "Points earned for booking {$booking->booking_number}.",
-            referenceModel: $booking,
+            booking: $booking,
             metadata: [
                 'booking_id' => $booking->id,
                 'booking_number' => $booking->booking_number,

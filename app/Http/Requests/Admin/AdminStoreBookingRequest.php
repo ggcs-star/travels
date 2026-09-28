@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\Payment;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -65,7 +66,7 @@ class AdminStoreBookingRequest extends FormRequest
 
             'contact_email' => [
                 'required',
-                'email:rfc,dns',
+                'email:rfc',
                 'max:255',
             ],
 
@@ -162,6 +163,71 @@ class AdminStoreBookingRequest extends FormRequest
                 'mimes:jpg,jpeg,png,webp,pdf',
                 'max:5120',
             ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Payment Already Collected (optional)
+            |--------------------------------------------------------------------------
+            |
+            | Real-life scenario: the customer sometimes pays the admin
+            | (cash, UPI, bank transfer, Razorpay) before this booking is
+            | even entered into the system. When that happens, the admin
+            | ticks "payment already collected" and this booking is
+            | created already confirmed & paid, instead of landing on
+            | the checkout screen to be confirmed separately.
+            */
+
+            'payment_collected' => [
+                'nullable',
+                'boolean',
+            ],
+
+            'payment_method' => [
+                'nullable',
+                'required_if:payment_collected,1',
+                Rule::in(Payment::OFFLINE_METHODS),
+            ],
+
+            'upi_id' => [
+                'nullable',
+                'required_if:payment_method,upi',
+                'string',
+                'max:100',
+            ],
+
+            'bank_name' => [
+                'nullable',
+                'required_if:payment_method,bank_transfer',
+                'string',
+                'max:150',
+            ],
+
+            'account_number' => [
+                'nullable',
+                'required_if:payment_method,bank_transfer',
+                'string',
+                'max:34',
+            ],
+
+            'ifsc_code' => [
+                'nullable',
+                'required_if:payment_method,bank_transfer',
+                'string',
+                'max:11',
+            ],
+
+            'razorpay_payment_id' => [
+                'nullable',
+                'required_if:payment_method,razorpay',
+                'string',
+                'max:100',
+            ],
+
+            'payment_note' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
         ];
     }
 
@@ -224,6 +290,24 @@ class AdminStoreBookingRequest extends FormRequest
 
             'travellers.*.id_proof_document.max' =>
                 'Each ID proof document may not be larger than 5 MB.',
+
+            'payment_method.required_if' =>
+                'Please select how the customer paid.',
+
+            'upi_id.required_if' =>
+                'Please enter the UPI ID used for payment.',
+
+            'bank_name.required_if' =>
+                'Please enter the bank name.',
+
+            'account_number.required_if' =>
+                'Please enter the account number.',
+
+            'ifsc_code.required_if' =>
+                'Please enter the IFSC code.',
+
+            'razorpay_payment_id.required_if' =>
+                'Please enter the Razorpay payment ID.',
         ];
     }
 

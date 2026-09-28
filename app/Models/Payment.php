@@ -17,6 +17,21 @@ class Payment extends Model
 
     public const STATUS_REFUNDED = 'refunded';
 
+    public const METHOD_CASH = 'cash';
+
+    public const METHOD_UPI = 'upi';
+
+    public const METHOD_BANK_TRANSFER = 'bank_transfer';
+
+    public const METHOD_RAZORPAY = 'razorpay';
+
+    public const OFFLINE_METHODS = [
+        self::METHOD_CASH,
+        self::METHOD_UPI,
+        self::METHOD_BANK_TRANSFER,
+        self::METHOD_RAZORPAY,
+    ];
+
     protected $hidden = [
         'signature',
     ];

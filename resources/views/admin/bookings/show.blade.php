@@ -33,11 +33,11 @@
                 <span class="bd-hero__eyebrow">Booking Details</span>
                 <h1>{{ $booking->booking_number }}</h1>
                 <p>
-                    {{ $booking->tourPackage->name }}
+                    {{ $booking->tripName() }}
                     <span>•</span>
-                    {{ $booking->departure->departure_date->format('d M Y') }}
+                    {{ $booking->tripDepartureDate()->format('d M Y') }}
                     –
-                    {{ $booking->departure->return_date->format('d M Y') }}
+                    {{ $booking->tripReturnDate()->format('d M Y') }}
                 </p>
             </div>
 
@@ -142,24 +142,24 @@
 
                     <div
                         class="bd-tour__image"
-                        style="background-image:url('{{ $booking->tourPackage->cover_image_url ?: asset('images/hero/tour-bg.jpg') }}')"
+                        style="background-image:url('{{ $booking->tripCoverImageUrl() ?: asset('images/hero/tour-bg.jpg') }}')"
                     ></div>
 
                     <div class="bd-tour__info">
 
                         <span class="admin-eyebrow">TOUR PACKAGE</span>
-                        <h3>{{ $booking->tourPackage->name }}</h3>
+                        <h3>{{ $booking->tripName() }}</h3>
 
                         <div class="bd-tour__facts">
 
                             <div>
                                 <span>Departure date</span>
-                                <strong>{{ $booking->departure->departure_date->format('D, d M Y') }}</strong>
+                                <strong>{{ $booking->tripDepartureDate()->format('D, d M Y') }}</strong>
                             </div>
 
                             <div>
                                 <span>Return date</span>
-                                <strong>{{ $booking->departure->return_date->format('D, d M Y') }}</strong>
+                                <strong>{{ $booking->tripReturnDate()->format('D, d M Y') }}</strong>
                             </div>
 
                             <div>
@@ -214,10 +214,12 @@
                         <strong>{{ $booking->currency }} {{ number_format((float) $booking->tax_amount, 2) }}</strong>
                     </div>
 
-                    <div class="bd-total-row">
-                        <span>Total Amount</span>
-                        <strong>{{ $booking->currency }} {{ number_format((float) $booking->total_amount, 2) }}</strong>
-                    </div>
+                    @if((float) $booking->points_discount > 0)
+                        <div>
+                            <span>Discount</span>
+                            <strong>&minus;{{ $booking->currency }} {{ number_format((float) $booking->points_discount, 2) }}</strong>
+                        </div>
+                    @endif
 
                 </div>
 
@@ -442,6 +444,7 @@
                                     <th>#</th>
                                     <th>Date</th>
                                     <th>Payment Mode</th>
+                                    <th>Details</th>
                                     <th>Order ID</th>
                                     <th>Payment ID</th>
                                     <th>Amount</th>
@@ -453,6 +456,10 @@
 
                                 @foreach($booking->payments as $i => $payment)
 
+                                    @php
+                                        $meta = (array) ($payment->metadata ?? []);
+                                    @endphp
+
                                     <tr>
                                         <td>{{ $i + 1 }}</td>
 
@@ -462,6 +469,32 @@
 
                                         <td>
                                             {{ $payment->provider === 'razorpay' ? 'Online (Razorpay)' : Str::headline($payment->provider) }}
+                                        </td>
+
+                                        <td class="bd-payment-id">
+                                            @if($payment->provider === 'upi' && !empty($meta['upi_id']))
+                                                UPI ID: {{ $meta['upi_id'] }}
+                                            @elseif($payment->provider === 'bank_transfer')
+                                                @if(!empty($meta['bank_name']))
+                                                    {{ $meta['bank_name'] }}
+                                                @endif
+                                                @if(!empty($meta['account_number']))
+                                                    · A/C {{ $meta['account_number'] }}
+                                                @endif
+                                                @if(!empty($meta['ifsc_code']))
+                                                    · {{ strtoupper($meta['ifsc_code']) }}
+                                                @endif
+                                            @endif
+                                            @if(!empty($meta['note']))
+                                                <br><small class="admin-muted">{{ $meta['note'] }}</small>
+                                            @endif
+                                            @if(
+                                                empty($meta['upi_id'])
+                                                && empty($meta['bank_name'])
+                                                && empty($meta['note'])
+                                            )
+                                                —
+                                            @endif
                                         </td>
 
                                         <td class="bd-payment-id">
@@ -1020,22 +1053,6 @@
 
 /* Amount Summary */
 
-.bd-total-row {
-    padding: 12px 14px !important;
-    margin: 4px -14px 0;
-    border-radius: 9px;
-    background: var(--admin-primary-soft, #fff7ed);
-}
-
-.bd-total-row span {
-    color: var(--admin-primary-dark, #b45309) !important;
-    font-weight: 700 !important;
-}
-
-.bd-total-row strong {
-    color: var(--admin-primary-dark, #b45309) !important;
-}
-
 .bd-points-box {
     display: flex;
     align-items: flex-start;
@@ -1082,17 +1099,17 @@
     padding: 14px;
     margin-bottom: 16px;
     border-radius: 10px;
-    background: #202b3e;
+    background: var(--admin-primary-soft, #fff7ed);
 }
 
 .bd-payable span {
-    color: #b8c0cd;
+    color: var(--admin-primary-dark, #b45309);
     font-size: 12px;
     font-weight: 650;
 }
 
 .bd-payable strong {
-    color: #fff;
+    color: var(--admin-primary-dark, #b45309);
     font-size: 18px;
     font-weight: 800;
 }

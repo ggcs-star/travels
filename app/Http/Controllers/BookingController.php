@@ -76,8 +76,60 @@ class BookingController extends Controller
                 'tourPackage:id,name,slug,cover_image',
                 'departure:id,tour_package_id,departure_date,return_date',
             ])
+
+            ->when(
+                $request->filled('search'),
+                function ($query) use ($request) {
+
+                    $search = trim(
+                        (string) $request->input('search')
+                    );
+
+                    $query->where(function ($query) use ($search) {
+
+                        $query
+                            ->where(
+                                'booking_number',
+                                'like',
+                                "%{$search}%"
+                            )
+                            ->orWhere(
+                                'trip_snapshot->tour_name',
+                                'like',
+                                "%{$search}%"
+                            )
+                            ->orWhereHas(
+                                'tourPackage',
+                                fn ($query) => $query->where(
+                                    'name',
+                                    'like',
+                                    "%{$search}%"
+                                )
+                            );
+
+                    });
+                }
+            )
+
+            ->when(
+                $request->filled('status'),
+                fn ($query) => $query->where(
+                    'status',
+                    $request->input('status')
+                )
+            )
+
+            ->when(
+                $request->filled('payment_status'),
+                fn ($query) => $query->where(
+                    'payment_status',
+                    $request->input('payment_status')
+                )
+            )
+
             ->latest('id')
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         return view('bookings.index', compact('bookings'));
     }
