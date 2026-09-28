@@ -1,12 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'Reset Password')
+@section('title', 'Create New Password')
 
 @section('content')
 <section class="auth-page-section">
     <div class="auth-card">
-        <h1>Reset your password</h1>
-        <p>Choose a new password for your account.</p>
+
+        <h1>Create new password</h1>
+
+        <p>Your email OTP has been verified. Choose a new password for your account.</p>
 
         @if($errors->any())
             <div class="auth-error">
@@ -16,21 +18,40 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('password.store') }}">
+        @if(session('success'))
+            <div class="auth-success">{{ session('success') }}</div>
+        @endif
+
+        <form method="POST" action="{{ route('password.reset.update') }}">
             @csrf
-            <input type="hidden" name="token" value="{{ $token }}">
 
-            <label>Email</label>
-            <input type="email" name="email" value="{{ old('email', $email) }}" required autocomplete="email">
+            <label for="reset_password">New password</label>
+            <input
+                id="reset_password"
+                type="password"
+                name="password"
+                required
+                minlength="8"
+                autocomplete="new-password"
+                placeholder="Minimum 8 characters"
+            >
 
-            <label>New password</label>
-            <input type="password" name="password" required autocomplete="new-password">
+            <label for="reset_password_confirmation">Confirm new password</label>
+            <input
+                id="reset_password_confirmation"
+                type="password"
+                name="password_confirmation"
+                required
+                minlength="8"
+                autocomplete="new-password"
+                placeholder="Confirm your new password"
+            >
 
-            <label>Confirm new password</label>
-            <input type="password" name="password_confirmation" required autocomplete="new-password">
-
-            <button type="submit" class="storefront-button">Reset password</button>
+            <button type="submit" class="storefront-button">
+                Reset password
+            </button>
         </form>
+
     </div>
 </section>
 @endsection
