@@ -262,7 +262,7 @@ class PaymentController extends Controller
         );
 
         return redirect()
-            ->route('bookings.show', $booking)
+            ->route('bookings.index')
             ->with(
                 'success',
                 'Payment received. Your booking is confirmed.'

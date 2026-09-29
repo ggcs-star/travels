@@ -27,6 +27,23 @@
 
 
     {{-- =====================================================
+         FLASH MESSAGES
+    ====================================================== --}}
+
+    @if(session('error'))
+        <div class="admin-alert admin-alert--danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if(session('success'))
+        <div class="admin-alert admin-alert--success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+
+    {{-- =====================================================
          FILTERS
     ====================================================== --}}
     <section class="admin-card">
@@ -396,9 +413,8 @@
 
 {{-- =====================================================
      MARK AS PAID MODAL
-     Opens when a booking's payment status is switched to
-     "Paid" from the table, so the admin records how the
-     customer actually paid before the status changes.
+     Opens directly on the payment options when a row's payment
+     status is switched to "Paid" — no separate page visit needed.
 ====================================================== --}}
 
 <dialog id="mark-paid-modal" class="mark-paid-modal">
@@ -502,6 +518,15 @@
     color: #4b5666;
 }
 
+.payment-method-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
 .mark-paid-modal {
     /*
      * Tailwind's preflight resets `margin` to 0 on every element
@@ -533,15 +558,6 @@
 
 .mark-paid-modal .admin-card__header {
     margin-bottom: 18px;
-}
-
-.mark-paid-modal .payment-method-actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 10px;
-
-    margin-top: 20px;
 }
 
 </style>

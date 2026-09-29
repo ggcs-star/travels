@@ -12,30 +12,39 @@
         $pointsRedeemed = (int) ($booking->points_redeemed ?? 0);
         $pointsDiscount = (float) ($booking->points_discount ?? 0);
         $payableAmount = (float) $booking->payableAmount();
-
-        $wallet = auth()->user()?->pointWallet;
-        $availablePoints = (int) ($wallet?->balance ?? 0);
-
-        $redemption = app(\App\Services\Points\PointSettingService::class)
-            ->calculateRedemption(
-                availablePoints: $availablePoints,
-                bookingAmount: $totalAmount
-            );
     @endphp
 
     <section class="storefront-section payment-page">
         <div class="container payment-card">
 
-            <span class="storefront-kicker">Secure payment</span>
+            <div class="payment-card__badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg>
+                Secure Payment
+            </div>
 
             <h1>Confirm your booking</h1>
 
-            <p>
-                {{ $booking->tripName() }}
-                ·
-                {{ $booking->traveller_count }}
-                {{ Str::plural('traveller', $booking->traveller_count) }}
-            </p>
+            {{-- ================================
+                TRIP DETAILS
+            ================================= --}}
+            <div class="payment-trip">
+                <strong>{{ $booking->tripName() }}</strong>
+
+                <div class="payment-trip__meta">
+                    <span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+                        {{ $booking->tripDepartureDate()?->format('d M Y') }}
+                        –
+                        {{ $booking->tripReturnDate()?->format('d M Y') }}
+                    </span>
+
+                    <span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        {{ $booking->traveller_count }}
+                        {{ Str::plural('traveller', $booking->traveller_count) }}
+                    </span>
+                </div>
+            </div>
 
             {{-- ================================
                 PAYMENT SUMMARY
@@ -64,8 +73,6 @@
                     </div>
                 @endif
 
-                <div class="payment-summary__divider"></div>
-
                 <div class="payment-summary__row payment-summary__row--total">
                     <span>Payable amount</span>
 
@@ -78,153 +85,6 @@
 
 
             {{-- ================================
-                TRAVEL POINTS
-            ================================= --}}
-            @if ($redemption['enabled'])
-                <div class="payment-points">
-
-                    <div class="payment-points__header">
-                        <div>
-                            <span class="storefront-kicker">
-                                Travel Points
-                            </span>
-
-                            <h2>Use your points</h2>
-
-                            <p class="storefront-muted">
-                                You have
-                                <strong>
-                                    {{ number_format($availablePoints) }}
-                                </strong>
-                                points available.
-                            </p>
-                        </div>
-
-                        <div class="payment-points__balance">
-                            <strong>
-                                {{ number_format($availablePoints) }}
-                            </strong>
-                            <span>Points</span>
-                        </div>
-                    </div>
-
-
-                    @if ($availablePoints > 0)
-
-                        @if ($pointsRedeemed > 0)
-
-                            {{-- Currently applied points --}}
-                            <div class="payment-points__applied">
-
-                                <div>
-                                    <span>Applied points</span>
-
-                                    <strong>
-                                        {{ number_format($pointsRedeemed) }}
-                                    </strong>
-                                </div>
-
-                                <div>
-                                    <span>Discount</span>
-
-                                    <strong>
-                                        ₹{{ number_format($pointsDiscount, 2) }}
-                                    </strong>
-                                </div>
-
-                                <form
-                                    method="POST"
-                                    action="{{ route('payments.points.remove', $booking) }}"
-                                >
-                                    @csrf
-                                    @method('DELETE')
-
-                                    <button
-                                        type="submit"
-                                        class="storefront-link-button"
-                                    >
-                                        Remove
-                                    </button>
-                                </form>
-
-                            </div>
-
-                        @else
-
-                            {{-- Apply points --}}
-                            <form
-                                method="POST"
-                                action="{{ route('payments.points.apply', $booking) }}"
-                                class="payment-points__form"
-                            >
-                                @csrf
-
-                                <label for="points">
-                                    Points to use
-                                </label>
-
-                                <div class="payment-points__input-row">
-
-                                    <input
-                                        type="number"
-                                        id="points"
-                                        name="points"
-                                        min="1"
-                                        max="{{ $redemption['points_to_redeem'] }}"
-                                        value="{{ old('points', $redemption['points_to_redeem']) }}"
-                                        required
-                                    >
-
-                                    <button
-                                        type="submit"
-                                        class="storefront-button"
-                                    >
-                                        Apply Points
-                                    </button>
-
-                                </div>
-
-                                <p class="storefront-muted">
-                                    You can use up to
-                                    <strong>
-                                        {{ number_format($redemption['points_to_redeem']) }}
-                                    </strong>
-                                    points on this booking.
-                                </p>
-
-                                @error('points')
-                                    <p class="payment-form-error">
-                                        {{ $message }}
-                                    </p>
-                                @enderror
-
-                            </form>
-
-                        @endif
-
-                    @else
-
-                        <p class="storefront-muted">
-                            You currently don't have enough Travel Points
-                            to use on this booking.
-                        </p>
-
-                    @endif
-
-                </div>
-            @endif
-
-
-            {{-- ================================
-                PAYMENT INFORMATION
-            ================================= --}}
-            <p class="storefront-muted payment-card__secure-text">
-                Payments are processed securely by Razorpay.
-                We do not store card or UPI details.
-            </p>
-
-
-            {{-- ================================
                 PAY BUTTON
             ================================= --}}
             <button
@@ -232,13 +92,23 @@
                 class="storefront-button storefront-button--wide"
                 id="start-razorpay-payment"
             >
-                Pay ₹{{ number_format($payableAmount, 2) }}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg>
+                Pay ₹{{ number_format($payableAmount, 2) }} securely
             </button>
+
+            {{-- ================================
+                PAYMENT INFORMATION
+            ================================= --}}
+            <p class="payment-trust">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
+                Payments are processed securely by Razorpay. We do not store card or UPI details.
+            </p>
 
             <a
                 href="{{ route('bookings.show', $booking) }}"
-                class="storefront-link"
+                class="payment-back-link"
             >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                 Return to booking
             </a>
 
@@ -335,7 +205,7 @@
                     },
 
                     theme: {
-                        color: '#e27627'
+                        color: '#ff7914'
                     },
 
                     handler(response) {

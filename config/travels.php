@@ -15,6 +15,19 @@ return [
         'whatsapp' => '+910000000000',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Notification Email
+    |--------------------------------------------------------------------------
+    |
+    | Every confirmed booking (customer or admin-created) emails a
+    | "new booking" summary to this address. Change ADMIN_NOTIFICATION_EMAIL
+    | in .env to redirect it — leave it blank to disable admin
+    | notifications entirely.
+    */
+
+    'admin_notification_email' => env('ADMIN_NOTIFICATION_EMAIL'),
+
     'social' => [
         'facebook' => '#',
         'youtube' => '#',

@@ -166,6 +166,27 @@ class AdminStoreBookingRequest extends FormRequest
 
             /*
             |--------------------------------------------------------------------------
+            | Travel Points Redemption (optional)
+            |--------------------------------------------------------------------------
+            |
+            | The true maximum redeemable amount is enforced server-side by
+            | BookingService::applyPoints(), based on the customer's wallet
+            | balance and the active point-setting caps.
+            */
+
+            'points' => [
+                'nullable',
+                'integer',
+                'min:1',
+            ],
+
+            'points_otp_token' => [
+                'nullable',
+                'string',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
             | Payment Already Collected (optional)
             |--------------------------------------------------------------------------
             |
@@ -328,6 +349,7 @@ class AdminStoreBookingRequest extends FormRequest
             'travellers.*.id_proof_type' => 'traveller ID proof type',
             'travellers.*.id_proof_number' => 'traveller ID proof number',
             'travellers.*.id_proof_document' => 'traveller ID proof document',
+            'points' => 'points to redeem',
         ];
     }
 }
