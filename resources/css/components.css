@@ -3136,6 +3136,7 @@ body:has(.profile-page) .profile-page .account-detail:nth-child(n+3) {
 .wallet-table-wrap {
     width: 100%;
     overflow-x: auto;
+    contain: paint;
 }
 
 .wallet-table {
