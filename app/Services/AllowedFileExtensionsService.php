@@ -81,22 +81,34 @@ class AllowedFileExtensionsService
      *
      * IMPORTANT:
      * [] means no upload types are allowed.
+     *
+     * Private settings must be read using getAny()
+     * because uploads.allowed_extensions is stored
+     * with is_public = false.
      */
     public function get(): array
     {
-        $configured = $this->settings->get(
+        $configured = $this->settings->getAny(
             'uploads.allowed_extensions',
             null
         );
 
         /*
          * Setting does not exist yet.
+         *
          * On a fresh installation use defaults.
          */
         if ($configured === null) {
             return self::DEFAULT_EXTENSIONS;
         }
 
+        /*
+         * Support JSON strings as well.
+         *
+         * SettingsService normally casts JSON
+         * into an array, but this keeps the service
+         * compatible with older/stored values.
+         */
         if (is_string($configured)) {
             $decoded = json_decode($configured, true);
 
@@ -137,7 +149,8 @@ class AllowedFileExtensionsService
         $available = $this->normalize($available);
 
         /*
-         * Keep standard options first, then custom extensions.
+         * Keep standard options first,
+         * then custom extensions.
          */
         $standard = [];
 
@@ -148,14 +161,20 @@ class AllowedFileExtensionsService
         }
 
         $custom = array_values(
-            array_diff($available, self::DEFAULT_EXTENSIONS)
+            array_diff(
+                $available,
+                self::DEFAULT_EXTENSIONS
+            )
         );
 
         sort($custom);
 
         return array_values(
             array_unique(
-                array_merge($standard, $custom)
+                array_merge(
+                    $standard,
+                    $custom
+                )
             )
         );
     }
@@ -176,7 +195,10 @@ class AllowedFileExtensionsService
                 continue;
             }
 
-            if (! preg_match('/^[a-z0-9]{1,20}$/', $extension)) {
+            if (! preg_match(
+                '/^[a-z0-9]{1,20}$/',
+                $extension
+            )) {
                 throw ValidationException::withMessages([
                     'allowed_extensions' =>
                         "Invalid file extension: {$extension}.",
@@ -209,6 +231,8 @@ class AllowedFileExtensionsService
          * DO NOT replace [] with DEFAULT_EXTENSIONS.
          *
          * [] = no uploads allowed.
+         *
+         * This is a PRIVATE admin preference.
          */
         $this->settings->set(
             key: 'uploads.allowed_extensions',
@@ -224,8 +248,9 @@ class AllowedFileExtensionsService
     /**
      * Check one uploaded file.
      */
-    public function accepts(UploadedFile $file): bool
-    {
+    public function accepts(
+        UploadedFile $file
+    ): bool {
         if (! $file->isValid()) {
             return false;
         }
@@ -246,9 +271,11 @@ class AllowedFileExtensionsService
     /**
      * Validate all uploaded files recursively.
      */
-    public function validateFiles(array $files): void
-    {
+    public function validateFiles(
+        array $files
+    ): void {
         foreach ($files as $file) {
+
             if (is_array($file)) {
                 $this->validateFiles($file);
                 continue;
@@ -274,7 +301,8 @@ class AllowedFileExtensionsService
             $allowed = $this->get();
 
             /*
-             * Empty allowed list means EVERYTHING is rejected.
+             * Empty allowed list means EVERYTHING
+             * is rejected.
              */
             if (
                 empty($allowed)
@@ -295,18 +323,25 @@ class AllowedFileExtensionsService
     /**
      * Normalize complete extension array.
      */
-    private function normalize(array $extensions): array
-    {
+    private function normalize(
+        array $extensions
+    ): array {
         $normalized = [];
 
         foreach ($extensions as $extension) {
-            $extension = $this->normalizeOne($extension);
+
+            $extension = $this->normalizeOne(
+                $extension
+            );
 
             if ($extension === '') {
                 continue;
             }
 
-            if (! preg_match('/^[a-z0-9]{1,20}$/', $extension)) {
+            if (! preg_match(
+                '/^[a-z0-9]{1,20}$/',
+                $extension
+            )) {
                 continue;
             }
 
@@ -335,12 +370,16 @@ class AllowedFileExtensionsService
     /**
      * Normalize a single extension.
      */
-    private function normalizeOne(mixed $extension): string
-    {
+    private function normalizeOne(
+        mixed $extension
+    ): string {
         $extension = Str::lower(
             trim((string) $extension)
         );
 
-        return ltrim($extension, '.');
+        return ltrim(
+            $extension,
+            '.'
+        );
     }
 }

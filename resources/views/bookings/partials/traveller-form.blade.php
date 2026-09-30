@@ -1,9 +1,72 @@
-<fieldset class="traveller-card" data-traveller-card>
+@php
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Controlled Upload Extensions
+    |--------------------------------------------------------------------------
+    |
+    | Only extensions enabled from:
+    | Admin > Settings > Preferences
+    | will be allowed/shown here.
+    |
+    */
+
+    $allowedExtensions = app(
+        \App\Services\AllowedFileExtensionsService::class
+    )->get();
+
+    /*
+     * Convert:
+     *
+     * ['jpg', 'png', 'pdf']
+     *
+     * into:
+     *
+     * .jpg,.png,.pdf
+     *
+     * for HTML accept attribute.
+     */
+    $acceptExtensions = collect($allowedExtensions)
+        ->map(
+            fn ($extension) =>
+                '.' . ltrim($extension, '.')
+        )
+        ->implode(',');
+
+    /*
+     * Convert:
+     *
+     * ['jpg', 'png', 'pdf']
+     *
+     * into:
+     *
+     * JPG, PNG, PDF
+     *
+     * for user-facing text.
+     */
+    $extensionLabels = collect($allowedExtensions)
+        ->map(
+            fn ($extension) =>
+                strtoupper($extension)
+        )
+        ->implode(', ');
+
+    /*
+     * Whether at least one upload type is enabled.
+     */
+    $uploadsEnabled = ! empty($allowedExtensions);
+@endphp
+
+
+<fieldset
+    class="traveller-card"
+    data-traveller-card
+>
 
     <div class="traveller-card__heading">
 
         <legend>
             Traveller
+
             <span data-traveller-number>
                 {{ is_numeric($index) ? $index + 1 : '' }}
             </span>
@@ -64,6 +127,7 @@
                 for="traveller_{{ $index }}_email"
             >
                 Email
+
                 <span class="storefront-muted">
                     (optional)
                 </span>
@@ -97,6 +161,7 @@
                 for="traveller_{{ $index }}_phone"
             >
                 Phone
+
                 <span class="storefront-muted">
                     (optional)
                 </span>
@@ -360,7 +425,9 @@
             </div>
 
 
-            {{-- ID Proof Document --}}
+            {{-- =================================================
+                 ID PROOF DOCUMENT
+                 ================================================= --}}
             <div>
 
                 <label
@@ -369,17 +436,67 @@
                     Upload ID proof *
                 </label>
 
-                <input
-                    id="traveller_{{ $index }}_id_proof_document"
-                    type="file"
-                    name="travellers[{{ $index }}][id_proof_document]"
-                    accept=".jpg,.jpeg,.png,.webp,.pdf"
-                    required
-                >
 
-                <small class="storefront-muted">
-                    JPG, JPEG, PNG, WEBP or PDF · Maximum 5 MB
-                </small>
+                @if($uploadsEnabled)
+
+                    {{-- =========================================
+                         FILE UPLOAD ENABLED
+                         ========================================= --}}
+
+                    <input
+                        id="traveller_{{ $index }}_id_proof_document"
+                        type="file"
+                        name="travellers[{{ $index }}][id_proof_document]"
+                        accept="{{ $acceptExtensions }}"
+                        required
+                    >
+
+                    <small class="storefront-muted">
+                        Allowed file types:
+                        {{ $extensionLabels }}
+                        · Maximum 5 MB
+                    </small>
+
+
+                @else
+
+                    {{-- =========================================
+                         NO FILE TYPES ENABLED BY ADMIN
+                         ========================================= --}}
+
+                    <div
+                        class="storefront-alert storefront-alert--error"
+                        role="alert"
+                    >
+
+                        <strong>
+                            File upload is currently unavailable.
+                        </strong>
+
+                        <div>
+                            No file types have been enabled by
+                            the administrator.
+                        </div>
+
+                    </div>
+
+
+                    <input
+                        id="traveller_{{ $index }}_id_proof_document"
+                        type="file"
+                        name="travellers[{{ $index }}][id_proof_document]"
+                        accept=""
+                        disabled
+                    >
+
+
+                    <small class="storefront-muted">
+                        Please contact the administrator to enable
+                        at least one allowed file type.
+                    </small>
+
+                @endif
+
 
                 @error('travellers.'.$index.'.id_proof_document')
                     <small class="booking-error">

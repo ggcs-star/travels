@@ -7,10 +7,22 @@ use Illuminate\Support\Facades\Cache;
 
 class SettingsService
 {
+    /**
+     * Cache key for PUBLIC settings.
+     */
     protected string $cacheKey = 'travels.site_settings';
 
     /**
-     * Get all public settings.
+     * Cache key for ALL settings.
+     *
+     * This includes private/admin settings.
+     */
+    protected string $allCacheKey = 'travels.all_site_settings';
+
+    /**
+     * Get all PUBLIC settings.
+     *
+     * Used by public website / public APIs.
      */
     public function all(): array
     {
@@ -35,13 +47,60 @@ class SettingsService
     }
 
     /**
-     * Get a single setting.
+     * Get ALL settings.
+     *
+     * Includes both public and private settings.
+     *
+     * This should be used by admin/internal services.
+     */
+    public function allSettings(): array
+    {
+        return Cache::remember(
+            $this->allCacheKey,
+            now()->addHours(24),
+            function () {
+                return SiteSetting::query()
+                    ->get()
+                    ->mapWithKeys(function (SiteSetting $setting) {
+                        return [
+                            $setting->key => $this->castValue(
+                                $setting->value,
+                                $setting->type
+                            ),
+                        ];
+                    })
+                    ->toArray();
+            }
+        );
+    }
+
+    /**
+     * Get a PUBLIC setting.
      */
     public function get(
         string $key,
         mixed $default = null
     ): mixed {
         $settings = $this->all();
+
+        return $settings[$key] ?? $default;
+    }
+
+    /**
+     * Get any setting, including PRIVATE settings.
+     *
+     * This is useful for admin preferences such as:
+     *
+     * uploads.allowed_extensions
+     * razorpay.key_id
+     * razorpay.key_secret
+     * razorpay.webhook_secret
+     */
+    public function getAny(
+        string $key,
+        mixed $default = null
+    ): mixed {
+        $settings = $this->allSettings();
 
         return $settings[$key] ?? $default;
     }
@@ -61,13 +120,22 @@ class SettingsService
                 'key' => $key,
             ],
             [
-                'value' => $this->prepareValue($value, $type),
+                'value' => $this->prepareValue(
+                    $value,
+                    $type
+                ),
+
                 'type' => $type,
+
                 'group' => $group,
+
                 'is_public' => $isPublic,
             ]
         );
 
+        /*
+         * Clear BOTH public and private caches.
+         */
         $this->clearCache();
 
         return $setting;
@@ -76,20 +144,30 @@ class SettingsService
     /**
      * Save multiple settings.
      */
-    public function setMany(array $settings): void
-    {
+    public function setMany(
+        array $settings
+    ): void {
         foreach ($settings as $key => $data) {
+
             if (is_array($data)) {
+
                 $this->set(
                     key: $key,
+
                     value: $data['value'] ?? null,
+
                     group: $data['group'] ?? 'general',
+
                     type: $data['type'] ?? 'text',
+
                     isPublic: $data['is_public'] ?? true,
                 );
+
             } else {
+
                 $this->set(
                     key: $key,
+
                     value: $data,
                 );
             }
@@ -103,7 +181,13 @@ class SettingsService
      */
     public function clearCache(): void
     {
-        Cache::forget($this->cacheKey);
+        Cache::forget(
+            $this->cacheKey
+        );
+
+        Cache::forget(
+            $this->allCacheKey
+        );
     }
 
     /**
@@ -114,6 +198,7 @@ class SettingsService
         string $type
     ): mixed {
         return match ($type) {
+
             'boolean' => filter_var(
                 $value,
                 FILTER_VALIDATE_BOOLEAN
@@ -144,6 +229,7 @@ class SettingsService
         }
 
         return match ($type) {
+
             'boolean' => $value ? '1' : '0',
 
             'json' => json_encode(
