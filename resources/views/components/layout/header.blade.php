@@ -770,6 +770,66 @@ $headerLogo = $settings->get(
                 {{ $headerCtaText }} →
             </a>
 
+
+            {{-- ACCOUNT --}}
+
+            <div class="kanila-mobile-account">
+
+                @auth
+
+                    <a
+                        href="{{ route('profile') }}"
+                        class="kanila-mobile-account-link"
+                    >
+                        <span>Welcome, {{ auth()->user()->name ?: auth()->user()->username ?: 'My Account' }}</span>
+                        <span>→</span>
+                    </a>
+
+                    <a
+                        href="{{ route('bookings.index') }}"
+                        class="kanila-mobile-account-link"
+                    >
+                        <span>My Bookings</span>
+                        <span>→</span>
+                    </a>
+
+                    <form
+                        method="POST"
+                        action="{{ route('logout') }}"
+                    >
+                        @csrf
+
+                        <button
+                            type="submit"
+                            class="kanila-mobile-account-link kanila-mobile-account-link--button"
+                        >
+                            <span>Logout</span>
+                            <span>→</span>
+                        </button>
+                    </form>
+
+                @else
+
+                    <a
+                        href="{{ route('login') }}"
+                        class="kanila-mobile-account-link"
+                    >
+                        <span>Login</span>
+                        <span>→</span>
+                    </a>
+
+                    <a
+                        href="{{ route('register') }}"
+                        class="kanila-mobile-account-link kanila-mobile-account-link--highlight"
+                    >
+                        <span>Register</span>
+                        <span>→</span>
+                    </a>
+
+                @endauth
+
+            </div>
+
         </nav>
 
     </div>

@@ -527,6 +527,138 @@
     }
 }
 
+.kanila-mobile-navigation nav {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.kanila-mobile-navigation nav > a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 4px;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.kanila-mobile-navigation nav > a.active,
+.kanila-mobile-navigation nav > a:hover {
+    color: #ff7914;
+}
+
+.kanila-mobile-group {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.kanila-mobile-group-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 14px 4px;
+    background: transparent;
+    border: 0;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 15px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+}
+
+.kanila-mobile-group-arrow {
+    transition: transform 0.25s ease;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.kanila-mobile-group.is-expanded .kanila-mobile-group-arrow {
+    transform: rotate(90deg);
+    color: #ff7914;
+}
+
+.kanila-mobile-group .kanila-mobile-sub-link {
+    display: none;
+}
+
+.kanila-mobile-group.is-expanded .kanila-mobile-sub-link {
+    display: flex;
+}
+
+.kanila-mobile-sub-link {
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 4px 11px 18px;
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.kanila-mobile-sub-link:hover {
+    color: #ff7914;
+}
+
+.kanila-mobile-sub-link--all {
+    color: #ff7914;
+    font-weight: 600;
+}
+
+.kanila-mobile-touch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 13px 20px;
+    border-radius: 999px;
+    background: #ff7914;
+    color: #fff !important;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    border-bottom: 0 !important;
+}
+
+.kanila-mobile-account {
+    display: flex;
+    flex-direction: column;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.kanila-mobile-account-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 4px;
+    background: transparent;
+    border: 0;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: left;
+    cursor: pointer;
+}
+
+.kanila-mobile-account-link:hover {
+    color: #ff7914;
+}
+
+.kanila-mobile-account-link--highlight {
+    color: #ff7914;
+}
+
+.kanila-mobile-account-link--button {
+    font-family: inherit;
+}
+
 /* =========================================================
    RESPONSIVE
    ========================================================= */

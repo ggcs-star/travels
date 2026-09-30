@@ -1085,13 +1085,13 @@
 @media (max-width: 768px) {
 
     .kanila-hero {
-        height: 900px;
+        height: 750px;
 
-        min-height: 900px;
+        min-height: 750px;
     }
 
     .kanila-hero-inner {
-        min-height: 900px;
+        min-height: 750px;
 
         width:
             calc(
@@ -1100,7 +1100,7 @@
     }
 
     .kanila-hero-copy {
-        top: 8%;
+        top: 15%;
 
         left: 0;
 
@@ -1158,30 +1158,16 @@
 
     .kanila-airplane {
         width: 280px;
+        height: 246px;
 
         right: -20px;
 
-        top: 51%;
+        top: 60%;
     }
 
-    .kanila-polaroid-one {
-        width: 115px;
-
-        height: 150px;
-
-        left: 0;
-
-        top: 52%;
-    }
-
+    .kanila-polaroid-one,
     .kanila-polaroid-two {
-        width: 105px;
-
-        height: 140px;
-
-        left: 12%;
-
-        top: 68%;
+        display: none;
     }
 
     .kanila-heart-red {
@@ -1189,7 +1175,7 @@
 
         right: 30%;
 
-        top: 64%;
+        top: 78%;
     }
 
     .kanila-heart-orange {
@@ -1197,7 +1183,7 @@
 
         right: 0;
 
-        top: 45%;
+        top: 56%;
     }
 
     .kanila-heart-blue {
@@ -5302,6 +5288,15 @@
 }
 
 
+.footer-link-label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    min-width: 0;
+}
+
+
 .footer-column li a::after {
     content: '\203A';
 
@@ -5648,6 +5643,37 @@
 
     .footer-contact {
         grid-column: auto;
+    }
+
+    .footer-contact-item {
+        align-items: center;
+
+        gap: 8px;
+
+        margin-bottom: 10px;
+    }
+
+    .footer-contact-icon {
+        width: auto;
+        height: auto;
+
+        border: 0;
+
+        border-radius: 0;
+
+        background: transparent;
+
+        font-size: 14px;
+    }
+
+    .footer-badges {
+        margin-top: 20px;
+
+        gap: 10px;
+    }
+
+    .footer-badges span {
+        width: 84px;
     }
 
     .footer-bottom-links {

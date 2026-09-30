@@ -29,7 +29,6 @@
             class="kanila-paper-plane kanila-paper-plane-left"
             src="{{ asset('images/hero/h1-paper-plane.png') }}"
             alt=""
-            loading="lazy"
             aria-hidden="true"
         >
 
@@ -62,7 +61,6 @@
             class="kanila-airplane"
             src="{{ asset('images/hero/h1-airplane.png') }}"
             alt="Airplane"
-            loading="lazy"
             aria-hidden="true"
         >
 
@@ -70,7 +68,6 @@
             class="kanila-heart kanila-heart-red"
             src="{{ asset('images/hero/h1-heart.png') }}"
             alt=""
-            loading="lazy"
             aria-hidden="true"
         >
 
@@ -78,7 +75,6 @@
             class="kanila-heart kanila-heart-orange"
             src="{{ asset('images/hero/h1-heart-orange.png') }}"
             alt=""
-            loading="lazy"
             aria-hidden="true"
         >
 
@@ -86,23 +82,6 @@
             class="kanila-heart kanila-heart-blue"
             src="{{ asset('images/hero/h1-heart-blue.png') }}"
             alt=""
-            loading="lazy"
-            aria-hidden="true"
-        >
-
-        <img
-            class="kanila-cloud kanila-cloud-left"
-            src="{{ asset('images/hero/h1-cloud.png') }}"
-            alt=""
-            loading="lazy"
-            aria-hidden="true"
-        >
-
-        <img
-            class="kanila-cloud kanila-cloud-right"
-            src="{{ asset('images/hero/h1-cloud.png') }}"
-            alt=""
-            loading="lazy"
             aria-hidden="true"
         >
 
@@ -110,7 +89,6 @@
             class="kanila-paper-plane kanila-paper-plane-top"
             src="{{ asset('images/hero/h1-paper-plane.png') }}"
             alt=""
-            loading="lazy"
             aria-hidden="true"
         >
 
@@ -118,7 +96,6 @@
             class="kanila-paper-plane kanila-paper-plane-right"
             src="{{ asset('images/hero/h1-paper-plane.png') }}"
             alt=""
-            loading="lazy"
             aria-hidden="true"
         >
 
