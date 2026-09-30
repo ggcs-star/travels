@@ -199,6 +199,12 @@ class TourCategoryController extends Controller
                     ->orderBy('sort_order')
                     ->orderBy('name');
             },
+
+            'packages' => function ($query) {
+                $query
+                    ->withCount('departures')
+                    ->orderBy('name');
+            },
         ]);
 
         $category->loadCount('packages');

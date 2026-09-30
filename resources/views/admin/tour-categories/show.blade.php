@@ -273,6 +273,79 @@
 
 
     {{-- =========================================================
+         TOUR PACKAGES (full width)
+         ========================================================= --}}
+
+    @if($tourCategory->packages->isNotEmpty())
+
+        <section class="bd-card">
+
+            <div class="bd-card__header bd-card__header--orange">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7Z"/></svg>
+                <h2>Tour Packages</h2>
+                <span class="bd-card__count">{{ $tourCategory->packages->count() }}</span>
+            </div>
+
+            <div class="admin-table-wrapper">
+
+                <table class="admin-table">
+
+                    <thead>
+                        <tr>
+                            <th>Package</th>
+                            <th>Duration</th>
+                            <th>Departures</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach($tourCategory->packages as $package)
+
+                            <tr>
+                                <td>
+                                    <strong>{{ $package->name }}</strong>
+                                    <small style="display:block;margin-top:3px;color:var(--admin-text-light);">{{ $package->package_code }}</small>
+                                </td>
+
+                                <td>
+                                    {{ $package->duration_days }} {{ Str::plural('Day', $package->duration_days) }}
+                                    /
+                                    {{ $package->duration_nights }} {{ Str::plural('Night', $package->duration_nights) }}
+                                </td>
+
+                                <td>{{ $package->departures_count ?? 0 }}</td>
+
+                                <td>
+                                    <span class="booking-pill booking-pill--status-{{ $package->status === 'published' ? 'confirmed' : 'cancelled' }}">
+                                        {{ Str::headline($package->status) }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="admin-actions">
+                                        <a href="{{ route('admin.tours.show', $package) }}" class="admin-icon-button" title="View">View</a>
+                                        <a href="{{ route('admin.tours.edit', $package) }}" class="admin-icon-button" title="Edit">Edit</a>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        @endforeach
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    @endif
+
+
+    {{-- =========================================================
          SUB CATEGORIES (full width)
          ========================================================= --}}
 
