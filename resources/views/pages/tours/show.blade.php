@@ -759,6 +759,215 @@
                 </section>
             @endif
 
+
+            {{-- =================================================
+                 MOBILE: REPEAT BOOKING CTA
+                 Same itinerary/dates/pricing cards as the sidebar,
+                 shown again here (mobile only) after the last
+                 policy section — so after reading everything, the
+                 booking action is right there instead of requiring
+                 a scroll back to the top.
+            ================================== --}}
+
+            @php
+                $bottomCtaSettingsService = app(\App\Services\SettingsService::class);
+                $bottomCtaSettings = $bottomCtaSettingsService->all() ?: [];
+
+                $bottomCtaPhone = trim((string) ($bottomCtaSettings['site.phone'] ?? ''));
+                $bottomCtaWhatsapp = trim((string) (
+                    $bottomCtaSettings['site.whatsapp']
+                    ?? $bottomCtaSettings['site.phone']
+                    ?? ''
+                ));
+
+                $bottomCtaPhoneNumber = preg_replace('/[^0-9]/', '', (string) (preg_split('/[,;|]/', $bottomCtaPhone)[0] ?? ''));
+                $bottomCtaWhatsappNumber = preg_replace('/[^0-9]/', '', (string) (preg_split('/[,;|]/', $bottomCtaWhatsapp)[0] ?? ''));
+
+                if (strlen($bottomCtaPhoneNumber) === 10) {
+                    $bottomCtaPhoneNumber = '91' . $bottomCtaPhoneNumber;
+                }
+
+                if (strlen($bottomCtaWhatsappNumber) === 10) {
+                    $bottomCtaWhatsappNumber = '91' . $bottomCtaWhatsappNumber;
+                }
+
+                $bottomCtaCategoryName = trim((string) (
+                    data_get($tour, 'category.name')
+                    ?? data_get($tour, 'category.title')
+                    ?? data_get($tour, 'category.label')
+                    ?? 'Tour'
+                ));
+
+                if ($bottomCtaCategoryName === '') {
+                    $bottomCtaCategoryName = 'Tour';
+                }
+
+                $bottomCtaBookDateMessage = rawurlencode(
+                    'Hi, I am interested in ' . $tour->name
+                    . ' (' . $bottomCtaCategoryName . '). '
+                    . 'Please share the available ' . $bottomCtaCategoryName
+                    . ' dates and booking details.'
+                );
+
+                $bottomCtaWhatsappMessage = rawurlencode(
+                    'Hi, I am interested in ' . $tour->name
+                    . ' (' . $bottomCtaCategoryName . '). '
+                    . 'Please share the booking details.'
+                );
+
+                $bottomCtaPackages = $hasPackages
+                    ? $packages
+                    : [[
+                        'name' => 'Standard Package',
+                        'price' => $sidebarPackagePrice,
+                    ]];
+            @endphp
+
+            <div class="mobile-repeat-cta">
+
+                @if($hasItinerary)
+                    <div class="overview-sidebar-card overview-sidebar-card--itinerary">
+                        <div class="overview-sidebar-card__head">
+                            <span class="overview-sidebar-card__icon" aria-hidden="true"><i class="fa-solid fa-file-pdf"></i></span>
+                            <div>
+                                <strong>TOUR ITINERARY</strong>
+                                <small>Complete day-by-day plan</small>
+                            </div>
+                        </div>
+
+                        <a
+                            href="{{ route('tours.itinerary.pdf', ['tour' => $tour->slug]) }}"
+                            class="overview-sidebar-card__button"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            <span><i class="fa-solid fa-download"></i> &nbsp; Download Itinerary</span>
+                        </a>
+
+                        <p>Full day-by-day plan · PDF</p>
+                    </div>
+                @endif
+
+                <div class="sidebar-dates-card">
+                    <div class="sidebar-dates-card__head">
+                        <span class="sidebar-card-icon" aria-hidden="true"><i class="fa-solid fa-calendar-days"></i></span>
+                        <strong>DEPARTURE DATES</strong>
+                    </div>
+
+                    <div class="sidebar-dates-card__label">
+                        <span aria-hidden="true"><i class="fa-solid fa-calendar-check"></i></span>
+                        <strong>{{ $bottomCtaCategoryName }}</strong>
+                    </div>
+
+                    <div class="sidebar-dates-card__single-action">
+                        @if($bottomCtaWhatsappNumber)
+                            <a
+                                href="https://wa.me/{{ $bottomCtaWhatsappNumber }}?text={{ $bottomCtaBookDateMessage }}"
+                                target="_blank"
+                                rel="noopener"
+                                class="sidebar-book-date sidebar-book-date--full"
+                            >
+                                <span aria-hidden="true"><i class="fa-brands fa-whatsapp"></i></span>
+                                Book This Date
+                            </a>
+                        @else
+                            <a
+                                href="{{ route('contact') }}"
+                                class="sidebar-book-date sidebar-book-date--full"
+                            >
+                                <span aria-hidden="true"><i class="fa-brands fa-whatsapp"></i></span>
+                                Book This Date
+                            </a>
+                        @endif
+                    </div>
+
+                    <div class="sidebar-dates-card__note">
+                        <span aria-hidden="true"><i class="fa-solid fa-circle-info"></i></span>
+                        <span>Can't find your date?</span>
+                        <a href="{{ route('contact') }}">Contact us</a>
+                    </div>
+                </div>
+
+                <div class="sidebar-pkg-card">
+                    <div class="sidebar-pkg-card__head">
+                        <span aria-hidden="true"><i class="fa-solid fa-tag"></i></span>
+                        <strong>PACKAGES &amp; PRICING</strong>
+                    </div>
+
+                    @foreach($bottomCtaPackages as $package)
+                        @php
+                            $packageName = is_array($package)
+                                ? ($package['name'] ?? $package['title'] ?? 'Standard Package')
+                                : 'Standard Package';
+
+                            $packagePrice = is_array($package)
+                                ? ($package['price'] ?? null)
+                                : null;
+
+                            $packageDescription = is_array($package)
+                                ? ($package['description'] ?? null)
+                                : null;
+                        @endphp
+
+                        <div class="sidebar-pkg-card__item">
+                            <span class="sidebar-pkg-card__badge">Most Popular</span>
+
+                            <strong class="sidebar-pkg-card__name">
+                                {{ $packageName }}
+                            </strong>
+
+                            @if($packagePrice !== null)
+                                <strong class="sidebar-pkg-card__price">
+                                    ₹{{ number_format((float) $packagePrice, 0) }}
+                                </strong>
+
+                                <span class="sidebar-pkg-card__per">
+                                    per person
+                                </span>
+                            @endif
+
+                            @if($packageDescription)
+                                <p class="sidebar-pkg-card__description">
+                                    {{ $packageDescription }}
+                                </p>
+                            @endif
+
+                            <a
+                                href="{{ route('bookings.create', ['tour' => $tour]) }}"
+                                class="sidebar-pkg-card__book"
+                            >
+                                Book Now
+                            </a>
+                        </div>
+                    @endforeach
+
+                    <div class="sidebar-pkg-card__actions">
+                        @if($bottomCtaPhoneNumber)
+                            <a
+                                href="tel:+{{ $bottomCtaPhoneNumber }}"
+                                class="sidebar-action sidebar-action--call"
+                            >
+                                <span><i class="fa-solid fa-phone"></i></span>
+                                Call Now
+                            </a>
+                        @endif
+
+                        @if($bottomCtaWhatsappNumber)
+                            <a
+                                href="https://wa.me/{{ $bottomCtaWhatsappNumber }}?text={{ $bottomCtaWhatsappMessage }}"
+                                target="_blank"
+                                rel="noopener"
+                                class="sidebar-action sidebar-action--whatsapp"
+                            >
+                                <span><i class="fa-brands fa-whatsapp"></i></span>
+                                WhatsApp Us
+                            </a>
+                        @endif
+                    </div>
+                </div>
+
+            </div>
+
         </main>
 
         @php
@@ -1524,6 +1733,50 @@ body:has(.tour-detail-page) .tour-detail-nav {
 
 .tour-detail-page .tour-detail-panel.is-active {
     display: block !important;
+}
+
+/*
+ * On mobile the tab bar is a poor pattern here: it scrolls
+ * horizontally with no visual hint that "Includes & Excludes" is
+ * cut off-screen, and nothing signals "Overview" is tappable to
+ * swap content. Rather than hide Itinerary/Includes behind a tap
+ * users may never discover, show every panel in one continuous
+ * scroll on small screens. The tab bar still works as a "jump to
+ * section" shortcut — clicking a tab smoothly scrolls to it and
+ * highlights it, it just no longer hides the others.
+ */
+@media (max-width: 1000px) {
+    .tour-detail-page .tour-detail-panel:not(.is-active) {
+        display: block !important;
+    }
+}
+
+/*
+ * Repeats the itinerary/dates/pricing cards after the last policy
+ * section, mobile only — on desktop the same cards are already
+ * visible the whole time in the sticky sidebar, so repeating them
+ * here would just be redundant clutter.
+ */
+.mobile-repeat-cta {
+    display: none;
+}
+
+@media (max-width: 1000px) {
+    .mobile-repeat-cta {
+        display: block;
+        margin-top: 32px;
+        padding-top: 28px;
+        border-top: 1px solid var(--tour-border, #e5e8eb);
+    }
+
+    /*
+     * The original sidebar stacks into normal flow near the top on
+     * mobile, which would duplicate the cards now repeated above.
+     * Hide it here; .mobile-repeat-cta is the only copy on mobile.
+     */
+    .tour-detail-page .departure-panel {
+        display: none !important;
+    }
 }
 
 .tour-detail-page .storefront-kicker {
@@ -3525,7 +3778,9 @@ body:has(.tour-detail-page) .tour-detail-nav {
                 window.location.hash = name;
             }
 
-            panelsWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            var targetPanel = panelsWrap.querySelector('[data-tour-panel="' + name + '"]');
+
+            (targetPanel || panelsWrap).scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
     });
 

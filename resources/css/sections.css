@@ -1466,6 +1466,17 @@
     display: flex;
     flex-direction: column;
 
+    /*
+     * Without these, CSS Grid's auto row-sizing was collapsing each
+     * card to a shorter height than its real content (frame + caption
+     * + "Explore Tours" link) — the link would render 30px+ below
+     * where the grid thought the row ended, so the next row's card
+     * visually overlapped it. align-self:start + height:auto force
+     * the row to size off this card's actual content.
+     */
+    align-self: start;
+    height: auto;
+
     text-decoration: none;
 
     transform: rotate(-1.4deg);
