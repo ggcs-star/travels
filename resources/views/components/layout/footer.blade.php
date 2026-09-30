@@ -109,12 +109,12 @@
     ));
 
     $footerContacts = !empty($settings['footer.contacts']) ? $settings['footer.contacts'] : [
-        ['label' => 'PHONE / WHATSAPP', 'value' => '+91-8990498843, +91-7894534878', 'url' => 'tel:+918978498843', 'icon' => '☎', 'enabled' => true],
-        ['label' => 'EMAIL US', 'value' => 'bookings@travels.com', 'url' => 'mailto:bookings@travels.com', 'icon' => '✉', 'enabled' => true],
-        ['label' => 'OUR OFFICE', 'value' => 'India', 'url' => '', 'icon' => '●', 'enabled' => true],
-        ['label' => 'REGISTERED ADDRESS', 'value' => '101, Sunrise Business Hub, C.G. Road, Ahmedabad, Gujarat - 380009', 'url' => '', 'icon' => '▣', 'enabled' => true],
-        ['label' => 'BRANCH OFFICE', 'value' => '204, Gateway Plaza, Airport Road, Ahmedabad, Gujarat - 380015', 'url' => '', 'icon' => '●', 'enabled' => true],
-        ['label' => 'WORKING HOURS', 'value' => 'Mon–Sat · 9am–7pm', 'url' => '', 'icon' => '◷', 'enabled' => true],
+        ['label' => 'PHONE / WHATSAPP', 'value' => '+91-8990498843, +91-7894534878', 'url' => 'tel:+918978498843', 'icon' => 'fa-solid fa-phone', 'enabled' => true],
+        ['label' => 'EMAIL US', 'value' => 'bookings@travels.com', 'url' => 'mailto:bookings@travels.com', 'icon' => 'fa-solid fa-envelope', 'enabled' => true],
+        ['label' => 'OUR OFFICE', 'value' => 'India', 'url' => '', 'icon' => 'fa-solid fa-building', 'enabled' => true],
+        ['label' => 'REGISTERED ADDRESS', 'value' => '101, Sunrise Business Hub, C.G. Road, Ahmedabad, Gujarat - 380009', 'url' => '', 'icon' => 'fa-solid fa-location-dot', 'enabled' => true],
+        ['label' => 'BRANCH OFFICE', 'value' => '204, Gateway Plaza, Airport Road, Ahmedabad, Gujarat - 380015', 'url' => '', 'icon' => 'fa-solid fa-map-pin', 'enabled' => true],
+        ['label' => 'WORKING HOURS', 'value' => 'Mon–Sat · 9am–7pm', 'url' => '', 'icon' => 'fa-solid fa-clock', 'enabled' => true],
     ];
 
     $trustBadges = !empty($settings['footer.trust_badges']) ? $settings['footer.trust_badges'] : [
@@ -363,7 +363,9 @@
                                         @if(!empty($link['enabled']) && !empty($link['label']))
                                             <li>
                                                 <a href="{{ $footerUrl($link['url'] ?? '#') }}">
-                                                    @if(!empty($link['icon']))<i class="{{ $link['icon'] }}"></i> @endif{{ $link['label'] }}
+                                                    <span class="footer-link-label">
+                                                        @if(!empty($link['icon']))<i class="{{ $link['icon'] }}"></i>@endif{{ $link['label'] }}
+                                                    </span>
                                                 </a>
                                             </li>
                                         @endif

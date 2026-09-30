@@ -850,10 +850,6 @@
         display: none !important;
     }
 
-    .kanila-header-actions {
-        display: none !important;
-    }
-
     .kanila-site-header .mobile-menu-toggle {
         display: flex !important;
         margin-left: auto;

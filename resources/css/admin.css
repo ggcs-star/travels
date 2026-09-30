@@ -50,6 +50,10 @@
         180ms ease;
 }
 
+html:has(.admin-body) {
+    background: var(--admin-background);
+}
+
 .admin-body {
     min-height: 100vh;
     margin: 0;
@@ -1641,6 +1645,12 @@
 
     .admin-main {
         margin-left: 0;
+
+        min-height: auto;
+    }
+
+    .admin-body {
+        min-height: auto;
     }
 
     .admin-sidebar-toggle {
@@ -1669,6 +1679,30 @@
         flex-direction: column;
 
         gap: 16px;
+    }
+
+    .admin-card__header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 14px;
+    }
+
+    .admin-card__header .admin-button {
+        width: auto;
+
+        min-height: 36px;
+
+        padding: 0 14px;
+
+        font-size: 12px;
+    }
+
+    .admin-card__header .admin-points-switch {
+        flex: 0 0 auto;
+
+        align-self: flex-start;
     }
 
     .admin-button {
@@ -1721,13 +1755,48 @@
     }
 
     .admin-stats {
-        grid-template-columns: 1fr;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
 
         gap: 10px;
     }
 
     .admin-stat {
-        padding: 16px;
+        padding: 13px;
+    }
+
+    .admin-stat__top {
+        margin-bottom: 10px;
+    }
+
+    .admin-stat__icon {
+        width: 30px;
+        height: 30px;
+
+        font-size: 13px;
+    }
+
+    .admin-stat__icon svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    .admin-badge {
+        padding: 4px 7px;
+
+        font-size: 10px;
+    }
+
+    .admin-stat__value {
+        font-size: 21px;
+    }
+
+    .admin-stat__label {
+        font-size: 10px;
+    }
+
+    .admin-stat__caption {
+        font-size: 8.5px;
     }
 
     .admin-grid {
@@ -1886,6 +1955,7 @@
     width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    contain: paint;
 }
 
 .admin-table {
@@ -6043,6 +6113,7 @@ select[name*="[currency]"] {
     width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    contain: paint;
 }
 
 .inquiries-page .table thead th {

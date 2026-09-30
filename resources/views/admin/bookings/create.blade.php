@@ -769,11 +769,23 @@
 
 .points-redeem-row input {
     flex: 1;
+    min-width: 0;
 }
 
 .points-redeem-row #redeem-points-btn {
     flex: 0 0 auto;
     white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+    .points-redeem-row {
+        flex-direction: column;
+    }
+
+    .points-redeem-row input,
+    .points-redeem-row #redeem-points-btn {
+        width: 100%;
+    }
 }
 
 </style>

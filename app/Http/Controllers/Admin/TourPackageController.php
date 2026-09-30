@@ -155,7 +155,11 @@ class TourPackageController extends Controller
             'category',
             'creator',
             'images',
-            'departures',
+            'departures' => function ($query) {
+                $query->withSum(['bookings as reserved_seats' => function ($query) {
+                    $query->reserving();
+                }], 'traveller_count');
+            },
         ]);
 
         return view(

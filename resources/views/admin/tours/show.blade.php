@@ -493,6 +493,7 @@
                             <th>Departure</th>
                             <th>Return</th>
                             <th>Capacity</th>
+                            <th>Available Seats</th>
                             <th>Price</th>
                             <th>Sale Price</th>
                             <th>Status</th>
@@ -508,6 +509,11 @@
                                 <td>{{ $departure->departure_date?->format('d M Y') }}</td>
                                 <td>{{ $departure->return_date?->format('d M Y') }}</td>
                                 <td>{{ $departure->capacity }}</td>
+                                <td>
+                                    <span class="booking-pill booking-pill--status-{{ $departure->available_seats > 0 ? 'confirmed' : 'cancelled' }}">
+                                        {{ $departure->available_seats }} left
+                                    </span>
+                                </td>
                                 <td>{{ $departure->currency }} {{ number_format((float) $departure->price, 2) }}</td>
                                 <td>
                                     {{ $departure->sale_price ? $departure->currency.' '.number_format((float) $departure->sale_price, 2) : '—' }}

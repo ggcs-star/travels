@@ -497,6 +497,39 @@
     margin-bottom: 20px;
 }
 
+@media (max-width: 640px) {
+    .db-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .bd-stat {
+        padding: 12px;
+        gap: 8px;
+    }
+
+    .bd-stat__icon {
+        width: 32px;
+        height: 32px;
+        flex: 0 0 32px;
+    }
+
+    .bd-stat__icon svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .bd-stat strong {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 360px) {
+    .db-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
 .bd-stat {
     display: flex;
     align-items: flex-start;
