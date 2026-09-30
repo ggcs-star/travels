@@ -21,6 +21,10 @@
         {{ config('travels.brand.name', 'Travels') }}
     </title>
 
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon-32.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('images/favicon-192.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/favicon-180.png') }}">
+
     @vite([
         'resources/css/app.css',
         'resources/js/app.js'

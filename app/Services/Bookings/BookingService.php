@@ -2,6 +2,9 @@
 
 namespace App\Services\Bookings;
 
+use App\Mail\AdminNewBookingMail;
+use App\Mail\BookingConfirmedMail;
+use App\Mail\PointsRefundedMail;
 use App\Models\Booking;
 use App\Models\Payment;
 use App\Models\TourDeparture;
@@ -11,6 +14,8 @@ use App\Services\Points\PointWalletService;
 use App\Services\Points\PointSettingService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -733,12 +738,17 @@ class BookingService
             |--------------------------------------------------------------------------
             */
 
-            return $booking->fresh([
+            $booking = $booking->fresh([
                 'tourPackage',
                 'departure',
                 'travellers',
                 'payments',
+                'user',
             ]);
+
+            $this->sendBookingConfirmedEmail($booking, $payment);
+
+            return $booking;
         });
     }
 
@@ -848,14 +858,160 @@ class BookingService
                 payment: $payment
             );
 
-            return $booking->fresh([
+            $booking = $booking->fresh([
                 'tourPackage',
                 'departure',
                 'travellers',
                 'payments',
                 'user',
             ]);
+
+            $this->sendBookingConfirmedEmail($booking, $payment);
+
+            return $booking;
         });
+    }
+
+    /**
+     * Email the customer their booking confirmation + payment
+     * receipt, and notify the admin inbox of the new booking.
+     * Deliberately never allowed to fail the surrounding
+     * payment-confirmation transaction — a flaky mail server must
+     * not undo a real payment.
+     */
+    private function sendBookingConfirmedEmail(
+        Booking $booking,
+        Payment $payment
+    ): void {
+        $recipient = $booking->contact_email ?: $booking->user?->email;
+
+        if ($recipient) {
+            try {
+                Mail::to($recipient)->send(
+                    new BookingConfirmedMail($booking, $payment)
+                );
+            } catch (\Throwable $exception) {
+                Log::error('Failed to send booking confirmation email.', [
+                    'booking_id' => $booking->id,
+                    'error' => $exception->getMessage(),
+                ]);
+            }
+        }
+
+        $adminEmails = $this->adminNotificationEmails();
+
+        if ($adminEmails !== []) {
+            try {
+                Mail::to($adminEmails)->send(
+                    new AdminNewBookingMail($booking, $payment)
+                );
+            } catch (\Throwable $exception) {
+                Log::error('Failed to send admin new-booking notification email.', [
+                    'booking_id' => $booking->id,
+                    'error' => $exception->getMessage(),
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Parse the admin_notification_email config into a clean list
+     * of addresses. Supports one address or several comma-separated
+     * ones (e.g. "a@x.com,b@x.com") — Mail::to() needs an array, not
+     * a raw comma-separated string, or it fails RFC 2822 validation.
+     *
+     * @return array<int, string>
+     */
+    private function adminNotificationEmails(): array
+    {
+        $configured = (string) config('travels.admin_notification_email', '');
+
+        return collect(explode(',', $configured))
+            ->map(fn (string $email) => trim($email))
+            ->filter()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * Credit back any points redeemed on a booking that's being
+     * refunded. We cannot reverse the real-money payment from here
+     * (that happens outside this system) — this only makes the
+     * customer whole on the points side.
+     *
+     * Reward points already earned from the booking are left
+     * untouched by design — only the redeemed/spent points return.
+     *
+     * The unique booking reference makes this idempotent: marking a
+     * booking "Refunded" more than once never double-credits.
+     */
+    public function refundBookingPoints(Booking $booking): void
+    {
+        if (! $booking->user_id) {
+            return;
+        }
+
+        $points = (int) $booking->points_redeemed;
+
+        if ($points <= 0) {
+            return;
+        }
+
+        $transaction = $this->pointWalletService->creditOnce(
+            user: $booking->user,
+            points: $points,
+            source: 'booking_refund',
+            reference: 'BOOKING_REFUND:' . $booking->id,
+            description: "Points refunded for booking {$booking->booking_number}.",
+            booking: $booking,
+            metadata: [
+                'booking_id' => $booking->id,
+                'booking_number' => $booking->booking_number,
+                'points_refunded' => $points,
+            ],
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Notify The Customer
+        |--------------------------------------------------------------------------
+        |
+        | $transaction is null if this booking's points were already
+        | refunded before (creditOnce() is idempotent) — skip the
+        | email in that case, since it would be a duplicate notice.
+        */
+
+        if ($transaction) {
+            $this->sendPointsRefundedEmail($booking, $points, (int) $transaction->balance_after);
+        }
+    }
+
+    /**
+     * Email the customer confirming their refunded points landed in
+     * their wallet. Never allowed to fail the surrounding refund —
+     * the points are already credited regardless of mail delivery.
+     */
+    private function sendPointsRefundedEmail(
+        Booking $booking,
+        int $pointsRefunded,
+        int $newBalance
+    ): void {
+        $recipient = $booking->user?->email ?: $booking->contact_email;
+
+        if (! $recipient) {
+            return;
+        }
+
+        try {
+            Mail::to($recipient)->send(
+                new PointsRefundedMail($booking, $pointsRefunded, $newBalance)
+            );
+        } catch (\Throwable $exception) {
+            Log::error('Failed to send points-refunded email.', [
+                'booking_id' => $booking->id,
+                'error' => $exception->getMessage(),
+            ]);
+        }
     }
 
     /**

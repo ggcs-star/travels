@@ -60,6 +60,11 @@
         action="{{ route('admin.bookings.store') }}"
         enctype="multipart/form-data"
         data-booking-form
+        data-tax-percent="{{ (float) config('travels.booking.tax_percent', 0) }}"
+        data-redemption-enabled="{{ $redemptionSetting?->redemption_enabled ? '1' : '0' }}"
+        data-point-value="{{ (float) ($redemptionSetting->point_value ?? 0) }}"
+        data-max-redemption-percent="{{ $redemptionSetting?->max_redemption_percent ?? '' }}"
+        data-max-points-per-booking="{{ $redemptionSetting?->max_points_per_booking ?? '' }}"
     >
         @csrf
 
@@ -186,6 +191,7 @@
                                     <option
                                         value="{{ $departure->id }}"
                                         data-price="{{ $departure->effective_price }}"
+                                        data-currency="{{ $departure->currency }}"
                                         data-available-seats="{{ $departure->available_seats }}"
                                         data-departure-label="{{ $departure->departure_date->format('D, d M Y') }} – {{ $departure->return_date->format('D, d M Y') }} · ₹{{ number_format((float) $departure->effective_price, 0) }} · {{ $departure->available_seats }} {{ Str::plural('seat', $departure->available_seats) }} left"
                                         @selected((string) old('departure_id') === (string) $departure->id)
@@ -387,6 +393,119 @@
 
 
         {{-- =================================================
+             AMOUNT SUMMARY & TRAVEL POINTS
+        ================================================== --}}
+
+        <div class="admin-grid admin-grid--main">
+
+            <section class="admin-card">
+
+                <div class="admin-card__header">
+                    <div>
+                        <span class="admin-eyebrow">PAYMENT</span>
+                        <h2>Amount summary</h2>
+                    </div>
+                </div>
+
+                <div class="admin-detail-list">
+
+                    <div>
+                        <span>Traveller count</span>
+                        <strong data-summary-traveller-count>1</strong>
+                    </div>
+
+                    <div>
+                        <span>Subtotal</span>
+                        <strong data-summary-subtotal>—</strong>
+                    </div>
+
+                    <div>
+                        <span>Taxes</span>
+                        <strong data-summary-tax>—</strong>
+                    </div>
+
+                    <div>
+                        <span>Booking total</span>
+                        <strong data-summary-booking-total>—</strong>
+                    </div>
+
+                    <div data-summary-discount-row hidden>
+                        <span data-summary-discount-label>Points discount</span>
+                        <strong data-summary-discount>—</strong>
+                    </div>
+
+                    <div class="admin-detail-list__highlight">
+                        <span>Payable amount</span>
+                        <strong data-summary-payable>—</strong>
+                    </div>
+
+                </div>
+
+                <small class="admin-muted" data-summary-empty-hint>
+                    Select a departure to see the amount summary.
+                </small>
+
+            </section>
+
+
+            <section class="admin-card">
+
+                <div class="admin-card__header">
+                    <div>
+                        <span class="admin-eyebrow">TRAVEL POINTS</span>
+                        <h2>Redeem points for this booking?</h2>
+                    </div>
+                </div>
+
+                <div class="admin-form-grid">
+
+                    <div class="admin-form-group admin-form-group--full">
+                        <label for="points">Points to redeem (optional)</label>
+
+                        <div class="points-redeem-row">
+                            <input
+                                id="points"
+                                type="number"
+                                name="points"
+                                min="1"
+                                value="{{ old('points') }}"
+                                placeholder="Leave blank to skip points redemption"
+                            >
+                            <button
+                                type="button"
+                                id="redeem-points-btn"
+                                class="admin-button admin-button--dark"
+                            >
+                                Redeem points
+                            </button>
+                        </div>
+
+                        <input type="hidden" id="points_otp_token" name="points_otp_token" value="">
+
+                        <small data-points-max-hint>
+                            Select a customer to see their points balance.
+                        </small>
+
+                        <div class="points-otp-status" data-points-otp-status hidden></div>
+
+                        <small>
+                            Points are only redeemed after the customer's OTP is verified.
+                        </small>
+                        @error('points')
+                            <small class="admin-form-error">{{ $message }}</small>
+                        @enderror
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+        @include('admin.bookings.partials.points-otp-modal')
+
+
+        {{-- =================================================
              PAYMENT ALREADY COLLECTED?
         ================================================== --}}
 
@@ -405,7 +524,7 @@
                     @include('admin.bookings.partials.payment-collected-toggle', [
                         'toggleId' => 'payment_collected',
                         'toggleTitle' => 'Payment already collected from the customer',
-                        'toggleHint' => 'Tick this if the customer already paid you directly (cash, UPI, bank transfer, or Razorpay) before this booking was entered into the system. The booking will be created already confirmed & paid, instead of landing on the checkout screen.',
+                        'toggleHint' => 'Tick this if the customer already paid you directly (cash, UPI, bank transfer, or Razorpay). Leave it unticked to save this booking as unpaid for now — you can confirm payment and apply points later from the bookings list.',
                     ])
                 </div>
 
@@ -429,8 +548,8 @@
         <div class="admin-card">
             <div class="admin-form-actions">
                 <div>
-                    <strong>Ready to hold these seats?</strong>
-                    <small>You'll apply points and confirm payment on the next screen.</small>
+                    <strong>Ready to create this booking?</strong>
+                    <small>Points and payment (if provided above) are applied immediately when you submit.</small>
                 </div>
 
                 <div class="admin-form-actions__buttons">
@@ -643,6 +762,20 @@
     font-size: 13px;
 }
 
+.points-redeem-row {
+    display: flex;
+    gap: 8px;
+}
+
+.points-redeem-row input {
+    flex: 1;
+}
+
+.points-redeem-row #redeem-points-btn {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
 </style>
 
 
@@ -653,6 +786,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const pointsHint = document.querySelector('[data-customer-points-hint]');
     const nameInput = document.getElementById('contact_name');
     const emailInput = document.getElementById('contact_email');
+    const pointsInput = document.getElementById('points');
 
     function applyCustomer() {
 
@@ -664,6 +798,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 pointsHint.textContent = 'Select a customer to see their points balance.';
             }
 
+            if (pointsInput) {
+                pointsInput.removeAttribute('max');
+            }
+
             return;
         }
 
@@ -671,6 +809,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (pointsHint) {
             pointsHint.textContent = `${points.toLocaleString('en-IN')} points available`;
+        }
+
+        if (pointsInput) {
+            if (points > 0) {
+                pointsInput.max = String(points);
+            } else {
+                pointsInput.removeAttribute('max');
+            }
         }
 
         if (nameInput && !nameInput.value) {
@@ -906,6 +1052,198 @@ document.addEventListener('DOMContentLoaded', function () {
             comboInput.value = lastConfirmedText;
         }
     }
+
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const form = document.querySelector('[data-booking-form]');
+    const customerSelect = document.querySelector('[data-customer-select]');
+    const departureSelect = document.querySelector('[data-departure-select]');
+    const travellerList = document.querySelector('[data-traveller-list]');
+    const pointsInput = document.getElementById('points');
+
+    const summaryTravellerCount = document.querySelector('[data-summary-traveller-count]');
+    const summarySubtotal = document.querySelector('[data-summary-subtotal]');
+    const summaryTax = document.querySelector('[data-summary-tax]');
+    const summaryBookingTotal = document.querySelector('[data-summary-booking-total]');
+    const summaryDiscountRow = document.querySelector('[data-summary-discount-row]');
+    const summaryDiscount = document.querySelector('[data-summary-discount]');
+    const summaryPayable = document.querySelector('[data-summary-payable]');
+    const summaryEmptyHint = document.querySelector('[data-summary-empty-hint]');
+    const pointsMaxHint = document.querySelector('[data-points-max-hint]');
+
+    if (!form || !departureSelect || !summaryPayable) {
+        return;
+    }
+
+    const taxPercent = Number(form.dataset.taxPercent ?? 0) || 0;
+    const redemptionEnabled = form.dataset.redemptionEnabled === '1';
+    const pointValue = Number(form.dataset.pointValue ?? 0) || 0;
+    const maxRedemptionPercent = form.dataset.maxRedemptionPercent
+        ? Number(form.dataset.maxRedemptionPercent)
+        : null;
+    const maxPointsPerBooking = form.dataset.maxPointsPerBooking
+        ? Number(form.dataset.maxPointsPerBooking)
+        : null;
+
+    function formatMoney(amount, currency) {
+        return `${currency} ${amount.toLocaleString('en-IN', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        })}`;
+    }
+
+    function recalculate(options = {}) {
+
+        const departureOption = departureSelect.selectedOptions?.[0];
+        const price = departureOption ? Number(departureOption.dataset.price ?? 0) : 0;
+        const currency = departureOption?.dataset.currency || 'INR';
+        const count = travellerList
+            ? travellerList.querySelectorAll('[data-traveller-card]').length
+            : 1;
+
+        if (summaryEmptyHint) {
+            summaryEmptyHint.hidden = !!departureOption?.value;
+        }
+
+        if (summaryTravellerCount) {
+            summaryTravellerCount.textContent = String(Math.max(1, count));
+        }
+
+        const subtotal = Math.round(price * Math.max(1, count) * 100) / 100;
+        const tax = Math.round(subtotal * (taxPercent / 100) * 100) / 100;
+        const total = Math.round((subtotal + tax) * 100) / 100;
+
+        if (summarySubtotal) {
+            summarySubtotal.textContent = formatMoney(subtotal, currency);
+        }
+
+        if (summaryTax) {
+            summaryTax.textContent = formatMoney(tax, currency);
+        }
+
+        if (summaryBookingTotal) {
+            summaryBookingTotal.textContent = formatMoney(total, currency);
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Points Redemption Estimate
+        |--------------------------------------------------------------------------
+        |
+        | Mirrors PointSettingService::calculateRedemption() so the admin
+        | sees a realistic cap. The server re-validates the real maximum
+        | on submit regardless of what's shown here.
+        */
+
+        const customerOption = customerSelect?.selectedOptions?.[0];
+        const availablePoints = customerOption ? Number(customerOption.dataset.points ?? 0) : 0;
+
+        let maxPoints = 0;
+
+        if (redemptionEnabled && pointValue > 0 && total > 0 && availablePoints > 0) {
+
+            const maxDiscountByPercent = maxRedemptionPercent === null
+                ? total
+                : Math.round(total * (Math.min(100, Math.max(0, maxRedemptionPercent)) / 100) * 100) / 100;
+
+            const pointsAllowedByAmount = Math.floor(maxDiscountByPercent / pointValue);
+
+            maxPoints = Math.min(
+                availablePoints,
+                pointsAllowedByAmount,
+                maxPointsPerBooking !== null ? maxPointsPerBooking : Infinity
+            );
+
+            maxPoints = Math.max(0, maxPoints);
+        }
+
+        if (pointsInput) {
+            if (maxPoints > 0) {
+                pointsInput.max = String(maxPoints);
+            } else {
+                pointsInput.removeAttribute('max');
+            }
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Auto-fill / Clamp The Points Input
+        |--------------------------------------------------------------------------
+        |
+        | Auto-fills the field with the maximum redeemable points as soon
+        | as a customer is picked. After that, the admin can lower it
+        | freely, but typing above the balance is clamped straight back
+        | down — it can never exceed what's actually redeemable.
+        */
+
+        if (pointsInput && pointsInput.dataset.otpLocked !== '1') {
+            if (options.resyncPointsValue) {
+                pointsInput.value = maxPoints > 0 ? String(maxPoints) : '';
+            } else if (Number(pointsInput.value || 0) > maxPoints) {
+                pointsInput.value = maxPoints > 0 ? String(maxPoints) : '';
+            }
+        }
+
+        if (pointsMaxHint) {
+            if (!customerOption?.value) {
+                pointsMaxHint.textContent = 'Select a customer to see their points balance.';
+            } else if (!redemptionEnabled) {
+                pointsMaxHint.textContent = 'Points redemption is currently disabled.';
+            } else if (maxPoints <= 0) {
+                pointsMaxHint.textContent = `Available balance: ${availablePoints.toLocaleString('en-IN')} points.`;
+            } else {
+                const maxDiscount = Math.round(maxPoints * pointValue * 100) / 100;
+                pointsMaxHint.textContent =
+                    `Available balance: ${availablePoints.toLocaleString('en-IN')} points. `
+                    + `Up to ${maxPoints.toLocaleString('en-IN')} points can be redeemed on this booking `
+                    + `(max discount ${formatMoney(maxDiscount, currency)}).`;
+            }
+        }
+
+        const pointsEntered = Math.max(0, Number(pointsInput?.value ?? 0) || 0);
+        const pointsToRedeem = Math.min(pointsEntered, maxPoints);
+        const discount = Math.min(
+            Math.round(pointsToRedeem * pointValue * 100) / 100,
+            total
+        );
+        const payable = Math.round((total - discount) * 100) / 100;
+
+        if (summaryDiscountRow) {
+            summaryDiscountRow.hidden = discount <= 0;
+        }
+
+        if (summaryDiscount) {
+            summaryDiscount.textContent = `−${formatMoney(discount, currency)}`;
+        }
+
+        if (summaryPayable) {
+            summaryPayable.textContent = formatMoney(payable, currency);
+        }
+    }
+
+    customerSelect?.addEventListener('change', () => {
+        // Switching customers invalidates any OTP already sent/verified
+        // for the previous customer — points must be re-verified.
+        window.pointsOtpModal?.invalidate?.();
+        recalculate({ resyncPointsValue: true });
+    });
+    departureSelect.addEventListener('change', () => recalculate());
+    pointsInput?.addEventListener('input', () => recalculate());
+
+    if (travellerList && window.MutationObserver) {
+        new MutationObserver(() => recalculate()).observe(travellerList, { childList: true });
+    }
+
+    // On first load, auto-fill only if the field starts empty — a
+    // validation round-trip (old('points')) should keep what the
+    // admin already typed, just clamped to the real maximum.
+    recalculate({ resyncPointsValue: !pointsInput?.value });
 
 });
 </script>

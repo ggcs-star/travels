@@ -301,25 +301,30 @@
 
                                 <td>
 
-                                    @if($inquiry->status === 'new')
+                                    <form
+                                        method="POST"
+                                        action="{{ route('admin.inquiries.status', $inquiry) }}"
+                                        class="admin-inline-status-form"
+                                    >
+                                        @csrf
+                                        @method('PATCH')
 
-                                        <span class="admin-badge admin-badge--danger">
-                                            New
-                                        </span>
-
-                                    @elseif($inquiry->status === 'read')
-
-                                        <span class="admin-badge admin-badge--warning">
-                                            Read
-                                        </span>
-
-                                    @else
-
-                                        <span class="admin-badge admin-badge--success">
-                                            Replied
-                                        </span>
-
-                                    @endif
+                                        <select
+                                            name="status"
+                                            title="Change status"
+                                            data-inquiry-status-select
+                                            class="admin-status-select admin-status-select--{{ $inquiry->status }}"
+                                        >
+                                            @foreach(['new' => 'New', 'read' => 'Read', 'replied' => 'Replied'] as $value => $label)
+                                                <option
+                                                    value="{{ $value }}"
+                                                    @selected($inquiry->status === $value)
+                                                >
+                                                    {{ $label }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </form>
 
                                 </td>
 
@@ -406,5 +411,59 @@
     </section>
 
 </div>
+
+<style>
+
+.admin-status-select {
+    height: 28px;
+    border: 1px solid #dfe3e9;
+    border-radius: 6px;
+    background: #fff;
+    color: #4b5666;
+    font-size: 10px;
+    font-weight: 650;
+    padding: 0 6px;
+    cursor: pointer;
+}
+
+.admin-status-select:focus {
+    outline: none;
+    border-color: #8993a3;
+}
+
+.admin-status-select--new {
+    background: var(--admin-danger-bg, #fff1f2);
+    border-color: var(--admin-danger-bg, #fff1f2);
+    color: var(--admin-danger, #b42318);
+}
+
+.admin-status-select--read {
+    background: #fffbeb;
+    border-color: #fffbeb;
+    color: #b45309;
+}
+
+.admin-status-select--replied {
+    background: var(--admin-success-bg, #ecfdf3);
+    border-color: var(--admin-success-bg, #ecfdf3);
+    color: var(--admin-success, #15803d);
+}
+
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    document.querySelectorAll('[data-inquiry-status-select]').forEach(function (select) {
+
+        select.addEventListener('change', function () {
+            select.className = 'admin-status-select admin-status-select--' + select.value;
+            select.closest('form').submit();
+        });
+
+    });
+
+});
+</script>
 
 @endsection

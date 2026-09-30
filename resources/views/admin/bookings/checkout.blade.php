@@ -5,9 +5,6 @@
 @section('content')
 
 @php
-    $totalAmount = (float) $booking->total_amount;
-    $pointsRedeemed = (int) ($booking->points_redeemed ?? 0);
-    $pointsDiscount = (float) ($booking->points_discount ?? 0);
     $payableAmount = (float) $booking->payableAmount();
 @endphp
 
@@ -26,7 +23,7 @@
                 <span>{{ $booking->booking_number }}</span>
             </div>
 
-            <span class="admin-eyebrow">CONFIRM &amp; APPLY POINTS</span>
+            <span class="admin-eyebrow">CONFIRM PAYMENT</span>
 
             <h1 class="admin-page__title">
                 {{ $booking->booking_number }}
@@ -74,161 +71,6 @@
     @endif
 
 
-    <div class="admin-grid admin-grid--main">
-
-        {{-- =================================================
-             AMOUNT SUMMARY
-        ================================================== --}}
-
-        <section class="admin-card">
-
-            <div class="admin-card__header">
-                <div>
-                    <span class="admin-eyebrow">PAYMENT</span>
-                    <h2>Amount summary</h2>
-                </div>
-            </div>
-
-            <div class="admin-detail-list">
-
-                <div>
-                    <span>Traveller count</span>
-                    <strong>{{ $booking->traveller_count }}</strong>
-                </div>
-
-                <div>
-                    <span>Subtotal</span>
-                    <strong>{{ $booking->currency }} {{ number_format((float) $booking->subtotal, 2) }}</strong>
-                </div>
-
-                <div>
-                    <span>Taxes</span>
-                    <strong>{{ $booking->currency }} {{ number_format((float) $booking->tax_amount, 2) }}</strong>
-                </div>
-
-                <div>
-                    <span>Booking total</span>
-                    <strong>{{ $booking->currency }} {{ number_format($totalAmount, 2) }}</strong>
-                </div>
-
-                @if($pointsRedeemed > 0)
-                    <div>
-                        <span>Points discount ({{ number_format($pointsRedeemed) }} pts)</span>
-                        <strong>&minus;{{ $booking->currency }} {{ number_format($pointsDiscount, 2) }}</strong>
-                    </div>
-                @endif
-
-                <div class="admin-detail-list__highlight">
-                    <span>Payable amount</span>
-                    <strong>{{ $booking->currency }} {{ number_format($payableAmount, 2) }}</strong>
-                </div>
-
-            </div>
-
-        </section>
-
-
-        {{-- =================================================
-             TRAVEL POINTS
-        ================================================== --}}
-
-        <section class="admin-card">
-
-            <div class="admin-card__header">
-                <div>
-                    <span class="admin-eyebrow">TRAVEL POINTS</span>
-                    <h2>{{ $booking->user->name ?? 'Customer' }}'s points</h2>
-                    <p>
-                        Available balance:
-                        <strong>{{ number_format($availablePoints) }}</strong>
-                        points
-                    </p>
-                </div>
-            </div>
-
-            @if(! $redemption['enabled'])
-
-                <p class="admin-muted">
-                    Points redemption is currently disabled in
-                    <a href="{{ route('admin.point-settings.index') }}">Points Management</a>.
-                </p>
-
-            @elseif($availablePoints <= 0)
-
-                <p class="admin-muted">
-                    This customer doesn't have any points to redeem yet.
-                </p>
-
-            @elseif($pointsRedeemed > 0)
-
-                <div class="admin-detail-list">
-                    <div>
-                        <span>Applied points</span>
-                        <strong>{{ number_format($pointsRedeemed) }}</strong>
-                    </div>
-                    <div>
-                        <span>Discount</span>
-                        <strong>{{ $booking->currency }} {{ number_format($pointsDiscount, 2) }}</strong>
-                    </div>
-                </div>
-
-                <form
-                    method="POST"
-                    action="{{ route('admin.bookings.checkout.points.remove', $booking) }}"
-                    style="margin-top: 14px;"
-                >
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="admin-button">
-                        Remove applied points
-                    </button>
-                </form>
-
-            @else
-
-                <form
-                    method="POST"
-                    action="{{ route('admin.bookings.checkout.points.apply', $booking) }}"
-                    class="admin-form-grid"
-                >
-                    @csrf
-
-                    <div class="admin-form-group admin-form-group--full">
-                        <label for="points">Points to redeem</label>
-                        <input
-                            id="points"
-                            type="number"
-                            name="points"
-                            min="1"
-                            max="{{ $redemption['points_to_redeem'] }}"
-                            value="{{ old('points', $redemption['points_to_redeem']) }}"
-                            required
-                        >
-                        <small>
-                            Up to {{ number_format($redemption['points_to_redeem']) }} points
-                            can be redeemed on this booking
-                            (max discount {{ $booking->currency }} {{ number_format($redemption['max_discount'], 2) }}).
-                        </small>
-                        @error('points')
-                            <small class="admin-form-error">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="admin-form-group admin-form-group--full">
-                        <button type="submit" class="admin-button admin-button--dark">
-                            Apply points discount
-                        </button>
-                    </div>
-
-                </form>
-
-            @endif
-
-        </section>
-
-    </div>
-
-
     {{-- =================================================
          CONFIRM PAYMENT
     ================================================== --}}
@@ -242,55 +84,75 @@
             </div>
         </div>
 
-        <form
-            method="POST"
-            action="{{ route('admin.bookings.confirm', $booking) }}"
-            id="checkout-confirm-form"
-        >
-            @csrf
+        <p class="admin-muted">
+            Leave this booking unpaid for now, or record how the customer paid.
+        </p>
 
-            <div class="admin-form-grid">
+        <div class="payment-method-actions">
+            <a href="{{ route('admin.bookings.show', $booking) }}" class="admin-button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Cancel
+            </a>
 
-                <div class="admin-form-group admin-form-group--full">
-                    @include('admin.bookings.partials.payment-collected-toggle', [
-                        'toggleId' => 'payment_collected',
-                        'toggleTitle' => 'Payment already collected from the customer',
-                        'toggleHint' => 'Tick this once the customer has paid, then select how below. Leave it unticked to save this booking as unpaid for now — you can confirm payment later from the bookings list.',
-                    ])
-                </div>
+            <div class="payment-method-actions__buttons">
 
-                <div
-                    class="admin-form-group admin-form-group--full"
-                    data-payment-collected-section
-                    hidden
-                >
-                    @include('admin.bookings.partials.payment-method-fields')
-                </div>
-
-            </div>
-
-            <div class="payment-method-actions">
-                <a href="{{ route('admin.bookings.show', $booking) }}" class="admin-button">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                    Cancel
-                </a>
+                <form method="POST" action="{{ route('admin.bookings.confirm', $booking) }}">
+                    @csrf
+                    <button type="submit" class="admin-button">
+                        Save as unpaid
+                    </button>
+                </form>
 
                 <button
-                    type="submit"
-                    class="admin-button admin-button--dark"
-                    data-checkout-submit
-                    data-label-unpaid="Save as unpaid"
-                    data-label-paid="Confirm &amp; mark as paid — {{ $booking->currency }} {{ number_format($payableAmount, 2) }}"
+                    type="button"
+                    class="admin-button admin-button--primary"
+                    data-open-mark-paid-modal
                 >
-                    Save as unpaid
+                    Confirm &amp; mark as paid — {{ $booking->currency }} {{ number_format($payableAmount, 2) }}
                 </button>
-            </div>
 
-        </form>
+            </div>
+        </div>
 
     </section>
 
 </div>
+
+
+{{-- =====================================================
+     MARK AS PAID MODAL
+     Opens directly on the payment options — no checkbox gate.
+====================================================== --}}
+
+<dialog id="mark-paid-modal" class="mark-paid-modal">
+
+    <form method="POST" action="{{ route('admin.bookings.confirm', $booking) }}" id="mark-paid-form">
+        @csrf
+
+        <div class="admin-card__header">
+            <div>
+                <span class="admin-eyebrow">PAYMENT</span>
+                <h2>How did the customer pay?</h2>
+                <p>Select the payment method to mark this booking as paid.</p>
+            </div>
+        </div>
+
+        @include('admin.bookings.partials.payment-method-fields')
+
+        <div class="payment-method-actions">
+            <button type="button" class="admin-button" data-mark-paid-cancel>
+                Cancel
+            </button>
+
+            <button type="submit" class="admin-button admin-button--primary">
+                Confirm &amp; mark as paid
+            </button>
+        </div>
+
+    </form>
+
+</dialog>
+
 
 <style>
     .payment-method-actions {
@@ -301,40 +163,83 @@
         margin-top: 20px;
     }
 
-    #checkout-confirm-form [data-checkout-submit].admin-button--primary {
-        background: var(--admin-primary);
-        box-shadow: 0 6px 16px rgba(217, 119, 6, .22);
+    .payment-method-actions__buttons {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .mark-paid-modal {
+        /*
+         * Tailwind's preflight resets `margin` to 0 on every element
+         * (including dialog), which breaks the browser's native
+         * `margin: auto` centering for <dialog>. Center it explicitly
+         * instead of relying on that default.
+         */
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
+
+        max-height: 90vh;
+        width: min(640px, 92vw);
+        padding: 24px;
+
+        border: none;
+        border-radius: var(--admin-radius-lg);
+
+        box-shadow: var(--admin-shadow-md);
+
+        overflow-y: auto;
+    }
+
+    .mark-paid-modal::backdrop {
+        background: rgba(15, 23, 42, .5);
+    }
+
+    .mark-paid-modal .admin-card__header {
+        margin-bottom: 18px;
+    }
+
+    .mark-paid-modal .payment-method-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+
+        margin-top: 20px;
     }
 </style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const checkbox = document.getElementById('payment_collected');
-        const section = document.querySelector('[data-payment-collected-section]');
-        const submitButton = document.querySelector('[data-checkout-submit]');
 
-        if (!checkbox || !section || !submitButton) {
+        const modal = document.getElementById('mark-paid-modal');
+        const openButton = document.querySelector('[data-open-mark-paid-modal]');
+        const cancelButton = document.querySelector('[data-mark-paid-cancel]');
+
+        if (!modal || !openButton) {
             return;
         }
 
-        function updateVisibility() {
-            const collected = checkbox.checked;
-            section.hidden = !collected;
-
-            section.querySelectorAll('[data-payment-method-radio]').forEach((radio) => {
-                radio.disabled = !collected;
-            });
-
-            submitButton.classList.toggle('admin-button--dark', !collected);
-            submitButton.classList.toggle('admin-button--primary', collected);
-            submitButton.innerHTML = collected
-                ? submitButton.dataset.labelPaid
-                : submitButton.dataset.labelUnpaid;
+        function openModal() {
+            modal.showModal();
         }
 
-        checkbox.addEventListener('change', updateVisibility);
+        function closeModal() {
+            modal.close();
+        }
 
-        updateVisibility();
+        openButton.addEventListener('click', openModal);
+
+        cancelButton?.addEventListener('click', closeModal);
+
+        modal.addEventListener('cancel', function (event) {
+            event.preventDefault();
+            closeModal();
+        });
+
     });
 </script>
 

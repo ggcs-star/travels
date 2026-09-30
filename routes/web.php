@@ -943,6 +943,26 @@ Route::patch(
 
         /*
         |--------------------------------------------------------------------------
+        | POINTS REDEMPTION OTP
+        |--------------------------------------------------------------------------
+        |
+        | Also literal routes that must stay ahead of the
+        | /bookings/{booking} wildcard below.
+        */
+
+        Route::post('/bookings/points-otp/send', [
+            AdminBookingController::class,
+            'sendPointsOtp',
+        ])->middleware('throttle:5,1')->name('bookings.points-otp.send');
+
+        Route::post('/bookings/points-otp/verify', [
+            AdminBookingController::class,
+            'verifyPointsOtp',
+        ])->middleware('throttle:10,1')->name('bookings.points-otp.verify');
+
+
+        /*
+        |--------------------------------------------------------------------------
         | BOOKING PAYMENT / POINTS CHECKOUT
         |--------------------------------------------------------------------------
         */

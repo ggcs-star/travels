@@ -68,7 +68,7 @@
 
         } else {
 
-            $faviconUrl = asset('images/favicon.ico');
+            $faviconUrl = asset('images/favicon-192.png');
 
         }
 
@@ -310,6 +310,11 @@
     <link
         rel="shortcut icon"
         href="{{ $faviconUrl }}"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="{{ asset('images/favicon-180.png') }}"
     >
 
 

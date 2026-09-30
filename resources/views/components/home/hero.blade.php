@@ -49,7 +49,7 @@
             </div>
 
             <a
-                href="#tours"
+                href="{{ route('tours.index') }}"
                 class="kanila-book-now"
             >
                 <span>Book Now</span>

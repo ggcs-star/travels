@@ -20,6 +20,23 @@
 
 
     {{-- =========================================================
+         FLASH MESSAGES
+         ========================================================= --}}
+
+    @if(session('error'))
+        <div class="admin-alert admin-alert--danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if(session('success'))
+        <div class="admin-alert admin-alert--success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+
+    {{-- =========================================================
          HERO
          ========================================================= --}}
 
@@ -41,9 +58,19 @@
                 </p>
             </div>
 
-            <a href="{{ route('admin.bookings.index') }}" class="bd-hero__back">
-                ← Back to bookings
-            </a>
+            <div class="bd-hero__actions">
+
+                @if($booking->isPayable())
+                    <a href="{{ route('admin.bookings.checkout', $booking) }}" class="bd-hero__back bd-hero__back--primary">
+                        Complete payment →
+                    </a>
+                @endif
+
+                <a href="{{ route('admin.bookings.index') }}" class="bd-hero__back">
+                    ← Back to bookings
+                </a>
+
+            </div>
 
         </div>
 
@@ -484,6 +511,8 @@
                                                 @if(!empty($meta['ifsc_code']))
                                                     · {{ strtoupper($meta['ifsc_code']) }}
                                                 @endif
+                                            @elseif($payment->provider === 'razorpay' && $payment->signature)
+                                                <span class="admin-muted" style="color:#15803d;">✓ Signature verified</span>
                                             @endif
                                             @if(!empty($meta['note']))
                                                 <br><small class="admin-muted">{{ $meta['note'] }}</small>
@@ -492,6 +521,7 @@
                                                 empty($meta['upi_id'])
                                                 && empty($meta['bank_name'])
                                                 && empty($meta['note'])
+                                                && ! ($payment->provider === 'razorpay' && $payment->signature)
                                             )
                                                 —
                                             @endif
@@ -691,6 +721,13 @@
     color: rgba(255, 255, 255, .55);
 }
 
+.bd-hero__actions {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .bd-hero__back {
     flex: 0 0 auto;
     display: inline-flex;
@@ -707,6 +744,15 @@
 
 .bd-hero__back:hover {
     background: rgba(255, 255, 255, .3);
+}
+
+.bd-hero__back--primary {
+    background: var(--admin-primary, #d97706);
+}
+
+.bd-hero__back--primary:hover {
+    background: var(--admin-primary, #d97706);
+    opacity: .9;
 }
 
 
