@@ -14,13 +14,12 @@ class PasswordResetOtpMail extends Mailable
         public string $otp,
         public int $expiresInMinutes,
         public ?string $userName = null,
-    ) {
-    }
+    ) {}
 
     public function build()
     {
         return $this
             ->subject('Your password reset OTP')
-            ->view('emails.password-reset-otp');
+            ->view('auth.emails.password-reset-otp');
     }
 }

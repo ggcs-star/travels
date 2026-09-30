@@ -30,23 +30,36 @@ Route::prefix('v1')->group(function () {
     Route::post('/contact', [ContactController::class, 'store'])
         ->middleware('throttle:10,1');
 
+  /*
+|--------------------------------------------------------------------------
+| Authentication
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('auth')->group(function () {
+
+    Route::post('/register', [AuthController::class, 'register'])
+        ->middleware('throttle:10,1');
+
+    Route::post('/login', [AuthController::class, 'login'])
+        ->middleware('throttle:10,1');
+Route::post('/refresh', [AuthController::class, 'refresh'])
+    ->middleware('throttle:10,1');
     /*
     |--------------------------------------------------------------------------
-    | Authentication
+    | Forgot Password - OTP
     |--------------------------------------------------------------------------
     */
 
-    Route::prefix('auth')->group(function () {
-        Route::post('/register', [AuthController::class, 'register'])
-            ->middleware('throttle:10,1');
+    Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])
+        ->middleware('throttle:5,1');
 
-        Route::post('/login', [AuthController::class, 'login'])
-            ->middleware('throttle:10,1');
+    Route::post('/verify-reset-otp', [AuthController::class, 'verifyResetOtp'])
+        ->middleware('throttle:10,1');
 
-        Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])
-            ->middleware('throttle:5,1');
-    });
-
+    Route::post('/reset-password', [AuthController::class, 'resetPassword'])
+        ->middleware('throttle:5,1');
+});
     /*
     |--------------------------------------------------------------------------
     | Authenticated customer API
@@ -70,12 +83,11 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/bookings', [BookingController::class, 'index']);
         Route::get('/bookings/{booking}', [BookingController::class, 'show']);
-        Route::post('/tours/{tour:slug}/bookings', [BookingController::class, 'store']);
+Route::post('/tours/{tour:id}/bookings', [BookingController::class, 'store']);
         Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);
 
         Route::post('/bookings/{booking}/payment/order', [PaymentController::class, 'createOrder']);
         Route::post('/bookings/{booking}/payment/verify', [PaymentController::class, 'verify']);
-        Route::post('/bookings/{booking}/payment/points/apply', [PaymentController::class, 'applyPoints']);
-        Route::delete('/bookings/{booking}/payment/points', [PaymentController::class, 'removePoints']);
+       
     });
 });
