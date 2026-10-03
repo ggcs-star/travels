@@ -256,7 +256,7 @@
                 </a>
 
 
-                {{-- POINTS MANAGEMENT --}}
+                <!-- {{-- POINTS MANAGEMENT --}}
 
                 <a
                     href="{{ route('admin.point-settings.index') }}"
@@ -271,7 +271,7 @@
                         Points Management
                     </span>
 
-                </a>
+                </a> -->
 
 
                 {{-- POINTS WALLETS --}}

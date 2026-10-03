@@ -16,7 +16,8 @@ class ApiTokenAuth
         if (! $plainToken || strlen($plainToken) < 40) {
             return response()->json([
                 'success' => false,
-                'message' => 'Authentication is required.',
+                'message' => 'Something went wrong. Please try again later.',
+                'data' => null,
                 'errors' => [],
             ], 401);
         }
@@ -34,7 +35,8 @@ class ApiTokenAuth
         ) {
             return response()->json([
                 'success' => false,
-                'message' => 'Your authentication token is invalid or expired.',
+                'message' => 'Something went wrong. Please try again later.',
+                'data' => null,
                 'errors' => [],
             ], 401);
         }
@@ -49,6 +51,7 @@ class ApiTokenAuth
         }
 
         $request->attributes->set('api_token', $token);
+
         $request->setUserResolver(
             fn () => $token->user
         );

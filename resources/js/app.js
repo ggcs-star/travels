@@ -1,4 +1,37 @@
 import './visual-settings';
+
+/*
+|--------------------------------------------------------------------------
+| Global Frontend Error Handling
+|--------------------------------------------------------------------------
+|
+| Prevent application errors from being exposed in the browser console.
+| Actual errors can still be investigated from Laravel/server logs.
+|
+*/
+
+// Prevent console.error messages
+console.error = () => {};
+
+// Prevent unhandled JavaScript errors
+window.addEventListener(
+    'error',
+    (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+    },
+    true
+);
+
+// Prevent unhandled Promise rejection errors
+window.addEventListener(
+    'unhandledrejection',
+    (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+    },
+    true
+);
 /*
 |--------------------------------------------------------------------------
 | Application Initialization
