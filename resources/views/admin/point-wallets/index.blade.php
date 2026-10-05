@@ -74,14 +74,14 @@
 
                 <h2>User Points Wallets</h2>
             </div>
-
+<!-- 
             <a
                 href="{{ route('admin.point-settings.index') }}"
                 class="wallet-settings-btn"
             >
                 <span>⚙</span>
                 Point Settings
-            </a>
+            </a> -->
 
         </div>
 
