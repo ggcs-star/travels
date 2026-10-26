@@ -64,12 +64,23 @@ class StoreTourCategoryRequest extends FormRequest
                 'max:100',
             ],
 
-            'image' => [
-                'nullable',
-                'image',
-                'mimes:jpg,jpeg,png,webp,avif',
-                'max:5120',
-            ],
+           
+'image' => [
+    'nullable',
+    'image',
+    'mimes:jpg,jpeg,png,webp,avif',
+    'max:5120',
+    'dimensions:min_width=800,min_height=500,max_width=4096,max_height=4096',
+],
+
+'og_image' => [
+    'nullable',
+    'image',
+    'mimes:jpg,jpeg,png,webp,avif',
+    'max:5120',
+    'dimensions:min_width=1200,min_height=630,max_width=4096,max_height=4096',
+],
+
 
             /*
             |--------------------------------------------------------------------------
@@ -148,6 +159,16 @@ class StoreTourCategoryRequest extends FormRequest
             ],
         ];
     }
+
+public function messages(): array
+{
+    return [
+        'image.dimensions' => 'Category image must be between 800 × 500 and 4096 × 4096 pixels.',
+        'og_image.dimensions' => 'Open Graph image must be between 1200 × 630 and 4096 × 4096 pixels.',
+        'image.max' => 'Category image must not exceed 5 MB.',
+        'og_image.max' => 'Open Graph image must not exceed 5 MB.',
+    ];
+}
 
     protected function prepareForValidation(): void
     {

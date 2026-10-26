@@ -123,6 +123,7 @@ class UpdateBlogRequest extends FormRequest
                 'image',
                 'mimes:jpg,jpeg,png,webp,avif',
                 'max:5120',
+                'dimensions:min_width=800,min_height=500,max_width=4096,max_height=4096',
             ],
 
             'featured_image_alt' => [
@@ -220,6 +221,7 @@ class UpdateBlogRequest extends FormRequest
                 'image',
                 'mimes:jpg,jpeg,png,webp,avif',
                 'max:5120',
+                'dimensions:min_width=800,min_height=500,max_width=4096,max_height=4096',
             ],
 
             'gallery_alt' => [
@@ -403,12 +405,36 @@ class UpdateBlogRequest extends FormRequest
                 'image',
                 'mimes:jpg,jpeg,png,webp,avif',
                 'max:5120',
+                'dimensions:min_width=1200,min_height=630,max_width=4096,max_height=4096',
             ],
 
             'remove_og_image' => [
                 'nullable',
                 'boolean',
             ],
+        ];
+    }
+
+    /**
+     * Custom image validation messages.
+     */
+    public function messages(): array
+    {
+        return [
+            'featured_image.image' => 'Featured image must be a valid image file.',
+            'featured_image.mimes' => 'Featured image must be JPG, JPEG, PNG, WebP, or AVIF.',
+            'featured_image.max' => 'Featured image may not be larger than 5 MB.',
+            'featured_image.dimensions' => 'Featured image must be between 800×500 and 4096×4096 pixels.',
+
+            'gallery.*.image' => 'Each gallery file must be a valid image.',
+            'gallery.*.mimes' => 'Each gallery image must be JPG, JPEG, PNG, WebP, or AVIF.',
+            'gallery.*.max' => 'Each gallery image may not be larger than 5 MB.',
+            'gallery.*.dimensions' => 'Each gallery image must be between 800×500 and 4096×4096 pixels.',
+
+            'og_image.image' => 'Open Graph image must be a valid image file.',
+            'og_image.mimes' => 'Open Graph image must be JPG, JPEG, PNG, WebP, or AVIF.',
+            'og_image.max' => 'Open Graph image may not be larger than 5 MB.',
+            'og_image.dimensions' => 'Open Graph image must be between 1200×630 and 4096×4096 pixels.',
         ];
     }
 

@@ -914,7 +914,19 @@
                                 accept=".jpg,.jpeg,.png,.webp,.avif,image/jpeg,image/png,image/webp,image/avif"
                                 data-itinerary-image-input
                             >
-                            <small>JPG, PNG, WebP or AVIF · max 5 MB · PDF only.</small>
+                            <div class="admin-image-requirements">
+                                <div class="admin-image-requirements__header">
+                                    <span aria-hidden="true">ⓘ</span>
+                                    <strong>Day Image Requirements</strong>
+                                </div>
+                                <ul>
+                                    <li><strong>Maximum file size:</strong> 5 MB</li>
+                                    <li><strong>Formats:</strong> JPG, JPEG, PNG, WebP, AVIF</li>
+                                    <li><strong>Minimum dimensions:</strong> 800 × 500 px</li>
+                                    <li><strong>Maximum dimensions:</strong> 4096 × 4096 px</li>
+                                    <li><strong>Usage:</strong> PDF itinerary only</li>
+                                </ul>
+                            </div>
 
                             @if($dayImage)
                                 @php
@@ -1054,7 +1066,19 @@
                                 accept=".jpg,.jpeg,.png,.webp,.avif,image/jpeg,image/png,image/webp,image/avif"
                                 data-itinerary-image-input
                             >
-                            <small>JPG, PNG, WebP or AVIF · max 5 MB · PDF only.</small>
+                            <div class="admin-image-requirements">
+                                <div class="admin-image-requirements__header">
+                                    <span aria-hidden="true">ⓘ</span>
+                                    <strong>Day Image Requirements</strong>
+                                </div>
+                                <ul>
+                                    <li><strong>Maximum file size:</strong> 5 MB</li>
+                                    <li><strong>Formats:</strong> JPG, JPEG, PNG, WebP, AVIF</li>
+                                    <li><strong>Minimum dimensions:</strong> 800 × 500 px</li>
+                                    <li><strong>Maximum dimensions:</strong> 4096 × 4096 px</li>
+                                    <li><strong>Usage:</strong> PDF itinerary only</li>
+                                </ul>
+                            </div>
                             <div class="tour-itinerary-image-preview tour-itinerary-image-preview--new" data-itinerary-image-preview hidden>
                                 <img src="" alt="Selected day image" data-itinerary-image-preview-img>
                                 <span>New image selected</span>
@@ -1293,11 +1317,19 @@ Any additional expenses arising due to unforeseen circumstances must be borne by
                 {{ isset($tour) ? '' : 'required' }}
             >
 
-            <small>
-                JPG, PNG, WebP or AVIF.
-                Maximum 5 MB.
-                Recommended landscape image.
-            </small>
+            <div class="admin-image-requirements">
+                <div class="admin-image-requirements__header">
+                    <span aria-hidden="true">ⓘ</span>
+                    <strong>Image Requirements</strong>
+                </div>
+                <ul>
+                    <li><strong>Minimum dimensions:</strong> 800 × 500 px</li>
+                    <li><strong>Maximum dimensions:</strong> 4096 × 4096 px</li>
+                    <li><strong>Maximum file size:</strong> 5 MB</li>
+                    <li><strong>Formats:</strong> JPG, JPEG, PNG, WebP, AVIF</li>
+                </ul>
+                <p>Cover image dimensions are validated by the backend. A landscape image is recommended.</p>
+            </div>
 
 
             @if(isset($tour) && $tour->cover_image_url)
@@ -1356,10 +1388,19 @@ Any additional expenses arising due to unforeseen circumstances must be borne by
                 multiple
             >
 
-            <small>
-                Upload up to 20 gallery images.
-                Each image can be up to 5 MB.
-            </small>
+            <div class="admin-image-requirements">
+                <div class="admin-image-requirements__header">
+                    <span aria-hidden="true">ⓘ</span>
+                    <strong>Gallery Image Requirements</strong>
+                </div>
+                <ul>
+                    <li><strong>Maximum images:</strong> 20</li>
+                    <li><strong>Maximum file size:</strong> 5 MB per image</li>
+                    <li><strong>Formats:</strong> JPG, JPEG, PNG, WebP, AVIF</li>
+<li><strong>Minimum dimensions:</strong> 800 × 500 px</li>
+<li><strong>Maximum dimensions:</strong> 4096 × 4096 px</li>                </ul>
+                <p>Use clear, high-quality images with a consistent landscape ratio for the best gallery appearance.</p>
+            </div>
 
             @error('gallery')
 
@@ -2759,7 +2800,19 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="admin-form-group">
                         <label>Day Image</label>
                         <input type="file" accept=".jpg,.jpeg,.png,.webp,.avif,image/jpeg,image/png,image/webp,image/avif" data-itinerary-image-input>
-                        <small>JPG, PNG, WebP or AVIF · max 5 MB · PDF only.</small>
+                        <div class="admin-image-requirements">
+                                <div class="admin-image-requirements__header">
+                                    <span aria-hidden="true">ⓘ</span>
+                                    <strong>Day Image Requirements</strong>
+                                </div>
+                                <ul>
+                                    <li><strong>Maximum file size:</strong> 5 MB</li>
+                                    <li><strong>Formats:</strong> JPG, JPEG, PNG, WebP, AVIF</li>
+                                    <li><strong>Minimum dimensions:</strong> 800 × 500 px</li>
+                                    <li><strong>Maximum dimensions:</strong> 4096 × 4096 px</li>
+                                    <li><strong>Usage:</strong> PDF itinerary only</li>
+                                </ul>
+                            </div>
                         <div class="tour-itinerary-image-preview tour-itinerary-image-preview--new" data-itinerary-image-preview hidden>
                             <img src="" alt="Selected day image" data-itinerary-image-preview-img>
                             <span>New image selected</span>
@@ -3198,5 +3251,66 @@ document.addEventListener('DOMContentLoaded', function () {
     min-height: 190px;
     line-height: 1.65;
     white-space: pre-wrap;
+}
+</style>
+
+
+<style>
+/* =========================================================
+   IMAGE REQUIREMENTS BOXES
+========================================================= */
+.admin-image-requirements {
+    display: block;
+    margin-top: 12px;
+    padding: 14px 16px;
+    border: 1px solid #dbe4f0;
+    border-radius: 12px;
+    background: #f8fafc;
+    color: #334155;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.admin-image-requirements__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: #0f172a;
+    font-size: 14px;
+}
+
+.admin-image-requirements__header span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    flex: 0 0 22px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: #334155;
+    font-weight: 700;
+}
+
+.admin-image-requirements ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.admin-image-requirements li {
+    margin: 3px 0;
+}
+
+.admin-image-requirements p {
+    margin: 9px 0 0;
+    color: #64748b;
+    font-size: 12px;
+}
+
+@media (max-width: 576px) {
+    .admin-image-requirements {
+        padding: 12px;
+    }
 }
 </style>

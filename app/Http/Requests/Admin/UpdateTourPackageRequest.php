@@ -180,12 +180,14 @@ class UpdateTourPackageRequest extends StoreTourPackageRequest
                     'max:20',
                 ],
 
-                'gallery.*' => [
-                    'required',
-                    'image',
-                    'mimes:jpg,jpeg,png,webp,avif',
-                    'max:5120',
-                ],
+'gallery.*' => [
+    'required',
+    'image',
+    'mimes:jpg,jpeg,png,webp,avif',
+    'max:5120',
+    'dimensions:min_width=800,min_height=500,max_width=4096,max_height=4096',
+],
+
 
                 /*
                 |--------------------------------------------------------------------------
