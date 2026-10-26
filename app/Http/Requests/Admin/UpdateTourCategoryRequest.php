@@ -102,7 +102,7 @@ class UpdateTourCategoryRequest extends FormRequest
                 'image',
                 'mimes:jpg,jpeg,png,webp,avif',
                 'max:5120',
-                'dimensions:max_width=4096,max_height=4096',
+                'dimensions:min_width=800,min_height=500,max_width=4096,max_height=4096',
             ],
 
             'remove_image' => [
@@ -121,7 +121,7 @@ class UpdateTourCategoryRequest extends FormRequest
                 'image',
                 'mimes:jpg,jpeg,png,webp,avif',
                 'max:5120',
-                'dimensions:max_width=4096,max_height=4096',
+                'dimensions:min_width=1200,min_height=630,max_width=4096,max_height=4096',
             ],
 
             'remove_og_image' => [
@@ -187,6 +187,21 @@ class UpdateTourCategoryRequest extends FormRequest
                 'string',
                 'max:50',
             ],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'image.image' => 'The category image must be a valid image file.',
+            'image.mimes' => 'The category image must be JPG, JPEG, PNG, WebP, or AVIF.',
+            'image.max' => 'The category image must not exceed 5 MB.',
+            'image.dimensions' => 'The category image must be at least 800 × 500 pixels and no larger than 4096 × 4096 pixels.',
+
+            'og_image.image' => 'The Open Graph image must be a valid image file.',
+            'og_image.mimes' => 'The Open Graph image must be JPG, JPEG, PNG, WebP, or AVIF.',
+            'og_image.max' => 'The Open Graph image must not exceed 5 MB.',
+            'og_image.dimensions' => 'The Open Graph image must be at least 1200 × 630 pixels and no larger than 4096 × 4096 pixels.',
         ];
     }
 

@@ -404,12 +404,13 @@ class StoreTourPackageRequest extends FormRequest
                 'max:20',
             ],
 
-            'gallery.*' => [
-                'required',
-                'image',
-                'mimes:jpg,jpeg,png,webp,avif',
-                'max:5120',
-            ],
+        'gallery.*' => [
+    'required',
+    'image',
+    'mimes:jpg,jpeg,png,webp,avif',
+    'max:5120',
+    'dimensions:min_width=800,min_height=500,max_width=4096,max_height=4096',
+],
 
             /*
             |--------------------------------------------------------------------------
@@ -984,7 +985,8 @@ class StoreTourPackageRequest extends FormRequest
 
             'gallery.max' =>
                 'You can upload a maximum of 20 gallery images.',
-
+'gallery.*.dimensions' =>
+    'Each gallery image must be between 800×500 and 4096×4096 pixels.',
             'gallery.*.image' =>
                 'Each gallery file must be a valid image.',
 

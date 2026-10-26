@@ -849,13 +849,22 @@ Travel tips
                         </span>
 
                         <small>
-                            JPG, PNG, WebP or AVIF · Maximum 5 MB
+                            JPG, JPEG, PNG, WebP or AVIF · Maximum 5 MB
                         </small>
 
                     </label>
 
                 </div>
 
+                <div class="blog-image-requirements" role="note">
+                    <div class="blog-image-requirements__heading">Featured image requirements</div>
+                    <ul>
+                        <li><strong>Minimum:</strong> 800 × 500 px</li>
+                        <li><strong>Maximum:</strong> 4096 × 4096 px</li>
+                        <li><strong>File size:</strong> up to 5 MB</li>
+                        <li><strong>Formats:</strong> JPG, JPEG, PNG, WebP, AVIF</li>
+                    </ul>
+                </div>
 
                 <div
                     class="blog-file-preview"
@@ -1187,13 +1196,22 @@ Travel tips
                         </span>
 
                         <small>
-                            Up to 20 images · Maximum 5 MB each
+                            Up to 20 images · Maximum 5 MB each · JPG, JPEG, PNG, WebP or AVIF
                         </small>
 
                     </label>
 
                 </div>
 
+                <div class="blog-image-requirements" role="note">
+                    <div class="blog-image-requirements__heading">Gallery image requirements</div>
+                    <ul>
+                        <li><strong>Minimum:</strong> 800 × 500 px per image</li>
+                        <li><strong>Maximum:</strong> 4096 × 4096 px per image</li>
+                        <li><strong>File size:</strong> up to 5 MB each</li>
+                        <li><strong>Formats:</strong> JPG, JPEG, PNG, WebP, AVIF</li>
+                    </ul>
+                </div>
 
                 <div
                     class="blog-file-preview blog-file-preview--gallery"
@@ -2031,11 +2049,21 @@ Travel tips
                                 </span>
 
                                 <small>
-                                    JPG, PNG, WebP or AVIF · Maximum 5 MB
+                                    JPG, JPEG, PNG, WebP or AVIF · Maximum 5 MB
                                 </small>
 
                             </label>
 
+                        </div>
+
+                        <div class="blog-image-requirements" role="note">
+                            <div class="blog-image-requirements__heading">Social share image requirements</div>
+                            <ul>
+                                <li><strong>Minimum:</strong> 1200 × 630 px</li>
+                                <li><strong>Maximum:</strong> 4096 × 4096 px</li>
+                                <li><strong>File size:</strong> up to 5 MB</li>
+                                <li><strong>Formats:</strong> JPG, JPEG, PNG, WebP, AVIF</li>
+                            </ul>
                         </div>
 
                     </div>
@@ -2476,7 +2504,38 @@ Travel tips
 
 
 
-<style>
+<style>\n/* Image requirements panel */
+.blog-image-requirements {
+    margin-top: 14px;
+    padding: 14px 16px;
+    border: 1px solid #dbe7e5;
+    border-radius: 12px;
+    background: #f7fbfa;
+    color: #334155;
+    font-size: 13px;
+    line-height: 1.55;
+}
+.blog-image-requirements__heading {
+    margin-bottom: 7px;
+    color: #0f766e;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .02em;
+}
+.blog-image-requirements ul {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px 18px;
+}
+.blog-image-requirements li { padding-left: 2px; }
+@media (max-width: 640px) {
+    .blog-image-requirements { padding: 12px; font-size: 12px; }
+    .blog-image-requirements ul { grid-template-columns: 1fr; }
+}
+
+
 /* ================================================================
    QUICK CATEGORY CREATOR — FINAL
    ================================================================ */
@@ -4514,5 +4573,76 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
+});
+</script>
+
+
+<script>
+/* Client-side image checks; server-side Laravel validation remains authoritative. */
+document.addEventListener('DOMContentLoaded', function () {
+    const imageRules = [
+        { selector: '#featured_image', label: 'Featured image', minWidth: 800, minHeight: 500 },
+        { selector: '#gallery', label: 'Gallery image', minWidth: 800, minHeight: 500, multiple: true },
+        { selector: '#og_image', label: 'Social share image', minWidth: 1200, minHeight: 630 }
+    ];
+
+    imageRules.forEach(function (rule) {
+        const input = document.querySelector(rule.selector);
+        if (!input) return;
+
+        input.addEventListener('change', async function () {
+            const files = Array.from(input.files || []);
+            for (const file of files) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(rule.label + ': each file must be 5 MB or smaller.');
+                    input.value = '';
+                    return;
+                }
+
+                const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
+                if (!allowed.includes(file.type)) {
+                    alert(rule.label + ': use JPG, JPEG, PNG, WebP or AVIF.');
+                    input.value = '';
+                    return;
+                }
+
+                const dimensions = await new Promise(function (resolve) {
+                    const image = new Image();
+                    const objectUrl = URL.createObjectURL(file);
+                    image.onload = function () {
+                        resolve({ width: image.naturalWidth, height: image.naturalHeight });
+                        URL.revokeObjectURL(objectUrl);
+                    };
+                    image.onerror = function () {
+                        resolve(null);
+                        URL.revokeObjectURL(objectUrl);
+                    };
+                    image.src = objectUrl;
+                });
+
+                if (!dimensions) {
+                    alert(rule.label + ': the selected file could not be read as an image.');
+                    input.value = '';
+                    return;
+                }
+
+                if (
+                    dimensions.width < rule.minWidth ||
+                    dimensions.height < rule.minHeight ||
+                    dimensions.width > 4096 ||
+                    dimensions.height > 4096
+                ) {
+                    alert(
+                        rule.label + ' must be between ' +
+                        rule.minWidth + '×' + rule.minHeight +
+                        ' px minimum and 4096×4096 px maximum. Selected image: ' +
+                        dimensions.width + '×' + dimensions.height + ' px.'
+                    );
+                    input.value = '';
+                    return;
+                }
+            }
+        });
+    });
 });
 </script>
