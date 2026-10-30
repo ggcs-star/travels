@@ -55,8 +55,8 @@
 
         <div class="wallet-table-header">
             <div>
-                <span class="admin-eyebrow">USER MANAGEMENT</span>
-                <h2>All Users</h2>
+                <span class="admin-eyebrow">MEMBER MANAGEMENT</span>
+                <h2>All Members</h2>
             </div>
         </div>
 
@@ -66,7 +66,7 @@
 
                 <thead>
                     <tr>
-                        <th>User</th>
+                        <th>Member</th>
                         <th>Status</th>
                         <th>Bookings</th>
                         <th>Points</th>

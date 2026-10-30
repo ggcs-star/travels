@@ -14,6 +14,8 @@
 @import './storefront.css';
 @import './blog.css';
 @import './auth-extra.css';
+@import './member-profile-responsive.css';
+@import './member-transaction-history.css';
 
 /* Visual Settings - Admin controlled theme */
 @import './visual-settings.css';
