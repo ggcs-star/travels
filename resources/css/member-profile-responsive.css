@@ -1,0 +1,294 @@
+/*
+|--------------------------------------------------------------------------
+| Member profile page additions
+|--------------------------------------------------------------------------
+| Add this file to your Vite/CSS entry point or include it through your
+| existing external stylesheet. No inline CSS is required in the Blade view.
+*/
+
+.account-profile-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.travel-wallet--clickable {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.travel-wallet--clickable:focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: 4px;
+}
+
+.travel-wallet__intro {
+    min-width: 0;
+}
+
+.travel-wallet__view-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Recent activity table */
+.profile-activity-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    border: 1px solid var(--profile-table-border, #e8eaf0);
+    border-radius: 14px;
+    background: var(--profile-table-bg, #fff);
+    -webkit-overflow-scrolling: touch;
+}
+
+.profile-activity-table {
+    width: 100%;
+    min-width: 650px;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.profile-activity-table thead th {
+    padding: 15px 18px;
+    background: var(--profile-table-head-bg, #f7f8fb);
+    color: var(--profile-table-muted, #697386);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--profile-table-border, #e8eaf0);
+}
+
+.profile-activity-table tbody td {
+    padding: 17px 18px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--profile-table-border, #edf0f4);
+}
+
+.profile-activity-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.profile-activity-table tbody tr {
+    transition: background-color .18s ease;
+}
+
+.profile-activity-table tbody tr:hover {
+    background: var(--profile-table-hover, #fafbfc);
+}
+
+.profile-activity-date,
+.profile-activity-title {
+    display: block;
+    color: var(--profile-table-text, #202938);
+    font-size: 13px;
+    font-weight: 650;
+}
+
+.profile-activity-time,
+.profile-activity-description {
+    display: block;
+    margin-top: 5px;
+    color: var(--profile-table-muted, #788292);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.profile-activity-description {
+    max-width: 340px;
+    overflow-wrap: anywhere;
+}
+
+.profile-activity-type {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 68px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.profile-activity-type.is-credit {
+    color: #147a49;
+    background: #eaf8f0;
+}
+
+.profile-activity-type.is-debit {
+    color: #b54747;
+    background: #fff0f0;
+}
+
+.profile-activity-points {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+.profile-activity-points small {
+    margin-left: 2px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.profile-activity-points.is-credit {
+    color: #16834f;
+}
+
+.profile-activity-points.is-debit {
+    color: #c04444;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+    .account-profile-card {
+        gap: 18px;
+    }
+
+    .account-profile-actions {
+        width: 100%;
+    }
+
+    .travel-wallet__top {
+        gap: 22px;
+    }
+
+    .travel-wallet__stats {
+        gap: 14px;
+    }
+
+    .profile-activity-table thead th,
+    .profile-activity-table tbody td {
+        padding: 14px;
+    }
+}
+
+/* Mobile: convert each table row into a readable stacked card */
+@media (max-width: 600px) {
+    .account-profile-actions {
+        align-items: flex-start;
+    }
+
+    .travel-wallet__top {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .travel-wallet__balance {
+        width: 100%;
+    }
+
+    .travel-wallet__stats {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .travel-wallet__footer {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .profile-activity-table-wrap {
+        overflow: visible;
+        border: 0;
+        background: transparent;
+    }
+
+    .profile-activity-table {
+        display: block;
+        min-width: 0;
+    }
+
+    .profile-activity-table thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .profile-activity-table tbody {
+        display: grid;
+        gap: 12px;
+    }
+
+    .profile-activity-table tbody tr {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px 16px;
+        padding: 15px;
+        border: 1px solid var(--profile-table-border, #e8eaf0);
+        border-radius: 13px;
+        background: var(--profile-table-bg, #fff);
+    }
+
+    .profile-activity-table tbody tr:hover {
+        background: var(--profile-table-bg, #fff);
+    }
+
+    .profile-activity-table tbody td {
+        display: block;
+        min-width: 0;
+        padding: 0;
+        border: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .profile-activity-table tbody td::before {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--profile-table-muted, #788292);
+        content: attr(data-label);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+    }
+
+    .profile-activity-table tbody td:nth-child(2) {
+        grid-column: 1 / -1;
+        grid-row: 2;
+    }
+
+    .profile-activity-table tbody td:nth-child(4) {
+        justify-self: end;
+        text-align: right;
+    }
+
+    .profile-activity-description {
+        max-width: none;
+    }
+}
+
+@media (max-width: 380px) {
+    .travel-wallet__stats {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-activity-table tbody tr {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .profile-activity-table tbody td:nth-child(2) {
+        grid-column: auto;
+        grid-row: auto;
+    }
+
+    .profile-activity-table tbody td:nth-child(4) {
+        justify-self: start;
+        text-align: left;
+    }
+}

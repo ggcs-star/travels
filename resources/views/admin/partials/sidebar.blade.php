@@ -218,7 +218,7 @@
                 </span>
 
                 <span>
-                    Users
+                    Members
                 </span>
 
             </a>
